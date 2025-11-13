@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import LoginComponent from "./LoginComponent/LoginComponent";
+import AssistanceComponent from "./AssistanceComponent/AssistanceComponent";
 
 function App() {
     return (
         <>
             <LoginComponent />
+            <AssistanceComponent />
         </>
     );
 
