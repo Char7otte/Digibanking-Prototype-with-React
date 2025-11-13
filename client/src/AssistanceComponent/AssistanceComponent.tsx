@@ -12,6 +12,20 @@ function AssistanceComponent() {
     function closeModal() {
         setIsOpen(false);
     }
+
+    //Controls the distance between elements.
+    const [elementDistance, setElementDistance] = useState(16);
+
+    function handleDistanceChange(e: ChangeEvent<HTMLInputElement>) {
+        setElementDistance(parseInt(e.target.value));
+    }
+
+    useEffect(() => {
+        document.documentElement.style.setProperty("--spacing", elementDistance + "px");
+    }, [elementDistance]);
+
+    ReactModal.setAppElement("#root");
+
     return (
         <div className={styles.assistanceButtonContainer}>
             <button onClick={openModal}>Assistance♿</button>

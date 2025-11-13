@@ -5,9 +5,9 @@ function LoginComponent() {
         <div>
             <form action="">
                 <label htmlFor="username">Username:</label> <br />
-                <input type="text" name="username" id="username" placeholder="Enter your username" /> <br />
+                <input type="text" name="username" id="username" placeholder="Enter your username" className="spacing-md" /> <br />
                 <label htmlFor="username">Password:</label> <br />
-                <input type="text" name="username" id="username" placeholder="Enter your password" /> <br />
+                <input type="text" name="username" id="username" placeholder="Enter your password" className="spacing-md" /> <br />
                 <div className={styles.loginModifiers}>
                     <button type="submit" className={styles.loginButton}>
                         Login
