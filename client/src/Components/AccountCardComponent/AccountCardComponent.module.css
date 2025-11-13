@@ -1,8 +1,7 @@
 .cardContainer {
         border: 5px solid black;
         border-radius: 20px;
-        margin-bottom: 20px;
-        padding: 10px;
+        padding: 20px;
         font-size: 1rem;
         width: 80vw;
 }
@@ -12,5 +11,3 @@
         flex-direction: row;
         justify-content: space-between;
 }
-
-.subheader {}

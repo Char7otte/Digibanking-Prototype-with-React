@@ -23,7 +23,7 @@ function AccountCardComponent({ accountData: { type, currency, number, money, is
     }
 
     return (
-        <div className={styles.cardContainer}>
+        <div className={`${styles.cardContainer} spacing-md`}>
             <div className={styles.header}>
                 <div className={styles.subheader}>
                     <h2>{type}</h2>
