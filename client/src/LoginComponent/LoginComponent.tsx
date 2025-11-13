@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styles from "./LoginComponent.module.css";
 
 function LoginComponent() {
@@ -9,9 +10,11 @@ function LoginComponent() {
                 <label htmlFor="username">Password:</label> <br />
                 <input type="text" name="username" id="username" placeholder="Enter your password" className="spacing-md" /> <br />
                 <div className={styles.loginModifiers}>
-                    <button type="submit" className={styles.loginButton}>
-                        Login
-                    </button>
+                    <Link to={"/dashboard"}>
+                        <button type="submit" className={styles.loginButton}>
+                            Login
+                        </button>
+                    </Link>
                     <a href="">Forgot password?</a>
                 </div>
                 <br />
