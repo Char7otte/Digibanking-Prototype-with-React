@@ -19,7 +19,7 @@ function AccountCardComponent({ accountData: { type, currency, number, money, is
 
     function obfuscateAccountNumber(fullNumber: string) {
         const last4Digits = fullNumber.slice(-4);
-        return (" " + last4Digits).padStart(8, "•");
+        return "•••• " + last4Digits;
     }
 
     return (
