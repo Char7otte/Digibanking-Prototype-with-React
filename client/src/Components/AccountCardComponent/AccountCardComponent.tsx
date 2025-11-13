@@ -29,7 +29,9 @@ function AccountCardComponent({ accountData: { type, currency, number, money, is
                     <h2>{type}</h2>
                     <p>{obfuscateAccountNumber(number)}</p>
                 </div>
-                <button onClick={toggleHideMoney}>Hide</button>
+                <button onClick={toggleHideMoney} className={styles.ignoreSizing}>
+                    Hide
+                </button>
             </div>
 
             <p>
