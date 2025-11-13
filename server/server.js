@@ -17,6 +17,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
+app.get("", (req, res) => {
+    res.json({ fruits: ["Apple", "Banana"] });
+});
+
 app.listen(port, () => {
     console.log("Server running on port " + port);
 });
