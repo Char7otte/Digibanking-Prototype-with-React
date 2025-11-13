@@ -1,9 +1,6 @@
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
-const corsOptions = {
-    origin: ["http://localhost:5173"],
-};
 // const sql = require("mssql");
 // const dotenv = require("dotenv");
 
@@ -11,6 +8,9 @@ const corsOptions = {
 
 const app = express();
 const port = process.env.PORT || 8080;
+const corsOptions = {
+    origin: ["http://localhost:5173"],
+};
 
 app.use(cors(corsOptions));
 app.use(express.json());
