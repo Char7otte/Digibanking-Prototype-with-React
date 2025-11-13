@@ -6,16 +6,16 @@ body {
   justify-content: center;
   align-items: center;
   align-content: center;
-  font-size: 8vw;
+  font-size: 7vw;
   font-family: arial, sans-serif;
 }
 
 input {
-  font-size: 8vw;
+  font-size: 7vw;
 }
 
 button {
-  font-size: 8vw;
+  font-size: 7vw;
   border-radius: 10px;
   border: none;
   padding: 10px;
