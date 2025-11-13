@@ -1,0 +1,16 @@
+.cardContainer {
+        border: 5px solid black;
+        border-radius: 20px;
+        margin-bottom: 20px;
+        padding: 10px;
+        font-size: 1rem;
+        width: 80vw;
+}
+
+.header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+}
+
+.subheader {}
