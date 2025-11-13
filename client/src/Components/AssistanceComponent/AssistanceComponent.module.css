@@ -1,0 +1,10 @@
+.assistanceButtonContainer {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+}
+
+.rangeInput {
+        margin: 10px 0;
+        width: 100%;
+}

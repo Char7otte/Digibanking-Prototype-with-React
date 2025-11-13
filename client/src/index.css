@@ -1,0 +1,67 @@
+:root {
+  --spacing: 16px;
+  --buttonSize: 50px;
+}
+
+.spacing-md {
+  display: block;
+  margin-bottom: var(--spacing);
+}
+
+.spacing-lg {
+  margin-bottom: calc(var(--spacing) * 2);
+}
+
+.spacing-sm {
+  margin-bottom: calc(var(--spacing) / 2);
+}
+
+.padding-md {
+  padding: var(--spacing);
+}
+
+.gap-md {
+  gap: var(--spacing);
+}
+
+body {
+  font-size: 7vw;
+  font-family: arial, sans-serif;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: safe center;
+}
+
+input {
+  font-size: 7vw;
+  height: var(--buttonSize);
+  width: 100%;
+  padding: 0;
+}
+
+button {
+  font-size: 7vw;
+  height: var(--buttonSize);
+  border-radius: 10px;
+  border: none;
+  padding: 10px;
+}
+
+h1,
+h2 {
+  all: unset;
+  display: block;
+}
+
+hr {
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.important-button {
+  color: white;
+  background-color: red;
+}
