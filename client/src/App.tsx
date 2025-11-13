@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import LoginComponent from "./LoginComponent/LoginComponent";
 
 function App() {
     return (
         <>
+            <LoginComponent />
         </>
     );
 
