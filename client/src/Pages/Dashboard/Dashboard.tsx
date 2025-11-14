@@ -1,6 +1,7 @@
 import styles from "./Dashboard.module.css";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 import AssistanceComponent from "../../Components/AssistanceComponent/AssistanceComponent";
+import FooterComponent from "../../Components/FooterComponent/FooterComponent";
 
 function Dashboard() {
     const savingsAccount = {
@@ -47,7 +48,8 @@ function Dashboard() {
                 <AccountCardComponent accountData={checkingAccount} />
                 <AccountCardComponent accountData={creditAccount} />
             </section>
-            <AssistanceComponent />
+            <FooterComponent />
+            {/* <AssistanceComponent /> */}
         </>
     );
 }
