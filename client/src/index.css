@@ -52,7 +52,7 @@ button {
   min-height: var(--buttonSize);
   border-radius: 10px;
   border: none;
-  padding: 10px;
+  padding: 0;
 }
 
 h1,
