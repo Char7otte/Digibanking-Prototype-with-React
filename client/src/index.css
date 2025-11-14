@@ -37,14 +37,14 @@ body {
 
 input {
   font-size: 7vw;
-  height: var(--buttonSize);
+  min-height: var(--buttonSize);
   width: 100%;
   padding: 0;
 }
 
 button {
   font-size: 7vw;
-  height: var(--buttonSize);
+  min-height: var(--buttonSize);
   border-radius: 10px;
   border: none;
   padding: 10px;
