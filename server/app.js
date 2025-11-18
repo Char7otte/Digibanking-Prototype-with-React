@@ -12,6 +12,8 @@ const corsOptions = {
     origin: ["http://localhost:5173"],
 };
 
+app.set("view engine", "ejs");
+
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
