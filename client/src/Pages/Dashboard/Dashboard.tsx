@@ -48,8 +48,8 @@ function Dashboard() {
                 <AccountCardComponent accountData={checkingAccount} />
                 <AccountCardComponent accountData={creditAccount} />
             </section>
-            <FooterComponent />
-            {/* <AssistanceComponent /> */}
+            {/* <FooterComponent /> */}
+            <AssistanceComponent />
         </>
     );
 }
