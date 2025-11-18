@@ -5,7 +5,7 @@
 
 .spacing-md {
         display: block;
-        margin-bottom: var(--spacing);
+        margin-bottom: calc(var(--spacing) * 0.7);
 }
 
 body {
@@ -16,11 +16,7 @@ body {
 
 input,
 button {
-        min-height: var(--buttonSize);
-}
-
-label,
-a {
+        min-height: calc(var(--buttonSize) * 0.5);
 }
 
 .ignore-sizing {
