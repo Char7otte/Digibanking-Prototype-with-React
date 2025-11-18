@@ -11,17 +11,16 @@
 body {
         font-family: arial, sans-serif;
         margin: 0;
+        font-size: 150%;
 }
 
 input,
 button {
-        font-size: 2rem;
         min-height: var(--buttonSize);
 }
 
 label,
 a {
-        font-size: 2rem;
 }
 
 .ignore-sizing {
