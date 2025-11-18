@@ -33,8 +33,21 @@ exports.dashboard = async (req, res) => {
       account_type: req.session.user.account_type,
       accountNumber: req.session.user.account_number,
       currency: req.session.user.currency,
-      balance: req.session.user.balance
+      balance: req.session.user.balance,
+
+      // Optional but recommended:
+      transactions: [
+          { title: "Giant Supermarket", date: "2025-11-10", amount: -52.90 },
+          { title: "Salary", date: "2025-11-08", amount: 3200 },
+          { title: "GrabPay", date: "2025-11-06", amount: -14.50 }
+      ],
+
+      otherAccounts: [
+          { account_type: "Savings", account_number: "520012345678", balance: 2500 },
+          { account_type: "E-Wallet", account_number: "888899991111", balance: 80.25 }
+      ]
   });
+
 
   } catch (err) {
     console.error('Dashboard error:', err);

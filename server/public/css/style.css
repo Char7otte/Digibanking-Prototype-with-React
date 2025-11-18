@@ -486,3 +486,277 @@ body {
     color: var(--muted);
     margin-right: 6px;
 }
+
+/* ===== Multi-Account Cards ===== */
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.account-card {
+    border-radius: 20px;
+    padding: 20px;
+    color: white;
+    box-shadow: var(--shadow-soft);
+}
+
+.card-red { background: linear-gradient(135deg, #d7261e, #a10f0a); }
+.card-blue { background: linear-gradient(135deg, #216aff, #0b3ca8); }
+.card-purple { background: linear-gradient(135deg, #a218ff, #5e0bb4); }
+
+.acc-title {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.acc-number {
+    font-size: 1rem;
+    margin-top: 4px;
+    opacity: 0.9;
+}
+
+.acc-label {
+    margin-top: 14px;
+    opacity: 0.8;
+}
+
+.acc-balance {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.acc-details {
+    margin-top: 12px;
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+}
+
+/* ===== Quick Actions ===== */
+
+.quick-actions-row {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    text-align: center;
+}
+
+.qa-item {
+    padding: 14px;
+    border-radius: 14px;
+    background: #fff7f7;
+    border: 1px dashed #fecaca;
+    color: var(--primary-dark);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+/* ===== Spending Overview ===== */
+
+.chart-placeholder {
+    height: 180px;
+    border-radius: 14px;
+    background: #ffe9e7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+}
+
+/* ===== Monthly Summary ===== */
+
+.monthly-summary {
+    margin-top: 18px;
+    padding: 20px;
+}
+
+.summary-title { color: var(--muted); }
+.summary-amount { font-size: 1.4rem; font-weight: 600; }
+.summary-sub { font-size: 0.85rem; color: green; }
+
+/* ===== Transactions ===== */
+
+.tx-list {
+    list-style: none;
+    margin-top: 10px;
+}
+
+.tx-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.tx-item:last-child {
+    border-bottom: none;
+}
+
+.tx-amount.income { color: green; }
+.tx-amount.expense { color: red; }
+
+/* === CONSISTENT SPACING BETWEEN DASHBOARD GROUPS === */
+.dashboard section,
+.accounts-overview,
+.quick-actions,
+.monthly-summary,
+.transactions {
+    margin-top: 32px !important;
+}
+
+/* First section should not have extra margin */
+.dashboard-header {
+    margin-top: 0 !important;
+}
+
+/* Better spacing inside sections */
+.card,
+.account-card {
+    margin-bottom: 0;
+    padding: 24px;
+}
+
+/* ===== Transfer Page Styling ===== */
+
+.transfer-page {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.page-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+
+.page-subtitle {
+    color: var(--muted);
+    margin-bottom: 20px;
+}
+
+/* Tabs */
+.transfer-tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.transfer-tabs .tab {
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: #fff;
+    cursor: pointer;
+}
+
+.transfer-tabs .tab.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+/* Card */
+.transfer-card {
+    margin-top: 10px;
+    padding: 24px;
+}
+
+.transfer-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.icon-circle {
+    width: 40px;
+    height: 40px;
+    background: #ffe4e2;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1.2rem;
+}
+
+/* Inputs */
+.input,
+.input-select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #fafafa;
+    margin-bottom: 14px;
+}
+
+.input:focus,
+.input-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: #fff;
+}
+
+/* Buttons */
+.transfer-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.button.red {
+    background: var(--primary);
+    color: #fff;
+}
+
+.button.red:hover {
+    background: var(--primary-dark);
+}
+
+.button.outline {
+    border: 1px solid var(--border);
+    background: #fff;
+}
+
+/* ===== Recent Transfers ===== */
+
+.recent-transfers {
+    margin-top: 32px;
+    padding: 24px;
+}
+
+.recent-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.transfer-list {
+    margin-top: 16px;
+}
+
+.transfer-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.transfer-item:last-child {
+    border-bottom: none;
+}
+
+.amount-col {
+    text-align: right;
+}
+
+.amount {
+    font-weight: 600;
+}
+
+.small {
+    font-size: 0.85rem;
+}

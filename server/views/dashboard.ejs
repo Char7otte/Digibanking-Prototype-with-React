@@ -6,47 +6,104 @@
 </head>
 <body>
 
-    <%- include("partials/header", { user: user }) %>
+    <%- include("partials/header") %>
 
     <main class="page-container">
-        <section class="dashboard">
 
-            <div class="dashboard-header">
-                <div>
-                    <p class="label">Welcome back</p>
-                    <h2 class="user-name"><%= name %></h2>
-                </div>
-
-                <div class="dashboard-total">
-                    <p class="label">Total balance</p>
-                    <p class="amount">
-                        <%= currency %> <%= Number(balance || 0).toFixed(2) %>
-                    </p>
-                </div>
+        <!-- ===== Top Welcome Header ===== -->
+        <section class="dashboard-header">
+            <div>
+                <p class="label">Welcome back</p>
+                <h2 class="user-name"><%= name %></h2>
             </div>
 
-            <div class="grid grid-2">
-                <div class="card account-summary">
-                    <h3>Your account</h3>
+            <div class="dashboard-total">
+                <p class="label">Total balance</p>
+                <p class="amount"><%= currency %> <%= Number(balance).toFixed(2) %></p>
+            </div>
+        </section>
 
-                    <%- include("partials/accountCardComponent.ejs", {
-                        account_type: account_type,
-                        account_number: accountNumber,
-                        balance: balance,
-                        currency: currency
-                    }) %>
-                </div>
+        <!-- ===== Multi-Account Fancy Cards ===== -->
+        <section class="accounts-overview grid-3">
 
-                <div class="card quick-actions">
-                    <h3>Quick actions</h3>
-                    <div class="quick-actions-grid">
-                        <a href="/transfer" class="quick-action">Transfer</a>
-                        <a href="/profile" class="quick-action">Profile</a>
-                    </div>
-                </div>
+            <!-- Savings -->
+            <div class="account-card card-red">
+                <p class="acc-title">Savings Account</p>
+                <p class="acc-number">•••• <%= accountNumber.slice(-4) %></p>
+                <p class="acc-label">Available Balance</p>
+                <p class="acc-balance">SGD <%= Number(balance).toFixed(2) %></p>
+                <a class="acc-details" href="#">View Details →</a>
+            </div>
+
+            <!-- Current Account -->
+            <div class="account-card card-blue">
+                <p class="acc-title">Current Account</p>
+                <p class="acc-number">•••• 3721</p>
+                <p class="acc-label">Available Balance</p>
+                <p class="acc-balance">SGD 8,950.25</p>
+                <a class="acc-details" href="#">View Details →</a>
+            </div>
+
+            <!-- Credit Card -->
+            <div class="account-card card-purple">
+                <p class="acc-title">Credit Card</p>
+                <p class="acc-number">•••• 8904</p>
+                <p class="acc-label">Available Credit</p>
+                <p class="acc-balance">SGD 15,420.00</p>
+                <a class="acc-details" href="#">View Details →</a>
             </div>
 
         </section>
+
+        <!-- ===== Quick Actions ===== -->
+        <section class="quick-actions card">
+            <h3>Quick Actions</h3>
+
+            <div class="quick-actions-row">
+                <a class="qa-item" href="/transfer">Transfer</a>
+                <a class="qa-item" href="#">Pay Bills</a>
+                <a class="qa-item" href="#">Cards</a>
+                <a class="qa-item" href="#">Mobile Top-up</a>
+                <a class="qa-item" href="#">Statements</a>
+                <a class="qa-item" href="#">Deposits</a>
+            </div>
+        </section>
+
+        <!-- ===== Monthly Summary ===== -->
+        <section class="monthly-summary card">
+            <p class="summary-title">This Month</p>
+            <p class="summary-amount">$3,124</p>
+            <p class="summary-sub">↑ 12% less than last month</p>
+
+            <hr />
+
+            <p class="summary-title">Total Balance</p>
+            <p class="summary-amount">$33,530</p>
+            <p class="summary-sub">↑ 5.2% growth</p>
+        </section>
+
+        <!-- ===== Recent Transactions ===== -->
+        <section class="transactions card">
+            <h3>Recent Transactions</h3>
+
+            <ul class="tx-list">
+                <li class="tx-item">
+                    <span>Salary Credit</span>
+                    <span class="tx-amount income">+ $5500.00</span>
+                </li>
+
+                <li class="tx-item">
+                    <span>Amazon Shopping</span>
+                    <span class="tx-amount expense">- $124.99</span>
+                </li>
+
+                <li class="tx-item">
+                    <span>Starbucks Coffee</span>
+                    <span class="tx-amount expense">- $8.50</span>
+                </li>
+            </ul>
+        </section>
+
     </main>
 
     <%- include("partials/accessibilityComponent.ejs") %>

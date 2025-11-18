@@ -30,10 +30,12 @@ router.get('/transfer', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
 
   res.render('transfer', {
+    user: req.session.user,
     error: null,
-    user: req.session.user
+    success: null    // <-- THIS WAS MISSING
   });
 });
+
 
 // ✅ ADD TRANSFER ACTION
 router.post('/transfer', transferController.transfer);
