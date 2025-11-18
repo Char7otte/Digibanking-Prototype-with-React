@@ -1,18 +1,15 @@
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
-// const sql = require("mssql");
-// const dotenv = require("dotenv");
-
-// dotenv.config();
+require('dotenv').config();
+const { getPool } = require('./db');
+const authController = require('./api-mvc/controllers/authController');
 
 const app = express();
 const port = process.env.PORT || 8080;
-const corsOptions = {
-    origin: ["http://localhost:5173"],
-};
 
-app.use(cors(corsOptions));
+// Allow local client during development
+app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -28,13 +25,26 @@ app.get("/dashboard", (req, res) => {
     res.render("dashboard");
 });
 
+// auth routes (handled in controller)
+app.post('/api/register', authController.register);
+app.post('/api/login', authController.login);
+
 app.listen(port, () => {
     console.log("Server running on port " + port);
 });
 
-// process.on("SIGINT", async () => {
-//     console.log("Server is gracefully shutting down");
-//     await sql.close();
-//     console.log("Database connections closed");
-//     process.exit(0);
-// });
+// Graceful shutdown: close DB pool when process exits
+async function closePoolAndExit(signal) {
+    console.log(`Server is gracefully shutting down (${signal})`);
+    try {
+        const pool = await getPool();
+        await pool.close();
+        console.log('Database pool closed');
+    } catch (e) {
+        // ignore shutdown errors
+    }
+    process.exit(0);
+}
+
+process.on('SIGINT', () => closePoolAndExit('SIGINT'));
+process.on('SIGTERM', () => closePoolAndExit('SIGTERM'));
