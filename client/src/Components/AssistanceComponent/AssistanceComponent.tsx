@@ -17,14 +17,29 @@ function AssistanceComponent() {
     const [elementDistance, setElementDistance] = useState(16);
 
     function handleDistanceChange(e: ChangeEvent<HTMLInputElement>) {
-        setElementDistance(parseInt(e.target.value));
+        const distance = e.target.value;
+        setElementDistance(parseInt(distance));
+        localStorage.setItem("elementDistance", distance);
     }
 
-    const [buttonSize, setbuttonSize] = useState(50);
+    const [buttonSize, setButtonSize] = useState(50);
 
     function handlebuttonSizeChange(e: ChangeEvent<HTMLInputElement>) {
-        setbuttonSize(parseInt(e.target.value));
+        const size = e.target.value;
+        setButtonSize(parseInt(size));
+        localStorage.setItem("buttonSize", size);
     }
+
+    useEffect(() => {
+        const localElementDistance = localStorage.getItem("elementDistance");
+        if (localElementDistance != null) {
+            setElementDistance(parseInt(localElementDistance));
+        }
+        const localButtonSize = localStorage.getItem("buttonSize");
+        if (localButtonSize != null) {
+            setButtonSize(parseInt(localButtonSize));
+        }
+    }, []);
 
     useEffect(() => {
         document.documentElement.style.setProperty("--spacing", elementDistance + "px");
@@ -42,13 +57,13 @@ function AssistanceComponent() {
                 Assistance♿
             </button>
             <ReactModal isOpen={isOpen} onRequestClose={closeModal}>
-                <label>
+                <label className={styles.label}>
                     Distance between buttons: <strong>{elementDistance}</strong>
                 </label>
                 <br />
                 <input type="range" className={styles.rangeInput} min="16" max="48" onChange={handleDistanceChange} value={elementDistance} />
                 <hr />
-                <label>
+                <label className={styles.label}>
                     Button size: <strong>{buttonSize}</strong>
                 </label>
                 <input type="range" className={styles.rangeInput} min="50" max="150" onChange={handlebuttonSizeChange} value={buttonSize} />
