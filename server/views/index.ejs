@@ -1,0 +1,43 @@
+<%
+var bodyContent = `
+<section class="hero hero-ocbc">
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <h1>Bank with confidence, anywhere</h1>
+      <p>Manage your accounts, track spending, and transfer funds instantly with OCBC Digital Banking.</p>
+      <div class="hero-cta">
+        <a href="/login" class="button primary large">Log in</a>
+        <a href="/register" class="button ghost large">Open an account</a>
+      </div>
+    </div>
+
+    <div class="hero-image">
+      <div class="phone-frame">
+        <div class="phone-status-bar"></div>
+        <div class="phone-screen">
+          <div class="phone-balance-label">Current Account</div>
+          <div class="phone-balance-amount">$4,250.80</div>
+          <div class="phone-balance-sub">Ending • 5678</div>
+          <div class="phone-actions">
+            <span>Pay</span>
+            <span>Transfer</span>
+            <span>Scan & Pay</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features container">
+  <h2 class="section-title">What you can do</h2>
+  <div class="grid grid-3">
+    <div class="card"><h3>View Accounts</h3><p>See all your balances in one place.</p></div>
+    <div class="card"><h3>Instant Transfers</h3><p>FAST and PayNow transfers anytime.</p></div>
+    <div class="card"><h3>Insights</h3><p>Track spending and upcoming bills.</p></div>
+  </div>
+</section>
+`;
+%>
+
+<%- include('layout', { title: "OCBC Digital - Home", body: bodyContent }) %>

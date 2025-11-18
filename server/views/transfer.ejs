@@ -1,0 +1,27 @@
+<%
+var bodyContent = `
+<div class="card auth-card">
+  <h2>Transfer Funds</h2>
+
+  \\<% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-error">\\<%= error %></div>
+  \\<% } %>
+
+  <form action="/transfer" method="POST" class="form">
+      <label for="recipient">Recipient Account Number</label>
+      <input id="recipient" type="text" name="recipient" required>
+
+      <label for="amount">Amount</label>
+      <input id="amount" type="number" step="0.01" name="amount" required>
+
+      <button type="submit" class="button primary full">Send Money</button>
+  </form>
+
+  <p class="auth-meta">
+      <a href="/dashboard" class="link-primary">Back to dashboard</a>
+  </p>
+</div>
+`;
+%>
+
+<%- include('layout', { title: "Transfer - OCBC Digital", body: bodyContent }) %>

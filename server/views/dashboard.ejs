@@ -1,0 +1,46 @@
+<%
+var bodyContent = `
+<section class="dashboard">
+
+  <div class="dashboard-header">
+    <div>
+      <p class="label">Welcome back</p>
+      <h2 class="user-name">\\<%= user?.name %></h2>
+    </div>
+
+    <div class="dashboard-total">
+      <p class="label">Total balance</p>
+      <p class="amount">$\\<%= user?.balance %></p>
+    </div>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card account-summary">
+      <h3>Your accounts</h3>
+      <ul class="account-list">
+        \\<% user?.accounts?.forEach(acc => { %>
+          <li class="account-item">
+            <div>
+              <p class="account-type">\\<%= acc.type %></p>
+              <p class="account-number">\\<%= acc.number %></p>
+            </div>
+            <p class="account-balance">$\\<%= acc.balance %></p>
+          </li>
+        \\<% }); %>
+      </ul>
+    </div>
+
+    <div class="card quick-actions">
+      <h3>Quick actions</h3>
+      <div class="quick-actions-grid">
+        <a href="/transfer" class="quick-action">Transfer</a>
+        <a href="/profile" class="quick-action">Profile</a>
+      </div>
+    </div>
+  </div>
+
+</section>
+`;
+%>
+
+<%- include('layout', { title: "Dashboard - OCBC Digital", body: bodyContent }) %>

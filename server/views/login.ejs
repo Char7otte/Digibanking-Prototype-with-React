@@ -1,0 +1,22 @@
+<div class="card auth-card">
+  <h2>Log in to OCBC Digital</h2>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
+
+  <form action="/login" method="POST" class="form">
+      <label for="email">Email</label>
+      <input id="email" type="email" name="email" required>
+
+      <label for="password">Password</label>
+      <input id="password" type="password" name="password" required>
+
+      <button type="submit" class="button primary full">Log in</button>
+  </form>
+
+  <p class="auth-meta">
+      New to OCBC Digital?
+      <a href="/register" class="link-primary">Open an account</a>
+  </p>
+</div>
