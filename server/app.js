@@ -20,7 +20,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("", (req, res) => {
-    res.json({ fruits: ["Apple", "Banana"] });
+    res.render("./login");
+});
 });
 
 app.listen(port, () => {
