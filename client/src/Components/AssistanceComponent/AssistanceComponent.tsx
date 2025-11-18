@@ -20,7 +20,7 @@ function AssistanceComponent() {
         setElementDistance(parseInt(e.target.value));
     }
 
-    const [buttonSize, setbuttonSize] = useState(50);
+    const [buttonSize, setButtonSize] = useState(50);
 
     function handlebuttonSizeChange(e: ChangeEvent<HTMLInputElement>) {
         setbuttonSize(parseInt(e.target.value));
