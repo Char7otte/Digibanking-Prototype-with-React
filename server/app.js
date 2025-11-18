@@ -28,6 +28,18 @@ app.get("/dashboard", (req, res) => {
     res.render("dashboard");
 });
 
+app.get("/transaction/1", (req, res) => {
+    res.render("transaction-step1");
+});
+
+app.get("/transaction/2", (req, res) => {
+    res.render("transaction-step2");
+});
+
+app.get("/transaction/3", (req, res) => {
+    res.render("transaction-step3");
+});
+
 app.listen(port, () => {
     console.log("Server running on port " + port);
 });

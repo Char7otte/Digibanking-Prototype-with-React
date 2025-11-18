@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include("partials/head.ejs") %>
+        <title>Transaction</title>
+    </head>
+    <body>
+        <%- include("partials/assistantComponent.ejs") %>
+        <main class="m-2">
+            <section>
+                <h1>Transfer money</h1>
+                <section class="d-flex justify-content-center">
+                    <!-- I have no idea, but it has to be h2 & button to get the desired text centering. Probably something to do with display-inline. -->
+                    <h2><button class="border border-2 rounded-circle p-2 no-pointer highlighted-step ignore-sizing">1</button></h2>
+                    <span>...</span>
+                    <h2><button class="border border-2 rounded-circle p-2 no-pointer highlighted-step ignore-sizing">2</button></h2>
+                    <span>...</span>
+                    <h2><button class="border border-2 rounded-circle p-2 important-button no-pointer highlighted-step ignore-sizing">3</button></h2>
+                </section>
+                <h2>How much do you want to transfer to Jerry Tan?</h2>
+                <form action="/dashboard" id="submit-transaction-form">
+                    <!-- Need its own class for spacing-md to avoid messing with Bootstrap's classes -->
+                    <div class="spacing-md">
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="text" name="amount" id="amount" placeholder="Transfer amount" class="form-control" />
+                        </div>
+                    </div>
+                    <button type="submit" class="w-100 spacing-md">Confirm</button>
+                </form>
+            </section>
+        </main>
+        <%- include("partials/accessibilityComponent.ejs") %>
+        <script>
+            const submitTransactionForm = document.querySelector("#submit-transaction-form");
+            submitTransactionForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                alert("Sent!");
+                window.location.href = "/dashboard";
+            });
+        </script>
+    </body>
+</html>

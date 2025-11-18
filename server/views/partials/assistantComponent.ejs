@@ -1,0 +1,10 @@
+<div class="d-flex justify-content-center"><button class="help-button w-100 m-2" id="help-button">Assistance</button></div>
+<script>
+    const helpButton = document.querySelector("#help-button");
+    helpButton.addEventListener("click", (e) => {
+        //Generate 6 digit OTP
+        const password = Math.floor(Math.random() * (999999 - 100000) + 100000);
+        console.log(password);
+        alert(password);
+    });
+</script>
