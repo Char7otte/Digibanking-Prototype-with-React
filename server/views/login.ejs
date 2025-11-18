@@ -1,22 +1,41 @@
-<div class="card auth-card">
-  <h2>Log in to OCBC Digital</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("partials/head.ejs") %>
+    <title>Log in</title>
+</head>
+<body>
+<main class="d-flex flex-column justify-content-center align-items-center overflow-auto" style="min-height: 100vh">
 
-  <% if (typeof error !== 'undefined' && error) { %>
-    <div class="alert alert-error"><%= error %></div>
-  <% } %>
+    <form action="/dashboard">
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" placeholder="Enter your username" class="spacing-md" />
+        </div>
 
-  <form action="/login" method="POST" class="form">
-      <label for="email">Email</label>
-      <input id="email" type="email" name="email" required>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" placeholder="Enter your password" class="spacing-md" />
+        </div>
 
-      <label for="password">Password</label>
-      <input id="password" type="password" name="password" required>
+        <a href="#" class="spacing-md">Forgot password?</a>
 
-      <button type="submit" class="button primary full">Log in</button>
-  </form>
+        <button type="submit" class="spacing-md w-100">Login</button>
+    </form>
 
-  <p class="auth-meta">
-      New to OCBC Digital?
-      <a href="/register" class="link-primary">Open an account</a>
-  </p>
-</div>
+    <hr />
+
+    <form action="/dashboard" class="flex flex-column">
+        <div>
+            <label for="otp">Assistance password:</label>
+            <input type="text" name="otp" id="otp" placeholder="Assistance OTP" class="spacing-md" />
+        </div>
+
+        <button class="w-100">Assist</button>
+    </form>
+
+</main>
+
+<%- include("partials/accessibilityComponent.ejs") %>
+</body>
+</html>

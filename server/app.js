@@ -6,54 +6,85 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const expressLayouts = require('express-ejs-layouts');
 const session = require('express-session');
-// const mongoose = require('mongoose');   // Mongo disabled
+const cors = require('cors');
+require('dotenv').config();
 
-// ===== TEMP: MONGO DISABLED =====
-// mongoose.connect("mongodb://127.0.0.1:27017/ocbc", {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true
-// })
-// .then(() => console.log("MongoDB connected"))
-// .catch(err => console.error(err));
+// Google Cloud SQL controllers (main branch)
+const { getPool } = require('./db');
+const authController = require('./api-mvc/controllers/authController');
+const accountsController = require('./api-mvc/controllers/accountsController');
+const { requireAuth } = require('./api-mvc/middlewares/authMiddleware');
+
+// Local EJS routes (HEAD branch)
+const mainRoutes = require("./routes/index");
 
 const app = express();
+const PORT = process.env.PORT || 8080;
 
-// ===== View Engine =====
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-app.use(expressLayouts);
-app.set('layout', 'layout');
+// =========================
+// MIDDLEWARE
+// =========================
 
-// ===== Security, Logging, Static =====
+// Security + logging
 app.use(helmet());
 app.use(morgan('dev'));
+
+// Allow client (React or other local frontend)
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+
+// Static files for EJS frontend
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ===== Body Parsers (MUST be before routes) =====
+// Body parsers
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// ===== Sessions (MUST be before routes) =====
+// Sessions (needed for EJS auth prototype)
 app.use(
   session({
-    secret: "supersecretkey", // change later
+    secret: "supersecretkey",
     resave: false,
     saveUninitialized: true,
     cookie: {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 // 1 hour
+      maxAge: 1000 * 60 * 60
     }
   })
 );
 
-// ===== Routes =====
-const mainRoutes = require("./routes/index");
+// =========================
+// VIEW ENGINE (EJS)
+// =========================
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+app.use(expressLayouts);
+app.set('layout', 'layout');
+
+// =========================
+// FRONTEND ROUTES (EJS)
+// =========================
 app.use("/", mainRoutes);
 
-// ===== 404 Handler =====
+// =========================
+// GOOGLE CLOUD SQL API ROUTES
+// =========================
+
+// Authentication API
+app.post('/api/register', authController.register);
+app.post('/api/login', authController.login);
+
+// Protected API endpoints
+app.get('/api/accounts', requireAuth, accountsController.getAll);
+app.get('/api/me', requireAuth, accountsController.getMe);
+
+// =========================
+// ERROR HANDLERS
+// =========================
+
+// 404
 app.use((req, res) => {
   res.status(404).render('layout', {
     title: 'Not found',
@@ -65,7 +96,7 @@ app.use((req, res) => {
   });
 });
 
-// ===== Error Handler =====
+// 500
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
   res.status(500).render('layout', {
@@ -78,8 +109,24 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ===== Start Server =====
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () =>
-  console.log(`Listening on http://localhost:${PORT}`)
-);
+// =========================
+// START SERVER
+// =========================
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
+
+// =========================
+// GRACEFUL SHUTDOWN (SQL)
+// =========================
+async function closePoolAndExit(signal) {
+  console.log(`Shutting down (${signal})...`);
+  try {
+    const pool = await getPool();
+    await pool.close();
+    console.log('Database pool closed');
+  } catch (e) {}
+  process.exit(0);
+}
+
+process.on('SIGINT', () => closePoolAndExit('SIGINT'));

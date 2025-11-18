@@ -1,0 +1,50 @@
+<dialog>
+    <label> Distance between buttons: <strong id="accessibilityElementDistanceText">0</strong> </label>
+    <br />
+    <input type="range" min="16" max="48" class="w-100" id="accessibilityElementDistanceInput" />
+    <hr />
+    <label> Button size: <strong id="accessibilityButtonSizeText">0</strong> </label>
+    <input type="range" min="50" max="150" class="w-100" id="accessibilityButtonSizeInput" />
+    <div class="d-flex justify-content-center"><button autofocus class="w-100">Close</button></div>
+</dialog>
+<button style="position: fixed; bottom: 0; right: 0" class="important-button">Accessibility♿</button>
+<script>
+    const dialog = document.querySelector("dialog");
+    const showButton = document.querySelector("dialog + button");
+    const closeButton = document.querySelector("dialog button");
+
+    showButton.addEventListener("click", () => {
+        dialog.showModal();
+    });
+
+    closeButton.addEventListener("click", () => {
+        dialog.close();
+    });
+
+    const elementDistanceInput = document.querySelector("#accessibilityElementDistanceInput");
+    const elementDistanceText = document.querySelector("#accessibilityElementDistanceText");
+    const buttonSizeInput = document.querySelector("#accessibilityButtonSizeInput");
+    const buttonSizeText = document.querySelector("#accessibilityButtonSizeText");
+
+    const localElementDistance = localStorage.getItem("elementDistance");
+    elementDistanceText.innerText = localElementDistance || 16;
+    elementDistanceInput.value = localElementDistance || 16;
+
+    const localButtonSize = localStorage.getItem("buttonSize");
+    buttonSizeText.innerText = localButtonSize || 50;
+    buttonSizeInput.value = localButtonSize || 50;
+
+    elementDistanceInput.addEventListener("change", (e) => {
+        const value = e.target.value;
+        elementDistanceText.innerText = value;
+        localStorage.setItem("elementDistance", value);
+        document.documentElement.style.setProperty("--spacing", value + "px");
+    });
+
+    buttonSizeInput.addEventListener("change", (e) => {
+        const value = e.target.value;
+        buttonSizeText.innerText = value;
+        localStorage.setItem("buttonSize", value);
+        document.documentElement.style.setProperty("--buttonSize", value + "px");
+    });
+</script>
