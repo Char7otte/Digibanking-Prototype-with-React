@@ -14,7 +14,7 @@ function LoginComponent() {
                     Forgot password?
                 </a>
 
-                <Link to={"/dashboard"}>
+                <Link to="/dashboard">
                     <button type="submit" className={styles.loginButton}>
                         Login
                     </button>
