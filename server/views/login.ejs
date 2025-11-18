@@ -5,7 +5,7 @@
         <title>Log in</title>
     </head>
     <body>
-        <div class="d-flex flex-column justify-content-center align-items-center vh-100">
+        <main class="d-flex flex-column justify-content-center align-items-center vh-100">
             <form action="/dashboard">
                 <div>
                     <label for="username">Username:</label>
@@ -15,9 +15,7 @@
                     <label for="username">Password:</label>
                     <input type="text" name="username" id="username" placeholder="Enter your password" class="spacing-md" />
                 </div>
-                <div>
-                    <a href="" class="spacing-md"> Forgot password? </a>
-                </div>
+                <a href="" class="spacing-md"> Forgot password? </a>
                 <button type="submit" class="spacing-md w-100">Login</button>
             </form>
             <hr />
@@ -28,7 +26,7 @@
                 </div>
                 <button class="w-100">Assist</button>
             </form>
-        </div>
+        </main>
         <%- include("partials/accessibilityComponent.ejs") %>
     </body>
 </html>
