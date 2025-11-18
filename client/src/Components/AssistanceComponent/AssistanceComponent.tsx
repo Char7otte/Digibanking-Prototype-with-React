@@ -17,14 +17,29 @@ function AssistanceComponent() {
     const [elementDistance, setElementDistance] = useState(16);
 
     function handleDistanceChange(e: ChangeEvent<HTMLInputElement>) {
-        setElementDistance(parseInt(e.target.value));
+        const distance = e.target.value;
+        setElementDistance(parseInt(distance));
+        localStorage.setItem("elementDistance", distance);
     }
 
     const [buttonSize, setButtonSize] = useState(50);
 
     function handlebuttonSizeChange(e: ChangeEvent<HTMLInputElement>) {
-        setbuttonSize(parseInt(e.target.value));
+        const size = e.target.value;
+        setButtonSize(parseInt(size));
+        localStorage.setItem("buttonSize", size);
     }
+
+    useEffect(() => {
+        const localElementDistance = localStorage.getItem("elementDistance");
+        if (localElementDistance != null) {
+            setElementDistance(parseInt(localElementDistance));
+        }
+        const localButtonSize = localStorage.getItem("buttonSize");
+        if (localButtonSize != null) {
+            setButtonSize(parseInt(localButtonSize));
+        }
+    }, []);
 
     useEffect(() => {
         document.documentElement.style.setProperty("--spacing", elementDistance + "px");
