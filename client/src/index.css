@@ -29,6 +29,10 @@ body {
   font-family: arial, sans-serif;
 }
 
+a {
+  text-decoration: none;
+}
+
 #root {
   font-size: 2rem;
   margin: 0;
