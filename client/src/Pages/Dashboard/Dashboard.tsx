@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styles from "./Dashboard.module.css";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 import AssistanceComponent from "../../Components/AssistanceComponent/AssistanceComponent";
@@ -36,7 +37,11 @@ function Dashboard() {
             <section>
                 <h2 className={styles.myAccountsTitle}>What would you like to do?</h2>
                 <div className={styles.buttonContainer}>
-                    <button className="spacing-md important-button">Transfer Money</button>
+                    <Link to={"/transaction"}>
+                        <button type="submit" className="spacing-md important-button">
+                            Transfer Money
+                        </button>
+                    </Link>
                     <button className="spacing-md">Pay Bills</button>
                     <button className={styles.lastButtonOfDiv}>View Transactions</button>
                 </div>
