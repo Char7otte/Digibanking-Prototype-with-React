@@ -27,3 +27,7 @@ a {
 .ignore-sizing {
         min-height: 0;
 }
+
+.important-button {
+        background-color: hsl(0, 100%, 41%);
+}
