@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include("partials/head.ejs") %>
+        <title>Dashboard</title>
+    </head>
+    <body>
+        <main class="m-2">
+            <h1 class="text-center">Welcome back,<br />{name}</h1>
+            <hr />
+            <section>
+                <h2>What would you like to do?</h2>
+                <button class="spacing-md w-100 important-button">Transfer Money</button>
+                <button class="spacing-md w-100">Pay Bills</button>
+                <button class="spacing-md w-100">View Transactions</button>
+            </section>
+            <hr />
+            <section>
+                <h2>My Accounts</h2>
+                <!-- why prettier why -->
+                <%- include("partials/accountCardComponent.ejs")%> <%- include("partials/accountCardComponent.ejs")%>
+                <%-include("partials/accountCardComponent.ejs")%>
+            </section>
+        </main>
+        <%- include("partials/accessibilityComponent.ejs") %>
+    </body>
+</html>
