@@ -1,3 +1,21 @@
 <footer class="footer">
     <p>© <%= new Date().getFullYear() %> OCBC Digital Banking. All rights reserved.</p>
 </footer>
+
+<!-- Tutorial system containers -->
+<div id="tutorial-overlay" class="hidden"></div>
+
+<div id="tutorial-modal" class="hidden">
+    <div class="tutorial-content">
+        <h3>What would you like to learn?</h3>
+
+        <button class="tutorial-option" data-tutorial="transfer">💸 How to transfer money</button>
+        <button class="tutorial-option" data-tutorial="profile">👤 How to see your profile</button>
+        <button class="tutorial-option" data-tutorial="paybills">🧾 How to pay bills</button>
+
+        <button class="tutorial-close">❌ Close</button>
+    </div>
+</div>
+
+<div id="tutorial-highlight" class="hidden"></div>
+<div id="tutorial-step-box" class="hidden"></div>

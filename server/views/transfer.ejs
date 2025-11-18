@@ -5,10 +5,10 @@ var bodyContent = `
     <h1 class='page-title'>Transfer Money</h1>
     <p class='page-subtitle'>Send money to your own accounts or others</p>
 
+    <!-- Tabs: Local vs Overseas only -->
     <div class='transfer-tabs'>
-        <button class='tab active'>Own Account</button>
-        <button class='tab'>Local Transfer</button>
-        <button class='tab'>Overseas</button>
+        <button class='tab active' data-mode="local">Local Transfer</button>
+        <button class='tab' data-mode="overseas">Overseas Transfer</button>
     </div>
 
     <div class='card transfer-card'>
@@ -37,11 +37,30 @@ var bodyContent = `
             <label>To Account</label>
             <input type="text" name="recipient" class="input" placeholder="Enter account number" required>
 
-            <label>Amount (SGD)</label>
+            <label>Amount</label>
             <input type="number" name="amount" class="input" step="0.01" required>
 
             <label>Remarks (Optional)</label>
             <input type="text" name="remarks" class="input" placeholder="Add a note">
+
+            <!-- Extra fields for OVERSEAS transfers -->
+            <div class="overseas-fields" style="display:none; margin-top:8px;">
+                <label>Destination Country</label>
+                <select class="input-select" name="country">
+                    <option value="MY">Malaysia</option>
+                    <option value="ID">Indonesia</option>
+                    <option value="CN">China</option>
+                    <option value="TH">Thailand</option>
+                </select>
+
+                <label>Currency</label>
+                <select class="input-select" name="currency">
+                    <option value="MYR">MYR – Malaysian Ringgit</option>
+                    <option value="IDR">IDR – Indonesian Rupiah</option>
+                    <option value="CNY">CNY – Chinese Yuan</option>
+                    <option value="THB">THB – Thai Baht</option>
+                </select>
+            </div>
 
             <div class='transfer-buttons'>
                 <button type="submit" class="button red full">Transfer Now</button>
@@ -94,7 +113,32 @@ var bodyContent = `
     </div>
 
 </div>
+
+<button id="tutorial-btn" class="tutorial-button">🧭 Tutorial</button>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var tabs = document.querySelectorAll('.transfer-tabs .tab');
+    var overseasFields = document.querySelector('.overseas-fields');
+
+    if (!tabs.length || !overseasFields) return;
+
+    tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            tabs.forEach(function (t) { t.classList.remove('active'); });
+            this.classList.add('active');
+
+            var mode = this.getAttribute('data-mode');
+            if (mode === 'overseas') {
+                overseasFields.style.display = 'block';
+            } else {
+                overseasFields.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
 `;
 %>
 
-<%- include("layout", { title: "Transfer Money", body: bodyContent }) %>
+<%- include("layout", { title: "Transfer Money", body: bodyContent, user: user, error: error, success: success }) %>

@@ -12,7 +12,9 @@ var bodyContent = `
       <a href="/dashboard" class="back-button">Back to dashboard</a>
   </p>
 </div>
+
+<button id="tutorial-btn" class="tutorial-button">🧭 Tutorial</button>
 `;
 %>
 
-<%- include("layout", { title: "My Profile", body: bodyContent }) %>
+<%- include("layout", { title: "My Profile", body: bodyContent, user: user }) %>

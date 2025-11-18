@@ -1,8 +1,16 @@
 const { getPool, sql } = require("../../db");
 
+// Simple FX rate table (SGD → foreign)
+const exchangeRates = {
+    "MYR": 3.5,   // 1 SGD = 3.5 MYR
+    "IDR": 11500, // 1 SGD = 11500 IDR
+    "CNY": 5.2,   // 1 SGD = 5.2 CNY
+    "THB": 26.0   // 1 SGD = 26 THB
+};
+
 exports.transfer = async (req, res) => {
     try {
-        const { recipient, amount } = req.body;
+        const { recipient, amount, country, currency } = req.body;
         const sender = req.session.user;
 
         if (!sender) return res.redirect("/login");
@@ -10,7 +18,7 @@ exports.transfer = async (req, res) => {
         if (!recipient || !amount) {
             return res.render("transfer", {
                 user: sender,
-                error: "Please fill in all fields.",
+                error: "Please fill in all required fields.",
                 success: null
             });
         }
@@ -26,7 +34,7 @@ exports.transfer = async (req, res) => {
 
         const pool = await getPool();
 
-        // 1️⃣ Check recipient account
+        // Check recipient account
         const recResult = await pool.request()
             .input("acc", sql.VarChar(50), recipient)
             .query(`
@@ -44,7 +52,7 @@ exports.transfer = async (req, res) => {
             });
         }
 
-        // 2️⃣ Check sender available balance
+        // Refresh sender's balance
         const senderResult = await pool.request()
             .input("id", sql.Int, sender.id)
             .query(`
@@ -54,54 +62,116 @@ exports.transfer = async (req, res) => {
 
         const senderDB = senderResult.recordset[0];
 
-        if (!senderDB || senderDB.balance < amt) {
+        if (!senderDB) {
             return res.render("transfer", {
                 user: sender,
-                error: "Insufficient balance.",
+                error: "Unable to fetch sender account.",
                 success: null
             });
         }
 
-        // 3️⃣ Perform transfer using transaction
+        /** ====================================================
+         *  LOCAL TRANSFER LOGIC (SGD → SGD)
+         * ==================================================== */
+        let isOverseas = Boolean(country && currency);
+        let debitAmountSGD = amt;           // amount deducted from sender
+        let creditAmountForeign = amt;      // amount added to recipient
+
+        if (isOverseas) {
+            // Validate currency
+            if (!exchangeRates[currency]) {
+                return res.render("transfer", {
+                    user: sender,
+                    error: "Unsupported currency for overseas transfer.",
+                    success: null
+                });
+            }
+
+            const rate = exchangeRates[currency];
+
+            // Convert SGD → foreign currency
+            creditAmountForeign = amt * rate;
+            debitAmountSGD = amt; // sender input is always SGD
+
+            if (senderDB.balance < debitAmountSGD) {
+                return res.render("transfer", {
+                    user: sender,
+                    error: "Insufficient balance for overseas transfer.",
+                    success: null
+                });
+            }
+
+        } else {
+            // Local transfer (SGD only)
+            if (senderDB.balance < amt) {
+                return res.render("transfer", {
+                    user: sender,
+                    error: "Insufficient balance.",
+                    success: null
+                });
+            }
+        }
+
+        /** ====================================================
+         *  PERFORM TRANSACTION
+         * ==================================================== */
         const transaction = new sql.Transaction(pool);
         await transaction.begin();
 
         try {
             const request = new sql.Request(transaction);
 
-            // Deduct from sender
+            // Deduct from sender (SGD only)
             await request
                 .input("sid", sql.Int, sender.id)
-                .input("amt", sql.Decimal(18, 2), amt)
+                .input("deduct", sql.Decimal(18, 2), debitAmountSGD)
                 .query(`
                     UPDATE UsersAccounts 
-                    SET balance = balance - @amt 
+                    SET balance = balance - @deduct 
                     WHERE id = @sid
                 `);
 
-            // Add to recipient
+            // Credit to recipient (SGD or Foreign)
             await request
                 .input("racc", sql.VarChar(50), recipient)
-                .input("amt2", sql.Decimal(18, 2), amt)
+                .input("credit", sql.Decimal(18, 2), creditAmountForeign)
                 .query(`
                     UPDATE UsersAccounts 
-                    SET balance = balance + @amt2 
+                    SET balance = balance + @credit 
                     WHERE account_number = @racc
                 `);
 
             await transaction.commit();
         } catch (err) {
             await transaction.rollback();
+            console.error("Transfer SQL error:", err);
             throw err;
         }
 
-        // 4️⃣ Update session balance
-        sender.balance = senderDB.balance - amt;
+        // Update session balance
+        sender.balance = senderDB.balance - debitAmountSGD;
+
+        /** ====================================================
+         *  SUCCESS MESSAGE
+         * ==================================================== */
+        let msg = "";
+
+        if (isOverseas) {
+            msg = `
+                Successfully sent SGD $${debitAmountSGD.toFixed(2)} 
+                to ${recipientUser.first_name}.<br/>
+                Converted to <strong>${currency}</strong>: 
+                ${creditAmountForeign.toFixed(2)}.<br/>
+                Destination Country: <strong>${country}</strong>.
+            `;
+        } else {
+            msg = `Successfully transferred $${amt.toFixed(2)} to ${recipientUser.first_name}.`;
+        }
 
         return res.render("transfer", {
             user: sender,
             error: null,
-            success: `Successfully transferred $${amt.toFixed(2)} to ${recipientUser.first_name}.`
+            success: msg
         });
 
     } catch (err) {
