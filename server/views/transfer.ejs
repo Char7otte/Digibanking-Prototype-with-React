@@ -3,9 +3,9 @@ var bodyContent = `
 <div class="card auth-card">
   <h2>Transfer Funds</h2>
 
-  \\<% if (typeof error !== 'undefined' && error) { %>
-    <div class="alert alert-error">\\<%= error %></div>
-  \\<% } %>
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
 
   <form action="/transfer" method="POST" class="form">
       <label for="recipient">Recipient Account Number</label>

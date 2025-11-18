@@ -5,12 +5,12 @@ var bodyContent = `
   <div class="dashboard-header">
     <div>
       <p class="label">Welcome back</p>
-      <h2 class="user-name">\\<%= user?.name %></h2>
+      <h2 class="user-name"><%= user?.name %></h2>
     </div>
 
     <div class="dashboard-total">
       <p class="label">Total balance</p>
-      <p class="amount">$\\<%= user?.balance %></p>
+      <p class="amount">$<%= user?.balance %></p>
     </div>
   </div>
 
@@ -18,15 +18,15 @@ var bodyContent = `
     <div class="card account-summary">
       <h3>Your accounts</h3>
       <ul class="account-list">
-        \\<% user?.accounts?.forEach(acc => { %>
+        <% user?.accounts?.forEach(acc => { %>
           <li class="account-item">
             <div>
-              <p class="account-type">\\<%= acc.type %></p>
-              <p class="account-number">\\<%= acc.number %></p>
+              <p class="account-type"><%= acc.type %></p>
+              <p class="account-number"><%= acc.number %></p>
             </div>
-            <p class="account-balance">$\\<%= acc.balance %></p>
+            <p class="account-balance">$<%= acc.balance %></p>
           </li>
-        \\<% }); %>
+        <% }); %>
       </ul>
     </div>
 
