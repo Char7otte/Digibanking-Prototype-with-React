@@ -25,7 +25,8 @@ app.get("", (req, res) => {
 });
 
 app.get("/dashboard", (req, res) => {
-    res.render("dashboard");
+    const { assistance } = req.query;
+    res.render("dashboard", { assistance });
 });
 
 app.get("/transaction/1", (req, res) => {

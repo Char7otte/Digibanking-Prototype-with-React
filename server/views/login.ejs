@@ -6,7 +6,8 @@
     </head>
     <body>
         <main class="d-flex flex-column justify-content-center align-items-center overflow-auto" style="min-height: 100vh">
-            <form action="/dashboard">
+            <form action="/dashboard" method="GET">
+                <input type="hidden" name="assistance" value="false" />
                 <div>
                     <label for="username">Username:</label>
                     <input type="text" name="username" id="username" placeholder="Enter your username" class="spacing-md" />
@@ -19,7 +20,8 @@
                 <button type="submit" class="spacing-md w-100">Login</button>
             </form>
             <hr />
-            <form action="/dashboard" class="flex flex-column">
+            <form action="/dashboard" class="flex flex-column" method="GET">
+                <input type="hidden" name="assistance" value="true" />
                 <div>
                     <label for="otp">Assistance password:</label>
                     <input type="text" name="otp" id="otp" placeholder="Assistance OTP" class="spacing-md" />

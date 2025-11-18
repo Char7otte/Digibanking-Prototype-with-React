@@ -40,3 +40,15 @@ a {
         height: 50px;
         cursor: default;
 }
+
+.overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 9999;
+        pointer-events: all;
+        cursor: not-allowed;
+        background-color: hsl(0, 0%, 0%);
+}
