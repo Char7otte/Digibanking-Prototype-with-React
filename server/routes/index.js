@@ -33,9 +33,11 @@ router.get('/transfer', (req, res) => {
   const user = req.session?.user || null;
   res.render('transfer', {
     title: 'Transfer - OCBC Digital',
-    user
+    user,
+    error: null
   });
 });
+
 
 // Transfer (action)
 router.post('/transfer', transferController.transfer);
