@@ -4,6 +4,8 @@ const cors = require("cors");
 require('dotenv').config();
 const { getPool } = require('./db');
 const authController = require('./api-mvc/controllers/authController');
+const accountsController = require('./api-mvc/controllers/accountsController');
+const { requireAuth } = require('./api-mvc/middlewares/authMiddleware');
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -28,6 +30,10 @@ app.get("/dashboard", (req, res) => {
 // auth routes (handled in controller)
 app.post('/api/register', authController.register);
 app.post('/api/login', authController.login);
+
+// protected endpoints
+app.get('/api/accounts', requireAuth, accountsController.getAll);
+app.get('/api/me', requireAuth, accountsController.getMe);
 
 app.listen(port, () => {
     console.log("Server running on port " + port);

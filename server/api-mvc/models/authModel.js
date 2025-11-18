@@ -35,4 +35,12 @@ async function verifyPassword(storedHash, password) {
   return bcrypt.compareSync(password, storedHash.toString());
 }
 
-module.exports = { findUserByUsername, createUser, verifyPassword };
+async function getUserById(id) {
+  const pool = await getPool();
+  const result = await pool.request()
+    .input('id', sql.Int, id)
+    .query('SELECT id, username, first_name, account_number, balance, account_type, currency FROM dbo.UsersAccounts WHERE id = @id');
+  return result.recordset[0];
+}
+
+module.exports = { findUserByUsername, createUser, verifyPassword, getUserById };
