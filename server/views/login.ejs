@@ -2,40 +2,51 @@
 <html lang="en">
 <head>
     <%- include("partials/head.ejs") %>
-    <title>Log in</title>
+    <title>Log in – OCBC Digital</title>
 </head>
 <body>
-<main class="d-flex flex-column justify-content-center align-items-center overflow-auto" style="min-height: 100vh">
 
-    <form action="/dashboard">
-        <div>
-            <label for="username">Username:</label>
-            <input type="text" name="username" id="username" placeholder="Enter your username" class="spacing-md" />
+    <%- include("partials/header") %>
+
+    <main class="page-container">
+        <div class="card auth-card">
+            <h2>Log in to OCBC Digital</h2>
+
+            <% if (typeof error !== 'undefined' && error) { %>
+                <div class="alert alert-error"><%= error %></div>
+            <% } %>
+
+            <form action="/login" method="POST" class="form">
+                <label for="username">Username</label>
+                <input
+                    id="username"
+                    type="text"
+                    name="username"
+                    required
+                />
+
+                <label for="password">Password</label>
+                <input
+                    id="password"
+                    type="password"
+                    name="password"
+                    required
+                />
+
+                <button type="submit" class="button primary full">
+                    Log in
+                </button>
+            </form>
+
+            <p class="auth-meta">
+                Don’t have an account?
+                <a href="/register" class="link-primary">Open an account</a>
+            </p>
         </div>
+    </main>
 
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" placeholder="Enter your password" class="spacing-md" />
-        </div>
+    <%- include("partials/accessibilityComponent.ejs") %>
+    <%- include("partials/footer") %>
 
-        <a href="#" class="spacing-md">Forgot password?</a>
-
-        <button type="submit" class="spacing-md w-100">Login</button>
-    </form>
-
-    <hr />
-
-    <form action="/dashboard" class="flex flex-column">
-        <div>
-            <label for="otp">Assistance password:</label>
-            <input type="text" name="otp" id="otp" placeholder="Assistance OTP" class="spacing-md" />
-        </div>
-
-        <button class="w-100">Assist</button>
-    </form>
-
-</main>
-
-<%- include("partials/accessibilityComponent.ejs") %>
 </body>
 </html>

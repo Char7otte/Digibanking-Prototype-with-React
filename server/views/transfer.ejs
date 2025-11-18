@@ -1,9 +1,17 @@
+<%
+var bodyContent = `
 <div class="card auth-card">
   <h2>Transfer Funds</h2>
 
-  <% if (typeof error !== 'undefined' && error) { %>
-    <div class="alert alert-error"><%= error %></div>
-  <% } %>
+  ${ typeof error !== "undefined" && error ? `
+    <div class="alert alert-error">${error}</div>
+  ` : "" }
+
+  ${ typeof success !== "undefined" && success ? `
+    <div class="alert alert-success" style="background:#ecfdf5; border:1px solid #6ee7b7; color:#065f46;">
+      ${success}
+    </div>
+  ` : "" }
 
   <form action="/transfer" method="POST" class="form">
       <label for="recipient">Recipient Account Number</label>
@@ -15,7 +23,16 @@
       <button type="submit" class="button primary full">Send Money</button>
   </form>
 
-  <p class="auth-meta">
-      <a href="/dashboard" class="link-primary">Back to dashboard</a>
+  <p class="auth-meta" style="margin-top: 20px; text-align:center;">
+      <a href="/dashboard" class="back-button">Back to dashboard</a>
   </p>
 </div>
+`;
+%>
+
+<%- include("layout", {
+  title: "Profile - OCBC Digital",
+  body: bodyContent,
+  user: user
+}) %>
+

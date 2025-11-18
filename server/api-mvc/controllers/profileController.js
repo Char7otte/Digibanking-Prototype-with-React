@@ -1,14 +1,13 @@
-// api-mvc/controllers/profileController.js
-
 exports.profile = (req, res) => {
-  const user = req.session?.user || {
-    name: 'OCBC Demo Customer',
-    email: 'demo@ocbc.com',
-    accountNumber: '5200 1234 5678'
-  };
+  if (!req.session.user) return res.redirect("/login");
 
-  res.render('profile', {
-    title: 'Profile - OCBC Digital',
-    user
+  res.render("profile", {
+    title: "My Profile",
+    user: {
+      name: req.session.user.name,
+      username: req.session.user.username,
+      email: "", // ← leave empty as requested
+      accountNumber: req.session.user.account_number
+    }
   });
 };

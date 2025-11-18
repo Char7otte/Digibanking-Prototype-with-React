@@ -9,7 +9,8 @@ const config = {
   database: process.env.DB_NAME,
   options: {
     encrypt: true,
-    trustServerCertificate: true
+    trustServerCertificate: true,
+    serverName: 'sqlserver'
   },
   pool: { max: 10, min: 0, idleTimeoutMillis: 30000 }
 };

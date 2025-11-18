@@ -1,11 +1,18 @@
-<div class="card">
+<%
+var bodyContent = `
+<div class="card auth-card">
   <h2>Your Profile</h2>
 
-  <p><span class="label">Name:</span> <%= user?.name %></p>
-  <p><span class="label">Email:</span> <%= user?.email %></p>
-  <p><span class="label">Account No:</span> <%= user?.accountNumber %></p>
+  <p><span class="label">Name:</span> ${user?.name}</p>
+  <p><span class="label">Username:</span> ${user?.username}</p>
+  <p><span class="label">Email:</span> </p>
+  <p><span class="label">Account Number:</span> ${user?.accountNumber}</p>
 
-  <p class="auth-meta">
-      <a href="/dashboard" class="link-primary">Back to dashboard</a>
+  <p class="auth-meta" style="margin-top:20px; text-align:center;">
+      <a href="/dashboard" class="back-button">Back to dashboard</a>
   </p>
 </div>
+`;
+%>
+
+<%- include("layout", { title: "My Profile", body: bodyContent }) %>

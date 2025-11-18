@@ -1,13 +1,48 @@
 <dialog>
-    <label> Distance between buttons: <strong id="accessibilityElementDistanceText">0</strong> </label>
+    <label>
+        Distance between buttons:
+        <strong id="accessibilityElementDistanceText">0</strong>
+    </label>
     <br />
-    <input type="range" min="16" max="48" class="w-100" id="accessibilityElementDistanceInput" />
+    <input
+        type="range"
+        min="16"
+        max="48"
+        class="w-100"
+        id="accessibilityElementDistanceInput"
+    />
     <hr />
-    <label> Button size: <strong id="accessibilityButtonSizeText">0</strong> </label>
-    <input type="range" min="50" max="150" class="w-100" id="accessibilityButtonSizeInput" />
-    <div class="d-flex justify-content-center"><button autofocus class="w-100">Close</button></div>
+    <label>
+        Button size:
+        <strong id="accessibilityButtonSizeText">0</strong>
+    </label>
+    <input
+        type="range"
+        min="50"
+        max="150"
+        class="w-100"
+        id="accessibilityButtonSizeInput"
+    />
+    <div class="d-flex justify-content-center">
+        <button autofocus class="w-100">Close</button>
+    </div>
 </dialog>
-<button style="position: fixed; bottom: 0; right: 0" class="important-button">Accessibility♿</button>
+
+<button
+    class="important-button"
+    style="
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      border-radius: 999px;
+      padding: 10px 18px;
+      border: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    "
+>
+    ♿ Accessibility
+</button>
+
 <script>
     const dialog = document.querySelector("dialog");
     const showButton = document.querySelector("dialog + button");

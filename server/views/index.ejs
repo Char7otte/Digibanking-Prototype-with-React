@@ -32,12 +32,23 @@ var bodyContent = `
 <section class="features container">
   <h2 class="section-title">What you can do</h2>
   <div class="grid grid-3">
-    <div class="card"><h3>View Accounts</h3><p>See all your balances in one place.</p></div>
-    <div class="card"><h3>Instant Transfers</h3><p>FAST and PayNow transfers anytime.</p></div>
-    <div class="card"><h3>Insights</h3><p>Track spending and upcoming bills.</p></div>
+    <div class="card feature-card">
+      <h3>View Accounts</h3>
+      <p>See all your balances in one place.</p>
+    </div>
+
+    <div class="card feature-card">
+      <h3>Instant Transfers</h3>
+      <p>FAST and PayNow transfers anytime.</p>
+    </div>
+
+    <div class="card feature-card">
+      <h3>Insights</h3>
+      <p>Track spending and upcoming bills.</p>
+    </div>
   </div>
 </section>
 `;
 %>
 
-<%- include('layout', { title: "OCBC Digital - Home", body: bodyContent }) %>
+<%- include('layout', { title: "OCBC Digital - Home", body: bodyContent, user: user }) %>

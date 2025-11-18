@@ -1,42 +1,56 @@
-<section class="dashboard">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("partials/head.ejs") %>
+    <title><%= title %></title>
+</head>
+<body>
 
-  <div class="dashboard-header">
-    <div>
-      <p class="label">Welcome back</p>
-      <h2 class="user-name"><%= user?.name %></h2>
-    </div>
+    <%- include("partials/header", { user: user }) %>
 
-    <div class="dashboard-total">
-      <p class="label">Total balance</p>
-      <p class="amount">$<%= user?.balance %></p>
-    </div>
-  </div>
+    <main class="page-container">
+        <section class="dashboard">
 
-  <div class="grid grid-2">
-    <div class="card account-summary">
-      <h3>Your accounts</h3>
-      <ul class="account-list">
-        <% if (user && user.accounts) { %>
-          <% user.accounts.forEach(acc => { %>
-            <li class="account-item">
-              <div>
-                <p class="account-type"><%= acc.type %></p>
-                <p class="account-number"><%= acc.number %></p>
-              </div>
-              <p class="account-balance">$<%= acc.balance %></p>
-            </li>
-          <% }) %>
-        <% } %>
-      </ul>
-    </div>
+            <div class="dashboard-header">
+                <div>
+                    <p class="label">Welcome back</p>
+                    <h2 class="user-name"><%= name %></h2>
+                </div>
 
-    <div class="card quick-actions">
-      <h3>Quick actions</h3>
-      <div class="quick-actions-grid">
-        <a href="/transfer" class="quick-action">Transfer</a>
-        <a href="/profile" class="quick-action">Profile</a>
-      </div>
-    </div>
-  </div>
+                <div class="dashboard-total">
+                    <p class="label">Total balance</p>
+                    <p class="amount">
+                        <%= currency %> <%= Number(balance || 0).toFixed(2) %>
+                    </p>
+                </div>
+            </div>
 
-</section>
+            <div class="grid grid-2">
+                <div class="card account-summary">
+                    <h3>Your account</h3>
+
+                    <%- include("partials/accountCardComponent.ejs", {
+                        account_type: account_type,
+                        account_number: accountNumber,
+                        balance: balance,
+                        currency: currency
+                    }) %>
+                </div>
+
+                <div class="card quick-actions">
+                    <h3>Quick actions</h3>
+                    <div class="quick-actions-grid">
+                        <a href="/transfer" class="quick-action">Transfer</a>
+                        <a href="/profile" class="quick-action">Profile</a>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <%- include("partials/accessibilityComponent.ejs") %>
+    <%- include("partials/footer") %>
+
+</body>
+</html>

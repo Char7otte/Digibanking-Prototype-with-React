@@ -1,6 +1,6 @@
 <header class="navbar">
     <div class="nav-left">
-        <a href="/" class="logo">
+        <a href="<%= typeof user !== 'undefined' ? '/dashboard' : '/login' %>" class="logo">
             <span class="logo-mark"></span>
             <span class="logo-text">OCBC Digital</span>
         </a>
@@ -14,6 +14,11 @@
         <a href="/dashboard" class="nav-link">Accounts</a>
         <a href="/transfer" class="nav-link">Transfer</a>
         <a href="/profile" class="nav-link">Profile</a>
-        <a href="/login" class="nav-link btn-login">Log in</a>
+
+        <% if (typeof user !== 'undefined') { %>
+            <a href="/logout" class="nav-link btn-login">Log out</a>
+        <% } else { %>
+            <a href="/login" class="nav-link btn-login">Log in</a>
+        <% } %>
     </nav>
 </header>
