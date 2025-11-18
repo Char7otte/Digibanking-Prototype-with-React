@@ -42,13 +42,13 @@ function AssistanceComponent() {
                 Assistance♿
             </button>
             <ReactModal isOpen={isOpen} onRequestClose={closeModal}>
-                <label>
+                <label className={styles.label}>
                     Distance between buttons: <strong>{elementDistance}</strong>
                 </label>
                 <br />
                 <input type="range" className={styles.rangeInput} min="16" max="48" onChange={handleDistanceChange} value={elementDistance} />
                 <hr />
-                <label>
+                <label className={styles.label}>
                     Button size: <strong>{buttonSize}</strong>
                 </label>
                 <input type="range" className={styles.rangeInput} min="50" max="150" onChange={handlebuttonSizeChange} value={buttonSize} />
