@@ -1,248 +1,131 @@
-// ============================================================
-// TUTORIAL ENGINE (Dashboard, Transfer, Profile)
-// ============================================================
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <%- include("partials/head.ejs") %>
+    <title><%= title %></title>
+</head>
+<body>
 
-document.addEventListener('DOMContentLoaded', function () {
-    var tutorialBtn = document.getElementById('tutorial-btn');
-    var overlay = document.getElementById('tutorial-overlay');
-    var modal = document.getElementById('tutorial-modal');
-    var highlight = document.getElementById('tutorial-highlight');
-    var stepBox = document.getElementById('tutorial-step-box');
+    <%- include("partials/header") %>
 
-    if (!overlay || !modal || !highlight || !stepBox) {
-        // Required containers not present - do nothing
-        return;
-    }
+    <main class="page-container">
 
-    function showOverlay() {
-        overlay.classList.remove('hidden');
-    }
+        <!-- ===== Top Welcome Header ===== -->
+        <section class="dashboard-header">
+            <div>
+                <p class="label">Welcome back</p>
+                <h2 class="user-name"><%= name %></h2>
+            </div>
 
-    function hideOverlay() {
-        overlay.classList.add('hidden');
-    }
+            <div class="dashboard-total">
+                <p class="label">Total balance</p>
+                <p class="amount"><%= currency %> <%= Number(balance).toFixed(2) %></p>
+            </div>
+        </section>
 
-    function openModal() {
-        showOverlay();
-        modal.classList.remove('hidden');
-    }
+        <!-- ===== Multi-Account Fancy Cards ===== -->
+        <section class="accounts-overview grid-3">
 
-    function closeModal() {
-        modal.classList.add('hidden');
-    }
+            <!-- Savings -->
+            <div class="account-card card-red">
+                <p class="acc-title">Savings Account</p>
+                <p class="acc-number">•••• <%= accountNumber.slice(-4) %></p>
+                <p class="acc-label">Available Balance</p>
+                <p class="acc-balance">SGD <%= Number(balance).toFixed(2) %></p>
+                <a class="acc-details" href="#">View Details →</a>
+            </div>
 
-    function endTutorial() {
-        closeModal();
-        hideOverlay();
-        highlight.classList.add('hidden');
-        stepBox.classList.add('hidden');
-    }
+            <!-- Current Account -->
+            <div class="account-card card-blue">
+                <p class="acc-title">Current Account</p>
+                <p class="acc-number">•••• 3721</p>
+                <p class="acc-label">Available Balance</p>
+                <p class="acc-balance">SGD 8,950.25</p>
+                <a class="acc-details" href="#">View Details →</a>
+            </div>
 
-    // Open tutorial menu
-    if (tutorialBtn) {
-        tutorialBtn.addEventListener('click', function () {
-            openModal();
-        });
-    }
+            <!-- Credit Card -->
+            <div class="account-card card-purple">
+                <p class="acc-title">Credit Card</p>
+                <p class="acc-number">•••• 8904</p>
+                <p class="acc-label">Available Credit</p>
+                <p class="acc-balance">SGD 15,420.00</p>
+                <a class="acc-details" href="#">View Details →</a>
+            </div>
 
-    // Close from "Close" button in modal
-    document.addEventListener('click', function (e) {
-        if (e.target.classList.contains('tutorial-close')) {
-            endTutorial();
-        }
-    });
+        </section>
 
-    // Clicking an option in the tutorial menu
-    var optionButtons = document.querySelectorAll('.tutorial-option');
-    optionButtons.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            var type = btn.getAttribute('data-tutorial');
-            closeModal();
-            startTutorial(type);
-        });
-    });
+        <!-- ===== Quick Actions ===== -->
+        <section class="quick-actions card">
+            <h3>Quick Actions</h3>
 
-    // Highlight helper
-    function highlightElement(el) {
-        if (!el) return;
+            <div class="quick-actions-row">
+                <a class="qa-item" href="/transfer">Transfer</a>
+                <a class="qa-item" href="#">Pay Bills</a>
+                <a class="qa-item" href="#">Cards</a>
+                <a class="qa-item" href="#">Mobile Top-up</a>
+                <a class="qa-item" href="#">Statements</a>
+                <a class="qa-item" href="#">Deposits</a>
+            </div>
+        </section>
 
-        var rect = el.getBoundingClientRect();
-        var scrollX = window.scrollX || window.pageXOffset;
-        var scrollY = window.scrollY || window.pageYOffset;
+        <!-- ===== Monthly Summary ===== -->
+        <section class="monthly-summary card">
+            <p class="summary-title">This Month</p>
+            <p class="summary-amount">$3,124</p>
+            <p class="summary-sub">↑ 12% less than last month</p>
 
-        highlight.style.width = (rect.width + 16) + 'px';
-        highlight.style.height = (rect.height + 16) + 'px';
-        highlight.style.left = (rect.left - 8 + scrollX) + 'px';
-        highlight.style.top = (rect.top - 8 + scrollY) + 'px';
-        highlight.classList.remove('hidden');
+            <hr />
 
-        stepBox.style.left = (rect.left + rect.width + 18 + scrollX) + 'px';
-        stepBox.style.top = (rect.top + scrollY) + 'px';
-        stepBox.classList.remove('hidden');
-    }
+            <p class="summary-title">Total Balance</p>
+            <p class="summary-amount">$33,530</p>
+            <p class="summary-sub">↑ 5.2% growth</p>
+        </section>
 
-    function runSteps(steps) {
-        steps = steps.filter(function (s) { return s.element; });
-        if (!steps.length) {
-            endTutorial();
-            return;
-        }
+        <!-- ===== Recent Transactions ===== -->
+        <section class="transactions card">
+            <h3>Recent Transactions</h3>
 
-        var index = 0;
-        showOverlay();
+            <ul class="tx-list">
+                <li class="tx-item">
+                    <span>Salary Credit</span>
+                    <span class="tx-amount income">+ $5500.00</span>
+                </li>
 
-        function showStep() {
-            if (index >= steps.length) {
-                endTutorial();
-                return;
-            }
+                <li class="tx-item">
+                    <span>Amazon Shopping</span>
+                    <span class="tx-amount expense">- $124.99</span>
+                </li>
 
-            var step = steps[index];
-            highlightElement(step.element);
+                <li class="tx-item">
+                    <span>Starbucks Coffee</span>
+                    <span class="tx-amount expense">- $8.50</span>
+                </li>
+            </ul>
+        </section>
 
-            stepBox.innerHTML = ''
-                + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">'
-                + '  <strong>Step ' + (index + 1) + '</strong>'
-                + '  <button type="button" id="tutorial-exit" '
-                + '     style="border:none;background:none;font-size:16px;cursor:pointer;">✖</button>'
-                + '</div>'
-                + '<div>' + step.text + '</div>'
-                + '<div style="margin-top:10px;text-align:right;">'
-                + '  <button type="button" id="tutorial-next" '
-                + '      class="button" '
-                + '      style="padding:4px 10px;font-size:0.8rem;">Next</button>'
-                + '</div>';
+    </main>
 
-            var exitBtn = document.getElementById('tutorial-exit');
-            if (exitBtn) {
-                exitBtn.addEventListener('click', function () {
-                    endTutorial();
-                });
-            }
+    <!-- Tutorial button above accessibility button -->
+    <button id="tutorial-btn" class="tutorial-button"
+        style="
+        position: fixed;
+        bottom: 140px;
+        right: 20px;
+        padding: 12px 18px;
+        background: #2563eb;
+        color: white;
+        border-radius: 999px;
+        border: none;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        z-index: 9999;
+        ">
+        🧭 Tutorial
+    </button>
 
-            var nextBtn = document.getElementById('tutorial-next');
-            if (nextBtn) {
-                nextBtn.addEventListener('click', function () {
-                    index++;
-                    showStep();
-                });
-            }
-        }
 
-        showStep();
-    }
+    <%- include("partials/accessibilityComponent.ejs") %>
+    <%- include("partials/footer") %>
 
-    // Detect current page
-    function currentPath() {
-        return window.location.pathname || '';
-    }
-
-    // ===== Tutorial flows per feature =====
-
-    function startTutorial(type) {
-        var path = currentPath();
-
-        if (type === 'transfer') {
-            if (path === '/dashboard') {
-                // Guide from dashboard: quick action → nav transfer
-                var steps = [
-                    {
-                        element: document.querySelector(".qa-item[href='/transfer']"),
-                        text: 'This button is for sending money. Tap it to go to the transfer page.'
-                    },
-                    {
-                        element: document.querySelector("a.nav-link[href='/transfer']"),
-                        text: 'You can also reach the transfer page from here in the top menu.'
-                    }
-                ];
-                runSteps(steps);
-            } else if (path === '/transfer') {
-                // On transfer page: explain tabs & fields
-                var stepsT = [
-                    {
-                        element: document.querySelector(".transfer-tabs .tab[data-mode='local']"),
-                        text: 'Here you choose <strong>Local Transfer</strong> to send money within the country.'
-                    },
-                    {
-                        element: document.querySelector(".transfer-tabs .tab[data-mode='overseas']"),
-                        text: 'Choose <strong>Overseas Transfer</strong> when sending money overseas.'
-                    },
-                    {
-                        element: document.querySelector("select[name='from']"),
-                        text: 'First, select which of your accounts you want to send money from.'
-                    },
-                    {
-                        element: document.querySelector("input[name='recipient']"),
-                        text: 'Then, type the <strong>recipient's account number</strong> here.'
-                    },
-                    {
-                        element: document.querySelector("input[name='amount']"),
-                        text: 'Enter the <strong>amount</strong> of money you want to transfer.'
-                    },
-                    {
-                        element: document.querySelector(".overseas-fields select[name='country']") || document.querySelector(".transfer-tabs .tab[data-mode='overseas']"),
-                        text: 'For overseas transfers, choose the <strong>country</strong> and <strong>currency</strong> you want to send in.'
-                    },
-                    {
-                        element: document.querySelector(".button.red"),
-                        text: 'Finally, tap <strong>Transfer Now</strong> to send your money.'
-                    }
-                ];
-                runSteps(stepsT);
-            } else {
-                // Other pages: just point to nav Transfer
-                var stepsNav = [
-                    {
-                        element: document.querySelector("a.nav-link[href='/transfer']"),
-                        text: 'Use this <strong>Transfer</strong> button to go to the transfer page.'
-                    }
-                ];
-                runSteps(stepsNav);
-            }
-        }
-
-        if (type === 'profile') {
-            if (path === '/profile') {
-                var stepsP = [
-                    {
-                        element: document.querySelector(".card.auth-card"),
-                        text: 'Here you can see your profile details like name, username and account number.'
-                    },
-                    {
-                        element: document.querySelector(".back-button"),
-                        text: 'Tap this button to <strong>go back to your dashboard</strong>.'
-                    }
-                ];
-                runSteps(stepsP);
-            } else {
-                var stepsP2 = [
-                    {
-                        element: document.querySelector("a.nav-link[href='/profile']"),
-                        text: 'Tap here to open your <strong>profile page</strong>.'
-                    }
-                ];
-                runSteps(stepsP2);
-            }
-        }
-
-        if (type === 'paybills') {
-            if (path === '/dashboard') {
-                var stepsB = [
-                    {
-                        element: document.querySelector(".qa-item:nth-child(2)"),
-                        text: 'This is the <strong>Pay Bills</strong> shortcut. Tap here to start paying your bills (for example utilities or phone).'
-                    }
-                ];
-                runSteps(stepsB);
-            } else {
-                var stepsB2 = [
-                    {
-                        element: document.querySelector(".qa-item:nth-child(2)"),
-                        text: 'On your dashboard you can use this <strong>Pay Bills</strong> button to pay your bills.'
-                    }
-                ];
-                runSteps(stepsB2);
-            }
-        }
-    }
-});
+</body>
+</html>
