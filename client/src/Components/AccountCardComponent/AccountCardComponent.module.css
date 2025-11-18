@@ -13,5 +13,6 @@
 }
 
 .ignoreSizing {
+        min-height: 0px;
         height: 50px;
 }
