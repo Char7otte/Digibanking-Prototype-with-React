@@ -1,20 +1,49 @@
-document.addEventListener('DOMContentLoaded', () => {
+const express = require('express');
+const router = express.Router();
 
-    // ===== Mobile Navigation Toggle =====
-    const navToggle = document.getElementById('nav-toggle');
-    const mainNav = document.getElementById('main-nav');
+const loginController = require('../api-mvc/controllers/loginController');
+const dashboardController = require('../api-mvc/controllers/dashboardController');
+const profileController = require('../api-mvc/controllers/profileController');
+const transferController = require('../api-mvc/controllers/transferController');
 
-    if (navToggle && mainNav) {
-        navToggle.addEventListener('click', () => {
-            if (mainNav.style.display === 'flex') {
-                // Hide menu
-                mainNav.style.display = 'none';
-            } else {
-                // Show menu
-                mainNav.style.display = 'flex';
-                mainNav.style.flexDirection = 'column';
-                mainNav.style.gap = '10px';
-            }
-        });
-    }
+// Home
+router.get('/', (req, res) => {
+  res.render('index', { user: req.session.user });
 });
+
+// Login page
+router.get('/login', (req, res) => {
+  res.render('login', { error: null });
+});
+
+// Login action
+router.post('/login', loginController.login);
+
+// Dashboard
+router.get('/dashboard', dashboardController.dashboard);
+
+// Profile
+router.get('/profile', profileController.profile);
+
+// Transfer page
+router.get('/transfer', (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+
+  res.render('transfer', {
+    error: null,
+    success: null,
+    user: req.session.user
+  });
+});
+
+// Transfer action
+router.post('/transfer', transferController.transfer);
+
+// Logout
+router.get("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.redirect("/");
+  });
+});
+
+module.exports = router;

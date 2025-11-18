@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var stepBox = document.getElementById('tutorial-step-box');
 
     if (!overlay || !modal || !highlight || !stepBox) {
-        // Required containers not present – do nothing
+        // Required containers not present - do nothing
         return;
     }
 
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                     {
                         element: document.querySelector("input[name='recipient']"),
-                        text: 'Then, type the <strong>recipient’s account number</strong> here.'
+                        text: 'Then, type the <strong>recipient's account number</strong> here.'
                     },
                     {
                         element: document.querySelector("input[name='amount']"),

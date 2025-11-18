@@ -22,7 +22,26 @@
         <%- body %>
     </main>
 
-    <%- include('partials/footer') %>
+    <!-- Accessibility (now on ALL pages) -->
+    <%- include('partials/accessibilityComponent.ejs') %>
+
+    <!-- Tutorial Modal System -->
+    <div id="tutorial-overlay" class="hidden"></div>
+
+    <div id="tutorial-modal" class="hidden">
+        <div class="tutorial-content">
+            <h3>What do you want to learn?</h3>
+
+            <button class="tutorial-option" data-tutorial="transfer">💸 How to transfer money</button>
+            <button class="tutorial-option" data-tutorial="profile">👤 How to edit your profile</button>
+            <button class="tutorial-option" data-tutorial="paybills">🧾 How to pay bills</button>
+
+            <button class="tutorial-close">❌ Close</button>
+        </div>
+    </div>
+
+    <div id="tutorial-highlight" class="hidden"></div>
+    <div id="tutorial-step-box" class="hidden"></div>
 
 </body>
 </html>

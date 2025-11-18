@@ -55,7 +55,7 @@ app.use((req, res) => {
 });
 app.use((err, req, res, next) => {
   console.error("SERVER ERROR:", err);
-  res.status(500).send("<h1>500 – Server Error</h1>");
+  res.status(500).send("<h1>500 - Server Error</h1>");
 });
 
 // START SERVER
