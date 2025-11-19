@@ -24,7 +24,20 @@ app.get("", (req, res) => {
 });
 
 app.get("/dashboard", (req, res) => {
-    res.render("dashboard");
+    const { assistance } = req.query;
+    res.render("dashboard", { assistance });
+});
+
+app.get("/transaction/1", (req, res) => {
+    res.render("transaction-step1");
+});
+
+app.get("/transaction/2", (req, res) => {
+    res.render("transaction-step2");
+});
+
+app.get("/transaction/3", (req, res) => {
+    res.render("transaction-step3");
 });
 
 // auth routes (handled in controller)
