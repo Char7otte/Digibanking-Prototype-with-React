@@ -1,56 +1,52 @@
-<%
-var bodyContent = `
+<% var bodyContent = `
 <button id="tutorial-btn" class="tutorial-button">🧭 Tutorial</button>
 
 <div class="transfer-page">
-
-    <h1 class='page-title'>Transfer Money</h1>
-    <p class='page-subtitle'>Send money locally or overseas</p>
+    <h1 class="page-title">Transfer Money</h1>
+    <p class="page-subtitle">Send money locally or overseas</p>
 
     <!-- REAL MODE SELECTION -->
-    <input type="radio" id="modeLocal" name="mode-select" value="local" checked hidden>
-    <input type="radio" id="modeOverseas" name="mode-select" value="overseas" hidden>
+    <input type="radio" id="modeLocal" name="mode-select" value="local" checked hidden />
+    <input type="radio" id="modeOverseas" name="mode-select" value="overseas" hidden />
 
-    <div class='transfer-tabs'>
-        <button class='tab active' onclick="selectMode('local')">Local Transfer</button>
-        <button class='tab' onclick="selectMode('overseas')">Overseas Transfer</button>
+    <div class="transfer-tabs">
+        <button class="tab active" onclick="selectMode('local')">Local Transfer</button>
+        <button class="tab" onclick="selectMode('overseas')">Overseas Transfer</button>
     </div>
 
-    <div class='card transfer-card'>
-
-        <div class='transfer-header'>
-            <div class='icon-circle'><span>↻</span></div>
+    <div class="card transfer-card">
+        <div class="transfer-header">
+            <div class="icon-circle"><span>↻</span></div>
             <div>
                 <h2>Make a Transfer</h2>
-                <p class='muted'>Instant and Secure</p>
+                <p class="muted">Instant and Secure</p>
             </div>
         </div>
 
-        ${error ? `<div class="alert alert-error">${error}</div>` : ""}
-        ${success ? `<div class="alert alert-success" 
-            style="background:#ecfdf5;border:1px solid #6ee7b7;color:#065f46;">
-            ${success}
-        </div>` : ""}
+        ${error ? `
+        <div class="alert alert-error">${error}</div>
+        ` : ""} ${success ? `
+        <div class="alert alert-success" style="background: #ecfdf5; border: 1px solid #6ee7b7; color: #065f46">${success}</div>
+        ` : ""}
 
         <form action="/transfer" method="POST" class="form">
-
-            <input type="hidden" id="modeInput" name="mode" value="local">
+            <input type="hidden" id="modeInput" name="mode" value="local" />
 
             <label>From Account</label>
-            <select class="input-select" required>
+            <select class="input-select spacing-md" required>
                 <option value="${user.account_number}">
                     ${user.account_type} — **** ${String(user.account_number).slice(-4)} (${user.currency})
                 </option>
             </select>
 
             <label>To Account</label>
-            <input type="text" name="recipient" class="input" placeholder="Enter account number" required>
+            <input type="text" name="recipient" class="input spacing-md" placeholder="Enter account number" required />
 
             <label>Amount</label>
-            <input type="number" name="amount" class="input" step="0.01" placeholder="Enter amount" required>
+            <input type="number" name="amount" class="input spacing-md" step="0.01" placeholder="Enter amount" required />
 
             <!-- OVERSEAS ONLY FIELDS -->
-            <div id="overseas-fields" style="display:none;">
+            <div id="overseas-fields" style="display: none">
                 <label>Destination (Country & Currency)</label>
                 <select name="countryCurrency" class="input-select">
                     <option value="">Select destination</option>
@@ -66,42 +62,36 @@ var bodyContent = `
             </div>
 
             <label>Remarks (Optional)</label>
-            <input type="text" name="remarks" class="input" placeholder="Add a note">
+            <input type="text" name="remarks spacing-md" class="input" placeholder="Add a note" />
 
-            <div class='transfer-buttons'>
+            <div class="transfer-buttons">
                 <button type="submit" class="button red full">Transfer Now</button>
                 <button type="button" class="button outline full">Schedule Transfer</button>
             </div>
-
         </form>
-
     </div>
-
 </div>
 
 <script>
-function selectMode(mode) {
-    const tabs = document.querySelectorAll(".transfer-tabs .tab");
-    const overseas = document.getElementById("overseas-fields");
+    function selectMode(mode) {
+        const tabs = document.querySelectorAll(".transfer-tabs .tab");
+        const overseas = document.getElementById("overseas-fields");
 
-    tabs.forEach(t => t.classList.remove("active"));
-    if (mode === "local") tabs[0].classList.add("active");
-    else tabs[1].classList.add("active");
+        tabs.forEach((t) => t.classList.remove("active"));
+        if (mode === "local") tabs[0].classList.add("active");
+        else tabs[1].classList.add("active");
 
-    document.getElementById("modeInput").value = mode;
-    document.getElementById("modeLocal").checked = (mode === "local");
-    document.getElementById("modeOverseas").checked = (mode === "overseas");
+        document.getElementById("modeInput").value = mode;
+        document.getElementById("modeLocal").checked = mode === "local";
+        document.getElementById("modeOverseas").checked = mode === "overseas";
 
-    overseas.style.display = (mode === "overseas") ? "block" : "none";
+        overseas.style.display = mode === "overseas" ? "block" : "none";
 
-    // 🚀 IMPORTANT FIX: Prevent stale overseas selection
-    if (mode === "local") {
-        const select = document.querySelector("select[name='countryCurrency']");
-        if (select) select.value = "";
+        // 🚀 IMPORTANT FIX: Prevent stale overseas selection
+        if (mode === "local") {
+            const select = document.querySelector("select[name='countryCurrency']");
+            if (select) select.value = "";
+        }
     }
-}
 </script>
-`;
-%>
-
-<%- include("layout", { title: "Transfer Money", body: bodyContent, user: user }) %>
+`; %> <%- include("layout", { title: "Transfer Money", body: bodyContent, user: user }) %>
