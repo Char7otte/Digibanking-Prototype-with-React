@@ -61,13 +61,15 @@
     const buttonSizeInput = document.querySelector("#accessibilityButtonSizeInput");
     const buttonSizeText = document.querySelector("#accessibilityButtonSizeText");
 
-    const localElementDistance = localStorage.getItem("elementDistance");
-    elementDistanceText.innerText = localElementDistance || 16;
-    elementDistanceInput.value = localElementDistance || 16;
+    const localElementDistance = localStorage.getItem("elementDistance") || 16; //Alt value is from styles.css :root
+    elementDistanceText.innerText = localElementDistance;
+    elementDistanceInput.value = localElementDistance;
+    document.documentElement.style.setProperty("--spacing", localElementDistance + "px");
 
-    const localButtonSize = localStorage.getItem("buttonSize");
-    buttonSizeText.innerText = localButtonSize || 50;
-    buttonSizeInput.value = localButtonSize || 50;
+    const localButtonSize = localStorage.getItem("buttonSize") || 50; //Alt value is from styles.css :root
+    buttonSizeText.innerText = localButtonSize;
+    buttonSizeInput.value = localButtonSize;
+    document.documentElement.style.setProperty("--buttonSize", localButtonSize + "px");
 
     elementDistanceInput.addEventListener("change", (e) => {
         const value = e.target.value;
