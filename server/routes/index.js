@@ -24,6 +24,7 @@ router.get('/dashboard', dashboardController.dashboard);
 
 // Profile
 router.get('/profile', profileController.profile);
+router.post('/profile/update', profileController.updateProfile);
 
 // Transfer page
 router.get('/transfer', (req, res) => {

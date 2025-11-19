@@ -2,16 +2,6 @@
  * ============================================================
  *  OCBC DIGITAL BANKING — STEP-BY-STEP TUTORIAL SYSTEM
  * ============================================================
- *  Behaviour:
- *  ✔ One step at a time
- *  ✔ "x" to end tutorial
- *  ✔ "Next" to go to next step
- *  ✔ No mouse / cursor emoji
- *  ✔ Only "x" and "Next" are clickable during a step
- *  ✔ Dashboard: popup menu (Transfer / Profile / Pay Bills)
- *  ✔ Dashboard -> Transfer tutorial
- *  ✔ Transfer page tutorial (multi-step)
- * ============================================================
  */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -30,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* ============================================================
-   SHARED TUTORIAL STATE & UI
+   SHARED STATE & UI
    ============================================================ */
 
 const tut = {
@@ -43,7 +33,6 @@ const tut = {
 };
 
 function createTutorialUI() {
-  // Dim overlay
   if (!tut.overlay) {
     tut.overlay = document.createElement("div");
     Object.assign(tut.overlay.style, {
@@ -56,7 +45,6 @@ function createTutorialUI() {
     document.body.appendChild(tut.overlay);
   }
 
-  // Highlight box
   if (!tut.highlight) {
     tut.highlight = document.createElement("div");
     Object.assign(tut.highlight.style, {
@@ -72,7 +60,6 @@ function createTutorialUI() {
     document.body.appendChild(tut.highlight);
   }
 
-  // Tooltip
   if (!tut.tooltip) {
     tut.tooltip = document.createElement("div");
     Object.assign(tut.tooltip.style, {
@@ -95,10 +82,7 @@ function blockAllExceptTooltip() {
   if (tut.blocker) return;
 
   tut.blocker = function (e) {
-    if (tut.tooltip && tut.tooltip.contains(e.target)) {
-      return; // allow clicks inside tooltip (x / Next)
-    }
-    // block everything else
+    if (tut.tooltip.contains(e.target)) return;
     e.preventDefault();
     e.stopPropagation();
   };
@@ -123,15 +107,15 @@ function endTutorial() {
 }
 
 /* ============================================================
-   STEP ENGINE: ONE STEP AT A TIME
+   STEP ENGINE
    ============================================================ */
 
 function startSteps(steps) {
   createTutorialUI();
-  tut.steps = steps || [];
+  tut.steps = steps;
   tut.index = 0;
 
-  if (!tut.steps.length) return;
+  if (!steps.length) return;
 
   tut.overlay.style.display = "block";
   blockAllExceptTooltip();
@@ -139,65 +123,49 @@ function startSteps(steps) {
 }
 
 function showStep(i) {
-  if (i >= tut.steps.length) {
-    endTutorial();
-    return;
-  }
+  if (i >= tut.steps.length) return endTutorial();
 
   tut.index = i;
   const step = tut.steps[i];
+
   const el = document.querySelector(step.selector);
 
-  if (!el) {
-    // If element not found, skip to next step
-    showStep(i + 1);
-    return;
-  }
+  if (!el) return showStep(i + 1);
 
-  // Position highlight
   const rect = el.getBoundingClientRect();
   const top = rect.top + window.scrollY;
   const left = rect.left + window.scrollX;
 
   tut.highlight.style.display = "block";
-  tut.highlight.style.top = (top - 8) + "px";
-  tut.highlight.style.left = (left - 8) + "px";
-  tut.highlight.style.width = (rect.width + 16) + "px";
-  tut.highlight.style.height = (rect.height + 16) + "px";
+  tut.highlight.style.top = `${top - 8}px`;
+  tut.highlight.style.left = `${left - 8}px`;
+  tut.highlight.style.width = `${rect.width + 16}px`;
+  tut.highlight.style.height = `${rect.height + 16}px`;
 
-  // Tooltip content
   const isLast = i === tut.steps.length - 1;
   const nextLabel = isLast ? "Finish" : "Next";
 
   tut.tooltip.innerHTML = `
     <div style="position:relative;">
-      <button id="tut-close-btn" style="
-        position:absolute;top:2px;right:4px;
-        border:none;background:transparent;
-        cursor:pointer;font-size:0.9rem;
-      ">x</button>
+      <button id="tut-close-btn"
+        style="position:absolute;top:2px;right:4px;border:none;background:transparent;cursor:pointer;">
+        x
+      </button>
 
-      <div style="margin-top:10px;">
-        ${step.text}
-      </div>
+      <div style="margin-top:10px;">${step.text}</div>
 
       <div style="margin-top:12px;text-align:right;">
-        <button id="tut-next-btn" style="
-          border:none;
-          background:#2563eb;
-          color:white;
-          border-radius:999px;
-          padding:6px 14px;
-          font-size:0.9rem;
-          cursor:pointer;
-        ">${nextLabel}</button>
+        <button id="tut-next-btn"
+          style="background:#2563eb;color:#fff;border:none;border-radius:999px;padding:6px 14px;">
+          ${nextLabel}
+        </button>
       </div>
     </div>
   `;
 
-  // Position tooltip below the element (or above if not enough space)
   let tooltipTop = top + rect.height + 12;
-  const tooltipHeight = 120; // rough estimate
+  const tooltipHeight = 120;
+
   if (tooltipTop + tooltipHeight > window.scrollY + window.innerHeight) {
     tooltipTop = top - tooltipHeight - 12;
   }
@@ -208,36 +176,21 @@ function showStep(i) {
 
   el.scrollIntoView({ behavior: "smooth", block: "center" });
 
-  // Hook buttons
-  const closeBtn = document.getElementById("tut-close-btn");
-  const nextBtn = document.getElementById("tut-next-btn");
+  document.getElementById("tut-close-btn").onclick = endTutorial;
 
-  if (closeBtn) {
-    closeBtn.onclick = () => {
-      endTutorial();
-    };
-  }
-
-  if (nextBtn) {
-    nextBtn.onclick = () => {
-      if (isLast) {
-        endTutorial();
-      } else {
-        showStep(i + 1);
-      }
-    };
-  }
+  document.getElementById("tut-next-btn").onclick = () => {
+    if (isLast) endTutorial();
+    else showStep(i + 1);
+  };
 }
 
 /* ============================================================
-   DASHBOARD: TUTORIAL MENU POPUP
+   DASHBOARD POPUP
    ============================================================ */
 
 function showDashboardMenu() {
-  // Close any running tutorial
   endTutorial();
 
-  // Remove old popup if exists
   const existing = document.getElementById("tut-dashboard-menu");
   if (existing) existing.remove();
 
@@ -248,58 +201,33 @@ function showDashboardMenu() {
     position: "fixed",
     top: "80px",
     right: "20px",
-    background: "#ffffff",
+    background: "#fff",
     padding: "18px 16px",
     borderRadius: "14px",
     boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
     width: "260px",
-    zIndex: "9999",
-    fontSize: "0.95rem",
-    lineHeight: "1.5"
+    zIndex: "9999"
   });
 
   popup.innerHTML = `
     <div style="position:relative;">
-      <button id="tut-menu-close" style="
-        position:absolute;top:4px;right:4px;
-        border:none;background:transparent;
-        cursor:pointer;font-size:0.9rem;
-      ">x</button>
+      <button id="tut-menu-close"
+        style="position:absolute;top:4px;right:4px;border:none;background:transparent;cursor:pointer;">
+        x
+      </button>
 
-      <div style="font-weight:600;margin-bottom:8px;">
-        Tutorial Menu
-      </div>
-      <p style="margin-bottom:12px;">
-        What would you like to learn?
-      </p>
+      <div style="font-weight:600;margin-bottom:8px;">Tutorial Menu</div>
+      <p style="margin-bottom:12px;">What would you like to learn?</p>
 
-      <button class="tut-menu-option" data-target="transfer" style="
-        width:100%;text-align:left;cursor:pointer;
-        padding:8px 10px;margin-bottom:6px;
-        border-radius:8px;border:1px solid #e5e7eb;
-        background:#f9fafb;
-      ">💸 How to transfer money</button>
-
-      <button class="tut-menu-option" data-target="profile" style="
-        width:100%;text-align:left;cursor:pointer;
-        padding:8px 10px;margin-bottom:6px;
-        border-radius:8px;border:1px solid #e5e7eb;
-        background:#f9fafb;
-      ">👤 How to view / edit profile</button>
-
-      <button class="tut-menu-option" data-target="bills" style="
-        width:100%;text-align:left;cursor:pointer;
-        padding:8px 10px;
-        border-radius:8px;border:1px solid #e5e7eb;
-        background:#f9fafb;
-      ">🧾 How to pay bills</button>
+      <button class="tut-menu-option" data-target="transfer">💸 Transfer Money</button>
+      <button class="tut-menu-option" data-target="profile">👤 Edit Profile</button>
+      <button class="tut-menu-option" data-target="bills">🧾 Pay Bills</button>
     </div>
   `;
 
   document.body.appendChild(popup);
 
-  const closeBtn = document.getElementById("tut-menu-close");
-  if (closeBtn) closeBtn.onclick = () => popup.remove();
+  document.getElementById("tut-menu-close").onclick = () => popup.remove();
 
   popup.querySelectorAll(".tut-menu-option").forEach(btn => {
     btn.addEventListener("click", (e) => {
@@ -314,14 +242,14 @@ function showDashboardMenu() {
 }
 
 /* ============================================================
-   DASHBOARD TUTORIAL FLOWS
+   DASHBOARD FLOWS
    ============================================================ */
 
 function startDashboardTransferSteps() {
   startSteps([
     {
       selector: ".qa-item[href='/transfer']",
-      text: "This button opens the Transfer Money page. Tap it whenever you want to send money."
+      text: "Tap here to go to the Transfer page."
     }
   ]);
 }
@@ -330,7 +258,7 @@ function startDashboardProfileSteps() {
   startSteps([
     {
       selector: "a.nav-link[href='/profile']",
-      text: "Tap this Profile button to see your personal details."
+      text: "Tap here to access your profile settings."
     }
   ]);
 }
@@ -339,49 +267,61 @@ function startDashboardBillsSteps() {
   startSteps([
     {
       selector: ".quick-actions-row .qa-item:nth-child(2)",
-      text: "Tap here to go to the Pay Bills section."
+      text: "Tap here to go to Bill Payments."
     }
   ]);
 }
 
 /* ============================================================
-   TRANSFER PAGE: MULTI-STEP TUTORIAL
+   PROFILE PAGE UPDATED TUTORIAL (AFTER UI REDESIGN)
+   ============================================================ */
+
+function startProfileTutorial() {
+  startSteps([
+    {
+      selector: "input#name",
+      text: "This is your full name. You can edit it here."
+    },
+    {
+      selector: "input#username",
+      text: "This is your username. You can change it anytime."
+    },
+    {
+      selector: "input#email",
+      text: "Here you can update your email address."
+    },
+    {
+      selector: "button.red",
+      text: "Tap this button to save your updated profile details."
+    }
+  ]);
+}
+
+/* ============================================================
+   TRANSFER PAGE TUTORIAL (unchanged)
    ============================================================ */
 
 function startTransferTutorial() {
   startSteps([
     {
       selector: ".transfer-tabs .tab:nth-of-type(1)",
-      text: "Use this Local Transfer tab to send money within the same currency and country."
+      text: "Local transfers stay within the same currency."
     },
     {
       selector: ".transfer-tabs .tab:nth-of-type(2)",
-      text: "Use this Overseas Transfer tab if you want to send money to another country with a different currency."
+      text: "Use Overseas transfer to send money internationally."
     },
     {
       selector: "input[name='recipient']",
-      text: "Type the account number of the person or account you want to send money to."
+      text: "Enter the receiver's account number here."
     },
     {
       selector: "input[name='amount']",
-      text: "Enter the amount you want to send. Make sure you check the amount carefully."
+      text: "Enter the amount you want to send."
     },
     {
       selector: ".button.red.full",
-      text: "When everything looks correct, tap this button to confirm and send your transfer."
-    }
-  ]);
-}
-
-/* ============================================================
-   PROFILE PAGE TUTORIAL
-   ============================================================ */
-
-function startProfileTutorial() {
-  startSteps([
-    {
-      selector: ".card.auth-card, .profile-details",
-      text: "This area shows your profile information such as your name and username."
+      text: "Tap here to complete your transfer."
     }
   ]);
 }
