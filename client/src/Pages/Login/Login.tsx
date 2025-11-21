@@ -27,22 +27,13 @@ function LoginComponent() {
                 },
                 withCredentials: true,
             });
-
-            navigate("/dashboard", {
-                state: {
-                    user: res.data.user,
-                },
-            });
             setIsLoading(false);
+            navigate("/dashboard");
         } catch (error: any) {
             setIsLoading(false);
             console.log("Login error: ", error);
 
-            if (error.response?.data) {
-                alert("Error: " + JSON.stringify(error.response.data, null, 2));
-            } else {
-                alert("Login failed. Please try again.");
-            }
+            alert("Login failed. Please try again.");
         }
     }
 
