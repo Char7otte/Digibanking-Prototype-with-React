@@ -2,6 +2,11 @@ import { useState, useEffect, type ChangeEvent } from "react";
 import ReactModal from "react-modal";
 import styles from "./AssistanceComponent.module.css";
 
+const defaultElementDistanceMin = 8;
+const defaultElementDistanceMax = 24;
+const defaultButtonSizeMin = 50;
+const defaultButtonSizeMax = 100;
+
 function AssistanceComponent() {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -14,7 +19,7 @@ function AssistanceComponent() {
     }
 
     //Controls the distance between elements.
-    const [elementDistance, setElementDistance] = useState(16);
+    const [elementDistance, setElementDistance] = useState(defaultElementDistanceMin);
 
     function handleDistanceChange(e: ChangeEvent<HTMLInputElement>) {
         const distance = e.target.value;
@@ -22,7 +27,7 @@ function AssistanceComponent() {
         localStorage.setItem("elementDistance", distance);
     }
 
-    const [buttonSize, setButtonSize] = useState(50);
+    const [buttonSize, setButtonSize] = useState(defaultButtonSizeMin);
 
     function handlebuttonSizeChange(e: ChangeEvent<HTMLInputElement>) {
         const size = e.target.value;
@@ -53,18 +58,26 @@ function AssistanceComponent() {
 
     return (
         <div>
-            <button onClick={openModal}>Assistance♿</button>
+            <button onClick={openModal} className={`${styles.helpButton} important-button`}>
+                Assistance♿
+            </button>
             <ReactModal isOpen={isOpen} onRequestClose={closeModal}>
                 <label>
                     Distance between buttons: <strong>{elementDistance}</strong>
                 </label>
                 <br />
-                <input type="range" min="16" max="48" onChange={handleDistanceChange} value={elementDistance} />
+                <input
+                    type="range"
+                    min={defaultElementDistanceMin}
+                    max={defaultElementDistanceMax}
+                    onChange={handleDistanceChange}
+                    value={elementDistance}
+                />
                 <hr />
                 <label>
                     Button size: <strong>{buttonSize}</strong>
                 </label>
-                <input type="range" min="50" max="150" onChange={handlebuttonSizeChange} value={buttonSize} />
+                <input type="range" min={defaultButtonSizeMin} max={defaultButtonSizeMax} onChange={handlebuttonSizeChange} value={buttonSize} />
             </ReactModal>
         </div>
     );

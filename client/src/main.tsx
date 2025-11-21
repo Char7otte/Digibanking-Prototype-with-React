@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./bootstrap-utilities.css";
 import "./index.css";
 import Dashboard from "./Pages/Dashboard/Dashboard.tsx";
 import Login from "./Pages/Login/Login.tsx";

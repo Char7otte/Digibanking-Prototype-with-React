@@ -1,0 +1,21 @@
+.mainContainer {
+        margin: 0 30px;
+        padding: 30px;
+        border: 1px solid var(--secondary-bg-color);
+        border-radius: 15px;
+        display: flex;
+        justify-content: center;
+}
+
+.loginForm {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+}
+
+.loginForm label {
+        width: 100%;
+        display: block;
+        text-align: start;
+}

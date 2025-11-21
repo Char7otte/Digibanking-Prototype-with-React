@@ -1,6 +1,9 @@
 :root {
-  --spacing: 16px;
+  --spacing: 8;
   --buttonSize: 50px;
+  --secondary-text-color: #978b8b;
+  --secondary-bg-color: #e2e2e2;
+  --ocbc-red: #ed1c24;
 }
 
 
@@ -11,14 +14,47 @@
 
 body {
   margin: 0;
-  font-family: arial, sans-serif;
+  font-family: "Trebuchet MS", sans-serif;
 }
 
 a {
   text-decoration: none;
+  width: 100%;
 }
 
 .important-button {
   color: white;
-  background-color: red;
+  background-color: var(--ocbc-red)
+}
+
+button,
+input {
+  min-height: var(--buttonSize);
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  background-color: var(--secondary-bg-color);
+}
+
+input[type=range] {
+  width: 100%;
+  margin: 0;
+}
+
+input {
+  padding: 0px;
+  padding-left: 10px;
+}
+
+.subtitle {
+  color: var(--secondary-text-color);
+}
+
+h1 {
+  font-weight: normal;
+  margin: 10px 0;
+}
+
+p {
+  margin: 10px 0;
 }
