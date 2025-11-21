@@ -58,7 +58,7 @@ function AssistanceComponent() {
 
     return (
         <div>
-            <button onClick={openModal} className={`${styles.helpButton} important-button`}>
+            <button onClick={openModal} className={`${styles.helpButton} important-button ignore-sizing`}>
                 Assistance♿
             </button>
             <ReactModal isOpen={isOpen} onRequestClose={closeModal}>

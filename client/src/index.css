@@ -58,4 +58,7 @@ p {
   margin-bottom: var(--spacing);
 }
 
+.ignore-sizing {
+  min-height: 0px;
+  height: 50px;
 }
