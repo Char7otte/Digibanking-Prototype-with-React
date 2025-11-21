@@ -6,16 +6,6 @@ const dashboardController = require("./api-mvc/controllers/dashboardController")
 const profileController = require("./api-mvc/controllers/profileController");
 const transferController = require("./api-mvc/controllers/transferController");
 
-// Home
-router.get("/", (req, res) => {
-    res.render("index", { user: req.session.user });
-});
-
-// Login page
-router.get("/login", (req, res) => {
-    res.render("login", { error: null });
-});
-
 // Login action
 router.post("/login", loginController.login);
 
