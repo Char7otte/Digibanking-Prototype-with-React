@@ -1,4 +1,4 @@
-import { type FormEvent } from "react";
+import { type FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "./Login.module.css";
@@ -7,6 +7,7 @@ import OCBCLogo from "../../assets/ocbc.svg";
 
 function LoginComponent() {
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
 
     async function handleLogin(e: FormEvent) {
         e.preventDefault();
@@ -19,6 +20,7 @@ function LoginComponent() {
         };
 
         try {
+            setIsLoading(true);
             const res = await axios.post("http://localhost:8080/login", data, {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
@@ -31,7 +33,9 @@ function LoginComponent() {
                     user: res.data.user,
                 },
             });
+            setIsLoading(false);
         } catch (error: any) {
+            setIsLoading(false);
             console.log("Login error: ", error);
 
             if (error.response?.data) {
@@ -41,6 +45,8 @@ function LoginComponent() {
             }
         }
     }
+
+    if (isLoading) return <div className="loadingContainer">Logging in...</div>;
 
     return (
         <div className="min-vh-100 d-flex align-items-center justify-content-center flex-column">
