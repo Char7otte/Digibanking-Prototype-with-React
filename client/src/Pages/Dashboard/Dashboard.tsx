@@ -32,28 +32,27 @@ function Dashboard() {
     const name = "Senior Tan";
     return (
         <>
-            <h1 className={styles.title}>Welcome back, {name}</h1>
+            <h1>Welcome back, {name}</h1>
             <hr />
             <section>
-                <h2 className={styles.myAccountsTitle}>What would you like to do?</h2>
-                <div className={styles.buttonContainer}>
+                <h2>What would you like to do?</h2>
+                <div>
                     <Link to={"/transaction"}>
-                        <button type="submit" className="spacing-md important-button">
+                        <button type="submit" className="spacing-md">
                             Transfer Money
                         </button>
                     </Link>
                     <button className="spacing-md">Pay Bills</button>
-                    <button className={styles.lastButtonOfDiv}>View Transactions</button>
+                    <button>View Transactions</button>
                 </div>
             </section>
             <hr />
             <section>
-                <h2 className={styles.myAccountsTitle}>My Accounts</h2>
+                <h2>My Accounts</h2>
                 <AccountCardComponent accountData={savingsAccount} />
                 <AccountCardComponent accountData={checkingAccount} />
                 <AccountCardComponent accountData={creditAccount} />
             </section>
-            {/* <FooterComponent /> */}
             <AssistanceComponent />
         </>
     );

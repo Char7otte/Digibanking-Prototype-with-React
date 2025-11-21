@@ -52,21 +52,19 @@ function AssistanceComponent() {
     ReactModal.setAppElement("#root");
 
     return (
-        <div className={styles.assistanceButtonContainer}>
-            <button onClick={openModal} className="important-button">
-                Assistance♿
-            </button>
+        <div>
+            <button onClick={openModal}>Assistance♿</button>
             <ReactModal isOpen={isOpen} onRequestClose={closeModal}>
-                <label className={styles.label}>
+                <label>
                     Distance between buttons: <strong>{elementDistance}</strong>
                 </label>
                 <br />
-                <input type="range" className={styles.rangeInput} min="16" max="48" onChange={handleDistanceChange} value={elementDistance} />
+                <input type="range" min="16" max="48" onChange={handleDistanceChange} value={elementDistance} />
                 <hr />
-                <label className={styles.label}>
+                <label>
                     Button size: <strong>{buttonSize}</strong>
                 </label>
-                <input type="range" className={styles.rangeInput} min="50" max="150" onChange={handlebuttonSizeChange} value={buttonSize} />
+                <input type="range" min="50" max="150" onChange={handlebuttonSizeChange} value={buttonSize} />
             </ReactModal>
         </div>
     );

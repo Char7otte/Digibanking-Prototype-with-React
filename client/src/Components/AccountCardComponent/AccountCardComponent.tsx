@@ -23,15 +23,13 @@ function AccountCardComponent({ accountData: { type, currency, number, money, is
     }
 
     return (
-        <div className={`${styles.cardContainer} spacing-md`}>
-            <div className={styles.header}>
-                <div className={styles.subheader}>
+        <div className="spacing-md">
+            <div>
+                <div>
                     <h2>{type}</h2>
                     <p>{obfuscateAccountNumber(number)}</p>
                 </div>
-                <button onClick={toggleHideMoney} className={styles.ignoreSizing}>
-                    Hide
-                </button>
+                <button onClick={toggleHideMoney}>Hide</button>
             </div>
 
             <p>

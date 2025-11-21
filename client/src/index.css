@@ -3,25 +3,10 @@
   --buttonSize: 50px;
 }
 
+
 .spacing-md {
   display: block;
   margin-bottom: var(--spacing);
-}
-
-.spacing-lg {
-  margin-bottom: calc(var(--spacing) * 2);
-}
-
-.spacing-sm {
-  margin-bottom: calc(var(--spacing) / 2);
-}
-
-.padding-md {
-  padding: var(--spacing);
-}
-
-.gap-md {
-  gap: var(--spacing);
 }
 
 body {
@@ -31,42 +16,6 @@ body {
 
 a {
   text-decoration: none;
-}
-
-#root {
-  font-size: 2rem;
-  margin: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-input {
-  font-size: 2rem;
-  min-height: var(--buttonSize);
-  width: 100%;
-  padding: 0;
-}
-
-button {
-  font-size: 2rem;
-  min-height: var(--buttonSize);
-  border-radius: 10px;
-  border: none;
-  padding: 0;
-}
-
-h1,
-h2 {
-  all: unset;
-  display: block;
-}
-
-hr {
-  margin: 0;
-  margin-bottom: 10px;
 }
 
 .important-button {

@@ -5,7 +5,7 @@ import AssistanceComponent from "../../Components/AssistanceComponent/Assistance
 function LoginComponent() {
     return (
         <>
-            <form action="" className={styles.container}>
+            <form action="">
                 <label htmlFor="username">Username:</label>
                 <input type="text" name="username" id="username" placeholder="Enter your username" className="spacing-md" />
                 <label htmlFor="username">Password:</label>
@@ -15,9 +15,7 @@ function LoginComponent() {
                 </a>
 
                 <Link to="/dashboard">
-                    <button type="submit" className={styles.loginButton}>
-                        Login
-                    </button>
+                    <button type="submit">Login</button>
                 </Link>
             </form>
             <AssistanceComponent />

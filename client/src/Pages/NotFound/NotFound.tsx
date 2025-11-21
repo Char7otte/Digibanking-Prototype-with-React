@@ -3,7 +3,7 @@ import styles from "./NotFound.module.css";
 
 function NotFound() {
     return (
-        <div className={styles.centerText}>
+        <div>
             <h1>404 Not found</h1>
             <p>This page doesn't exist!</p>
             <Link to={"/"}>
