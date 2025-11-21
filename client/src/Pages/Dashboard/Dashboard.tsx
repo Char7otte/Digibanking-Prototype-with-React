@@ -1,10 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styles from "./Dashboard.module.css";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 import AssistanceComponent from "../../Components/AssistanceComponent/AssistanceComponent";
 // import FooterComponent from "../../Components/FooterComponent/FooterComponent";
 
 function Dashboard() {
+    const location = useLocation();
+    console.log(location.state);
+
     const savingsAccount = {
         type: "Savings",
         number: "1234 5678 0987 7654",

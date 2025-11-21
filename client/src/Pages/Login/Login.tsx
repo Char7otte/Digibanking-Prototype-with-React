@@ -1,9 +1,47 @@
-import { Link } from "react-router-dom";
+import { type FormEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import styles from "./Login.module.css";
 import AssistanceComponent from "../../Components/AssistanceComponent/AssistanceComponent";
 import OCBCLogo from "../../assets/ocbc.svg";
 
 function LoginComponent() {
+    const navigate = useNavigate();
+
+    async function handleLogin(e: FormEvent) {
+        e.preventDefault();
+
+        const form = e.target as HTMLFormElement;
+        const formData = new FormData(form);
+        const data = {
+            username: formData.get("username"),
+            password: formData.get("password"),
+        };
+
+        try {
+            const res = await axios.post("http://localhost:8080/login", data, {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                withCredentials: true,
+            });
+
+            navigate("/dashboard", {
+                state: {
+                    user: res.data.user,
+                },
+            });
+        } catch (error: any) {
+            console.log("Login error: ", error);
+
+            if (error.response?.data) {
+                alert("Error: " + JSON.stringify(error.response.data, null, 2));
+            } else {
+                alert("Login failed. Please try again.");
+            }
+        }
+    }
+
     return (
         <div className="min-vh-100 d-flex align-items-center justify-content-center flex-column">
             <section>
@@ -14,7 +52,7 @@ function LoginComponent() {
                 <div>
                     <h1>Welcome Back</h1>
                     <p className="subtitle pb-4">Sign in to access your bank account</p>
-                    <form action="" className={styles.loginForm}>
+                    <form onSubmit={handleLogin} className={styles.loginForm}>
                         <label htmlFor="username" className="m-2">
                             Username
                         </label>
@@ -26,9 +64,7 @@ function LoginComponent() {
                         <a href="" className="spacing-md d-block text-start w-100 mt-2">
                             Forgot password?
                         </a>
-                        <Link to="/dashboard">
-                            <button type="submit">Sign In</button>
-                        </Link>
+                        <button type="submit">Sign In</button>
                         <hr />
                         <p>
                             New to OCBC? <a href="">Open an Account</a>
