@@ -6,12 +6,6 @@
   --ocbc-red: #ed1c24;
 }
 
-
-.spacing-md {
-  display: block;
-  margin-bottom: var(--spacing);
-}
-
 body {
   margin: 0;
   font-family: "Trebuchet MS", sans-serif;
@@ -20,11 +14,6 @@ body {
 a {
   text-decoration: none;
   width: 100%;
-}
-
-.important-button {
-  color: white;
-  background-color: var(--ocbc-red)
 }
 
 button,
@@ -46,10 +35,6 @@ input {
   padding-left: 10px;
 }
 
-.subtitle {
-  color: var(--secondary-text-color);
-}
-
 h1 {
   font-weight: normal;
   margin: 10px 0;
@@ -57,4 +42,20 @@ h1 {
 
 p {
   margin: 10px 0;
+}
+
+.important-button {
+  color: white;
+  background-color: var(--ocbc-red)
+}
+
+.subtitle {
+  color: var(--secondary-text-color);
+}
+
+.spacing-md {
+  display: block;
+  margin-bottom: var(--spacing);
+}
+
 }
