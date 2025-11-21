@@ -1,12 +1,48 @@
-import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./Dashboard.module.css";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 import AssistanceComponent from "../../Components/AssistanceComponent/AssistanceComponent";
 // import FooterComponent from "../../Components/FooterComponent/FooterComponent";
 
+interface User {
+    id: number;
+    username: string;
+    name: string;
+    account_number: string;
+    balance: number;
+    account_type: string;
+    currency: string;
+}
+
 function Dashboard() {
-    const location = useLocation();
-    console.log(location.state);
+    const navigate = useNavigate();
+    const [user, setUser] = useState<User>();
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchUserData() {
+            try {
+                const response = await axios.get("http://localhost:8080/dashboard", {
+                    withCredentials: true,
+                });
+                setUser(response.data.user);
+            } catch (error: any) {
+                console.error("Error fetching user data:", error);
+                if (error.response?.status === 401) {
+                    navigate("/login");
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        fetchUserData();
+    }, []);
+
+    if (isLoading) return <div className="loadingContainer">Loading...</div>;
+    if (!user) return <div className="loadingContainer">Not authenticated</div>;
 
     const savingsAccount = {
         type: "Savings",
@@ -32,10 +68,9 @@ function Dashboard() {
         isHidden: true,
     };
 
-    const name = "Senior Tan";
     return (
         <>
-            <h1>Welcome back, {name}</h1>
+            <h1>Welcome back, {user.name}.</h1>
             <hr />
             <section>
                 <h2>What would you like to do?</h2>
