@@ -28,24 +28,10 @@ async function login(req, res) {
     if (!username || !password) return res.status(400).json({ error: 'username and password required' });
 
     const user = await authModel.findUserByUsername(username);
-    if (!user) {
-      console.warn(`[auth] login failed: user not found for username='${username}'`);
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-
-    // diagnostic info for debugging — shows whether a password hash exists and its length
-    try {
-      const hashPreview = user.password_hash ? String(user.password_hash).slice(0, 20) : null;
-      console.debug(`[auth] signing in username='${username}', userId=${user.id}, hashPreview='${hashPreview}', hashLength=${user.password_hash ? String(user.password_hash).length : 0}`);
-    } catch (e) {
-      // ignore logging errors
-    }
+    if (!user) return res.status(401).json({ error: 'Invalid credentials' });
 
     const ok = await authModel.verifyPassword(user.password_hash, password);
-    if (!ok) {
-      console.warn(`[auth] login failed: password mismatch for username='${username}', userId=${user.id}`);
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
+    if (!ok) return res.status(401).json({ error: 'Invalid credentials' });
 
     const secret = process.env.JWT_SECRET;
     if (!secret) return res.status(500).json({ error: 'JWT_SECRET not configured on server' });
