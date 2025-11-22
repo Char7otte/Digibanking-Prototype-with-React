@@ -79,3 +79,16 @@ hr {
   justify-content: center;
   align-items: center;
 }
+
+.bodyMini {
+  width: 100%;
+  max-width: 700px;
+}
+
+.selectedAccountCard {
+  border: 5px solid var(--ocbc-red);
+}
+
+.selected {
+  border: 5px solid var(--ocbc-red) !important;
+}

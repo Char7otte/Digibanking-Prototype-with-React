@@ -73,7 +73,7 @@ function Dashboard() {
     if (isSimplified) {
         return (
             <div className="d-flex justify-content-center">
-                <div className={styles.body}>
+                <div className="bodyMini">
                     <HeaderComponent />
                     <hr />
                     <main className={styles.mainContainer}>

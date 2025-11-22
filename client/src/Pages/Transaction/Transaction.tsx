@@ -61,11 +61,20 @@ function Transaction() {
 
     if (isSimplified) {
         return (
-            <div>
-                <HeaderComponent />
-                <main>
-                    <h1>Transfer money</h1>
-                </main>
+            <div className="d-flex justify-content-center">
+                <div className="bodyMini">
+                    <HeaderComponent />
+                    <main>
+                        <h1>Transfer money</h1>
+                        <p>
+                            <span>1</span>
+                            <span>2</span>
+                            <span>3</span>
+                        </p>
+                        <h2>Step 1: What account do you want to transfer from? </h2>
+                        <AccountCardsManager accounts={accountsArray} selectable={true} />
+                    </main>
+                </div>
                 <AccessibilityComponent />
             </div>
         );
