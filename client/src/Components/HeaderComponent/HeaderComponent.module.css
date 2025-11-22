@@ -1,0 +1,12 @@
+.headerInput {
+        background-color: white;
+        margin: 10px;
+        border: 1px solid var(--secondary-input-color);
+}
+
+.modifierButton {
+        margin: 10px;
+        margin-left: 0;
+        width: 50px;
+        background-color: white;
+}

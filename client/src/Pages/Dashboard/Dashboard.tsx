@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { UseSimplified } from "../../main.tsx";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Dashboard.module.css";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 import AssistanceComponent from "../../Components/AssistanceComponent/AssistanceComponent";
+import HeaderComponent from "../../Components/HeaderComponent/HeaderComponent";
 // import FooterComponent from "../../Components/FooterComponent/FooterComponent";
 
 interface User {
@@ -20,6 +22,7 @@ function Dashboard() {
     const navigate = useNavigate();
     const [user, setUser] = useState<User>();
     const [isLoading, setIsLoading] = useState(true);
+    const isUseSimplified = useContext(UseSimplified);
 
     useEffect(() => {
         async function fetchUserData() {
@@ -67,49 +70,50 @@ function Dashboard() {
 
     if (isLoading) return <div className="loadingContainer">Loading...</div>;
     if (!user) return <div className="loadingContainer">Not authenticated</div>;
-
-    return (
-        <div className="d-flex justify-content-center">
-            <div className={styles.body}>
-                <header className="d-flex justify-content-center">
-                    <input type="text" placeholder="Search transactions, payments" className={styles.headerInput} />
-                </header>
-                <hr />
-                <main className={styles.mainContainer}>
-                    <h1 className="text-center">Welcome back</h1>
-                    <p className="subtitle fs-2 text-center">{user.name}</p>
-                    <section className={styles.subContainer}>
-                        <h2>What would you like to do?</h2>
-                        <div>
-                            <Link to={"/transaction"}>
-                                <button type="submit" className="spacing-md fs-3 important-button">
-                                    Transfer Money
-                                </button>
-                            </Link>
-                            <button className="spacing-md fs-3">Pay Bills</button>
-                            <button className="fs-3">View Transactions</button>
-                        </div>
-                    </section>
-                    <section className={`${styles.subContainer} mt-2`}>
-                        <h2>My Accounts</h2>
-                        <AccountCardComponent
-                            accountData={{
-                                type: "Checking",
-                                currency: user.currency,
-                                number: user.account_number,
-                                money: user.balance,
-                                isHidden: false,
-                            }}
-                        />
-                        <AccountCardComponent accountData={savingsAccount} />
-                        <AccountCardComponent accountData={creditAccount} />
-                        <AccountCardComponent accountData={checkingAccount} />
-                    </section>
-                </main>
-                <AssistanceComponent />
+    if (isUseSimplified) {
+        return (
+            <div className="d-flex justify-content-center">
+                <div className={styles.body}>
+                    <HeaderComponent />
+                    <hr />
+                    <main className={styles.mainContainer}>
+                        <h1 className="text-center">Welcome back</h1>
+                        <p className="subtitle fs-2 text-center">{user.name}</p>
+                        <section className={styles.subContainer}>
+                            <h2>What would you like to do?</h2>
+                            <div>
+                                <Link to={"/transaction"}>
+                                    <button type="submit" className="spacing-md fs-3 important-button">
+                                        Transfer Money
+                                    </button>
+                                </Link>
+                                <button className="spacing-md fs-3">Pay Bills</button>
+                                <button className="fs-3">View Transactions</button>
+                            </div>
+                        </section>
+                        <section className={`${styles.subContainer} mt-2`}>
+                            <h2>My Accounts</h2>
+                            <AccountCardComponent
+                                accountData={{
+                                    type: "Checking",
+                                    currency: user.currency,
+                                    number: user.account_number,
+                                    money: user.balance,
+                                    isHidden: false,
+                                }}
+                            />
+                            <AccountCardComponent accountData={savingsAccount} />
+                            <AccountCardComponent accountData={creditAccount} />
+                            <AccountCardComponent accountData={checkingAccount} />
+                        </section>
+                    </main>
+                    <AssistanceComponent />
+                </div>
             </div>
-        </div>
-    );
+        );
+    } else {
+        return <div>Not simplified menu!</div>;
+    }
 }
 
 export default Dashboard;

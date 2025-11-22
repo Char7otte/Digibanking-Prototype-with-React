@@ -13,9 +13,3 @@
 .subContainer {
         width: 90%;
 }
-
-.headerInput {
-        background-color: white;
-        margin: 10px;
-        border: 1px solid var(--secondary-input-color);
-}
