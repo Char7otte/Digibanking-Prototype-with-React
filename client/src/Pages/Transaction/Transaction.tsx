@@ -29,6 +29,9 @@ function Transaction() {
     const [user, setUser] = useState<User>();
     const [isLoading, setIsLoading] = useState(true);
     const { isSimplified } = useMenuContext();
+    const accountCardArticles = useRef<Element[]>([]);
+    const [selectedAccountCardArticle, setSelectedAccountCardArticle] = useState<Element>();
+    const accounts = useRef<Account[]>([]);
 
     useEffect(() => {
         async function fetchUserData() {
@@ -63,10 +66,6 @@ function Transaction() {
             overseasButton?.classList.add("active");
         }
     }
-
-    const accountCardArticles = useRef<Element[]>([]);
-    const [selectedAccountCardArticle, setSelectedAccountCardArticle] = useState<Element>();
-    const accounts = useRef<Account[]>([]);
 
     useEffect(() => {
         const articles = document.querySelectorAll(".accountCard");
