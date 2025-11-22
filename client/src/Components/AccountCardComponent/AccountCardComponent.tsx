@@ -23,20 +23,22 @@ function AccountCardComponent({ accountData: { type, currency, number, money, is
     }
 
     return (
-        <div className="spacing-md">
-            <div>
+        <article className={`${styles.mainContainer} spacing-md`}>
+            <div className="d-flex justify-content-between">
                 <div>
-                    <h2>{type}</h2>
-                    <p>{obfuscateAccountNumber(number)}</p>
+                    <h3>{type}</h3>
+                    <p className="subtitle">{obfuscateAccountNumber(number)}</p>
                 </div>
-                <button onClick={toggleHideMoney}>Hide</button>
+                <button onClick={toggleHideMoney} className={styles.hideButton}>
+                    Hide
+                </button>
             </div>
 
             <p>
                 {currency + " "}
-                {handleMoneyDisplay(money, _isHidden)}
+                <span className="fs-2">{handleMoneyDisplay(money, _isHidden)}</span>
             </p>
-        </div>
+        </article>
     );
 }
 
