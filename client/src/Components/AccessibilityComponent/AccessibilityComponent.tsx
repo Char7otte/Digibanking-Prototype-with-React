@@ -1,13 +1,13 @@
 import { useState, useEffect, type ChangeEvent } from "react";
 import ReactModal from "react-modal";
-import styles from "./AssistanceComponent.module.css";
+import styles from "./AccessibilityComponent.module.css";
 
 const defaultElementDistanceMin = 8;
 const defaultElementDistanceMax = 24;
 const defaultButtonSizeMin = 50;
 const defaultButtonSizeMax = 100;
 
-function AssistanceComponent() {
+function AccessibilityComponent() {
     const [isOpen, setIsOpen] = useState(false);
 
     function openModal() {
@@ -83,4 +83,4 @@ function AssistanceComponent() {
     );
 }
 
-export default AssistanceComponent;
+export default AccessibilityComponent;

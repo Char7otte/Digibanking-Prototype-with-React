@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Dashboard.module.css";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
-import AssistanceComponent from "../../Components/AssistanceComponent/AssistanceComponent";
+import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent.tsx";
 import HeaderComponent from "../../Components/HeaderComponent/HeaderComponent";
 import { useMenuContext } from "../../MenuContext.tsx";
 // import FooterComponent from "../../Components/FooterComponent/FooterComponent";
@@ -107,7 +107,7 @@ function Dashboard() {
                             <AccountCardComponent accountData={checkingAccount} />
                         </section>
                     </main>
-                    <AssistanceComponent />
+                    <AccessibilityComponent />
                 </div>
             </div>
         );
