@@ -90,7 +90,7 @@ function Dashboard() {
                             <button className="fs-3">View Transactions</button>
                         </div>
                     </section>
-                    <section className={styles.subContainer}>
+                    <section className={`${styles.subContainer} mt-2`}>
                         <h2>My Accounts</h2>
                         <AccountCardComponent
                             accountData={{

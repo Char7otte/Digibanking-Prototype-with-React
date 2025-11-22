@@ -2,7 +2,8 @@
   --spacing: 8;
   --buttonSize: 50px;
   --secondary-text-color: #978b8b;
-  --secondary-bg-color: #e2e2e2;
+  --secondary-input-color: #e2e2e2;
+  --secondary-bg-color: #f9f9f9;
   --ocbc-red: #ed1c24;
 }
 
@@ -22,7 +23,7 @@ input {
   width: 100%;
   border-radius: 10px;
   border: none;
-  background-color: var(--secondary-bg-color);
+  background-color: var(--secondary-input-color);
 }
 
 input[type=range] {
@@ -45,10 +46,11 @@ p {
 }
 
 hr {
-  height: 2px;
+  height: 1px;
   width: 100%;
-  background-color: var(--secondary-bg-color);
+  background-color: var(--secondary-input-color);
   border: none;
+  margin: 0;
 }
 
 .important-button {
