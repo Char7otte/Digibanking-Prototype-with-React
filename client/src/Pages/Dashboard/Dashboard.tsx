@@ -41,9 +41,6 @@ function Dashboard() {
         fetchUserData();
     }, []);
 
-    if (isLoading) return <div className="loadingContainer">Loading...</div>;
-    if (!user) return <div className="loadingContainer">Not authenticated</div>;
-
     const savingsAccount = {
         type: "Savings",
         number: "1234 5678 0987 7654",
@@ -67,6 +64,9 @@ function Dashboard() {
         money: 1250.75,
         isHidden: true,
     };
+
+    if (isLoading) return <div className="loadingContainer">Loading...</div>;
+    if (!user) return <div className="loadingContainer">Not authenticated</div>;
 
     return (
         <>
