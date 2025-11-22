@@ -160,7 +160,7 @@ function Dashboard() {
                     <section className="quick-actions card">
                         <h3>Quick Actions</h3>
                         <div className="quick-actions-row">
-                            <a className="qa-item" href="/transfer">
+                            <a className="qa-item" href="/transaction">
                                 Transfer
                             </a>
                             <a className="qa-item" href="#">
