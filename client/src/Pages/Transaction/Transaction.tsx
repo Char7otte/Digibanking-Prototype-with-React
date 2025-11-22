@@ -177,7 +177,7 @@ function Transaction() {
                     <HeaderComponent />
                     <h1 className="page-title">Transfer Money</h1>
                     <p className="page-subtitle">Send money locally or overseas</p>
-                    <input type="radio" id="modeLocal" name="mode-select" value="local" checked hidden />
+                    <input type="radio" id="modeLocal" name="mode-select" value="local" hidden />
                     <input type="radio" id="modeOverseas" name="mode-select" value="overseas" hidden />
                     <div className="transfer-tabs">
                         <button className="tab spacing-md active" onClick={() => handleModeChange("local")} id="localButton">
