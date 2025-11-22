@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import HeaderComponent from "../../Components/HeaderComponent/HeaderComponent";
@@ -14,6 +14,13 @@ interface User {
     balance: number;
     account_type: string;
     currency: string;
+}
+
+interface Account {
+    type: string;
+    number: string;
+    currency: string;
+    money: number;
 }
 
 function Transaction() {
@@ -55,6 +62,46 @@ function Transaction() {
             localButton?.classList.remove("active");
             overseasButton?.classList.add("active");
         }
+    }
+
+    const accountCardArticles = useRef<Element[]>([]);
+    const [selectedAccountCardArticle, setSelectedAccountCardArticle] = useState<Element>();
+    const accounts = useRef<Account[]>([]);
+
+    useEffect(() => {
+        const articles = document.querySelectorAll(".accountCard");
+        accountCardArticles.current = [...articles];
+
+        articles.forEach((article) => {
+            article.addEventListener("click", selectCardArticle);
+        });
+
+        return () => {
+            accountCardArticles.current.forEach((article) => {
+                article.removeEventListener("click", selectCardArticle);
+            });
+            accountCardArticles.current = [];
+        };
+    }, [isSimplified]);
+
+    function selectCardArticle(e: Event) {
+        updateSelectedAccountCard(e.currentTarget as HTMLElement);
+    }
+
+    function addAccountCard(newCard: HTMLElement) {
+        accountCardArticles.current = [...accountCardArticles.current, newCard];
+    }
+
+    function updateSelectedAccountCard(newSelectedCard: HTMLElement) {
+        setSelectedAccountCardArticle(newSelectedCard);
+        newSelectedCard.classList.add("selected");
+        accountCardArticles.current.forEach((article) => {
+            if (article != newSelectedCard) article.classList.remove("selected");
+        });
+    }
+
+    function addAccounts(newAccount: Account) {
+        accounts.current = [...accounts.current, newAccount];
     }
 
     if (isLoading) return <div className="loadingContainer">Loading...</div>;
