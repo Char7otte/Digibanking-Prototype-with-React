@@ -23,7 +23,7 @@ function AccountCardComponent({ accountData: { type, currency, number, money, is
     }
 
     return (
-        <article className={`${styles.mainContainer} spacing-md account-card`}>
+        <article className={`${styles.mainContainer} spacing-md accountCard`}>
             <div className="d-flex justify-content-between">
                 <div>
                     <h3>{type}</h3>
