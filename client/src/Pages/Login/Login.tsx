@@ -41,7 +41,7 @@ function LoginComponent() {
 
     return (
         <div className="min-vh-100 d-flex align-items-center justify-content-center flex-column">
-            <section>
+            <section className="pt-4">
                 <img src={OCBCLogo} alt="" />
                 <p className="subtitle pb-4">Internet Banking</p>
             </section>

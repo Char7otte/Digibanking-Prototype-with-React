@@ -5,7 +5,7 @@
         border-radius: 15px;
         display: flex;
         justify-content: center;
-        padding-bottom: 60px;
+        margin-bottom: 60px;
 }
 
 .loginForm {

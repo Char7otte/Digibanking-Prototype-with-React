@@ -44,6 +44,13 @@ p {
   margin: 10px 0;
 }
 
+hr {
+  height: 2px;
+  width: 100%;
+  background-color: var(--secondary-bg-color);
+  border: none;
+}
+
 .important-button {
   color: white;
   background-color: var(--ocbc-red)
