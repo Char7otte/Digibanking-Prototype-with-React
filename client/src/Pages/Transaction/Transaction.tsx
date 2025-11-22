@@ -42,8 +42,18 @@ function Transaction() {
         fetchUserData();
     }, []);
 
-    function handleModeChange(mode: string) {
+    function handleModeChange(newMode: string) {
         setMode(mode);
+        const localButton = document.querySelector("#localButton");
+        const overseasButton = document.querySelector("#overseasButton");
+
+        if (newMode == "local") {
+            localButton?.classList.add("active");
+            overseasButton?.classList.remove("active");
+        } else {
+            localButton?.classList.remove("active");
+            overseasButton?.classList.add("active");
+        }
     }
 
     if (isLoading) return <div className="loadingContainer">Loading...</div>;
@@ -69,10 +79,10 @@ function Transaction() {
                     <input type="radio" id="modeLocal" name="mode-select" value="local" checked hidden />
                     <input type="radio" id="modeOverseas" name="mode-select" value="overseas" hidden />
                     <div className="transfer-tabs">
-                        <button className="tab spacing-md active" onClick={() => handleModeChange("local")}>
+                        <button className="tab spacing-md active" onClick={() => handleModeChange("local")} id="localButton">
                             Local Transfer
                         </button>
-                        <button className="tab spacing-md" onClick={() => handleModeChange("overseas")}>
+                        <button className="tab spacing-md" onClick={() => handleModeChange("overseas")} id="overseasButton">
                             Overseas Transfer
                         </button>
                         <div className="card-transfer-card">
