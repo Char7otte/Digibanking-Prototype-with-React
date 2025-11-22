@@ -660,7 +660,6 @@ body {
 
 /* Tabs */
 .transfer-tabs {
-    display: flex;
     gap: 12px;
     margin-bottom: 20px;
 }
