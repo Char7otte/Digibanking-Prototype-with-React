@@ -1,11 +1,11 @@
-import { useState, useEffect, useContext } from "react";
-import { UseSimplified } from "../../main.tsx";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Dashboard.module.css";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 import AssistanceComponent from "../../Components/AssistanceComponent/AssistanceComponent";
 import HeaderComponent from "../../Components/HeaderComponent/HeaderComponent";
+import { useMenuContext } from "../../MenuContext.tsx";
 // import FooterComponent from "../../Components/FooterComponent/FooterComponent";
 
 interface User {
@@ -22,7 +22,7 @@ function Dashboard() {
     const navigate = useNavigate();
     const [user, setUser] = useState<User>();
     const [isLoading, setIsLoading] = useState(true);
-    const isUseSimplified = useContext(UseSimplified);
+    const { isSimplified } = useMenuContext();
 
     useEffect(() => {
         async function fetchUserData() {
@@ -70,7 +70,7 @@ function Dashboard() {
 
     if (isLoading) return <div className="loadingContainer">Loading...</div>;
     if (!user) return <div className="loadingContainer">Not authenticated</div>;
-    if (isUseSimplified) {
+    if (isSimplified) {
         return (
             <div className="d-flex justify-content-center">
                 <div className={styles.body}>
@@ -112,7 +112,12 @@ function Dashboard() {
             </div>
         );
     } else {
-        return <div>Not simplified menu!</div>;
+        return (
+            <>
+                <HeaderComponent />
+                <h1>Not simplified menu!</h1>
+            </>
+        );
     }
 }
 
