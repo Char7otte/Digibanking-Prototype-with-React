@@ -20,7 +20,9 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
-    <MenuContextProvider>
-        <RouterProvider router={router} />
-    </MenuContextProvider>
+    <StrictMode>
+        <MenuContextProvider>
+            <RouterProvider router={router} />
+        </MenuContextProvider>
+    </StrictMode>
 );
