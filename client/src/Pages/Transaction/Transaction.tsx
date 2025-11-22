@@ -103,6 +103,10 @@ function Transaction() {
         accounts.current = [...accounts.current, newAccount];
     }
 
+    function returnToDashboard() {
+        navigate("/dashboard");
+    }
+
     if (isLoading) return <div className="loadingContainer">Loading...</div>;
     if (!user) return <div className="loadingContainer">Not authenticated</div>;
 
@@ -155,6 +159,12 @@ function Transaction() {
                         <AccountCardComponent accountData={savingsAccount} />
                         <AccountCardComponent accountData={creditAccount} />
                         <AccountCardComponent accountData={checkingAccount} />
+                        <div className="d-flex justify-content-between">
+                            <button className="m-2" onClick={returnToDashboard}>
+                                Cancel
+                            </button>
+                            <button className="important-button m-2">Continue</button>
+                        </div>
                     </main>
                 </div>
                 <AccessibilityComponent />
