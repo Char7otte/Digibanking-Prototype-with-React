@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import styles from "./Dashboard.module.css";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent.tsx";
 import HeaderComponent from "../../Components/HeaderComponent/HeaderComponent";
 import { useMenuContext } from "../../MenuContext.tsx";
-// import FooterComponent from "../../Components/FooterComponent/FooterComponent";
 
 interface User {
     id: number;
