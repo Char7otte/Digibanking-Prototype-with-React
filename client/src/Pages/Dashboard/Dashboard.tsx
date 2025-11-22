@@ -124,7 +124,7 @@ function Dashboard() {
                         <div className="dashboard-total">
                             <p className="label">Total balance</p>
                             <p className="amount">
-                                {user.currency} {user.balance}
+                                {user.currency} {user.balance.toFixed(2)}
                             </p>
                         </div>
                     </section>
@@ -133,7 +133,7 @@ function Dashboard() {
                             <p className="acc-title">Savings Account</p>
                             <p className="acc-number">•••• {user.account_number.slice(-4)}</p>
                             <p className="acc-label">Available Balance</p>
-                            <p className="acc-balance">SGD {user.balance}</p>
+                            <p className="acc-balance">SGD {user.balance.toFixed(2)}</p>
                             <a className="acc-details" href="#">
                                 View Details →
                             </a>
