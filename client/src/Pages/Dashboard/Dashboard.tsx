@@ -71,6 +71,7 @@ function Dashboard() {
     return (
         <>
             <h1>Welcome back, {user.name}.</h1>
+            {console.log(user)}
             <hr />
             <section>
                 <h2>What would you like to do?</h2>
@@ -87,7 +88,15 @@ function Dashboard() {
             <hr />
             <section>
                 <h2>My Accounts</h2>
-                <AccountCardComponent accountData={savingsAccount} />
+                <AccountCardComponent
+                    accountData={{
+                        type: user.account_type,
+                        currency: user.currency,
+                        number: user.account_number,
+                        money: user.balance,
+                        isHidden: false,
+                    }}
+                />
                 <AccountCardComponent accountData={checkingAccount} />
                 <AccountCardComponent accountData={creditAccount} />
             </section>
