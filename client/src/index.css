@@ -92,3 +92,15 @@ hr {
 .selected {
   border: 5px solid var(--ocbc-red) !important;
 }
+
+@media (min-width: 1000px) {
+  .ReactModal__Content {
+    inset: 20% !important;
+  }
+}
+
+@media (max-width: 1000px) {
+  .ReactModal__Content {
+    inset: 15% !important;
+  }
+}
