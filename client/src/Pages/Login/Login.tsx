@@ -2,7 +2,7 @@ import { type FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "./Login.module.css";
-import AssistanceComponent from "../../Components/AssistanceComponent/AssistanceComponent";
+import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent";
 import OCBCLogo from "../../assets/ocbc.svg";
 
 function LoginComponent() {
@@ -68,7 +68,7 @@ function LoginComponent() {
                         </p>
                     </form>
                 </div>
-                <AssistanceComponent />
+                <AccessibilityComponent />
             </main>
         </div>
     );

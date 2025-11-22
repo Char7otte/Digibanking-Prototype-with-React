@@ -12,7 +12,7 @@ interface MenuContextType {
 const MenuContext = createContext<MenuContextType | undefined>(undefined);
 
 export function MenuContextProvider({ children }: MenuContextProps) {
-    const [isSimplified, setIsSimplified] = useState(true);
+    const [isSimplified, setIsSimplified] = useState(false);
 
     return <MenuContext.Provider value={{ isSimplified, setIsSimplified }}>{children}</MenuContext.Provider>;
 }
