@@ -24,13 +24,13 @@ function Dashboard() {
     useEffect(() => {
         async function fetchUserData() {
             try {
-                const response = await axios.get("http://localhost:8080/dashboard", {
+                const res = await axios.get("http://localhost:8080/dashboard", {
                     withCredentials: true,
                 });
-                setUser(response.data.user);
+                setUser(res.data.user);
             } catch (error: any) {
                 console.error("Error fetching user data:", error);
-                if (error.response?.status === 401) {
+                if (error.res?.status === 401) {
                     navigate("/login");
                 }
             } finally {
