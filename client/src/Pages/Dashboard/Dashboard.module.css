@@ -13,3 +13,13 @@
 .subContainer {
         width: 90%;
 }
+
+.mainContainerRegular {
+        display: flex;
+        justify-content: center;
+}
+
+.bodyRegular {
+        width: 100%;
+        max-width: 1080px;
+}
