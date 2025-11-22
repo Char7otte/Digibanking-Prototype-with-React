@@ -1,9 +1,10 @@
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useMenuContext } from "../../MenuContext";
 import HeaderComponent from "../../Components/HeaderComponent/HeaderComponent";
 import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent";
-import { useMenuContext } from "../../MenuContext";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 
 interface User {
     id: number;
@@ -59,6 +60,30 @@ function Transaction() {
     if (isLoading) return <div className="loadingContainer">Loading...</div>;
     if (!user) return <div className="loadingContainer">Not authenticated</div>;
 
+    const savingsAccount = {
+        type: "Savings",
+        number: "1234 5678 0987 7654",
+        currency: "SGD",
+        money: 23423,
+        isHidden: false,
+    };
+
+    const checkingAccount = {
+        type: "Checking",
+        number: "5678 1234 8765 4321",
+        currency: "SGD",
+        money: 1520.5,
+        isHidden: false,
+    };
+
+    const creditAccount = {
+        type: "Credit",
+        number: "4321 8765 1234 5678",
+        currency: "SGD",
+        money: 1250.75,
+        isHidden: true,
+    };
+
     if (isSimplified) {
         return (
             <div className="d-flex justify-content-center">
@@ -72,7 +97,18 @@ function Transaction() {
                             <span>3</span>
                         </p>
                         <h2>Step 1: What account do you want to transfer from? </h2>
-                        <AccountCardsManager accounts={accountsArray} selectable={true} />
+                        <AccountCardComponent
+                            accountData={{
+                                type: "Checking",
+                                currency: user.currency,
+                                number: user.account_number,
+                                money: user.balance,
+                                isHidden: false,
+                            }}
+                        />
+                        <AccountCardComponent accountData={savingsAccount} />
+                        <AccountCardComponent accountData={creditAccount} />
+                        <AccountCardComponent accountData={checkingAccount} />
                     </main>
                 </div>
                 <AccessibilityComponent />
