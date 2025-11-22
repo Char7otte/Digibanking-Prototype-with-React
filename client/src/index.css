@@ -104,3 +104,7 @@ hr {
     inset: 15% !important;
   }
 }
+
+.accountCard {
+  background-color: white;
+}
