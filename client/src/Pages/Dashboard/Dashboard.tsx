@@ -115,7 +115,106 @@ function Dashboard() {
         return (
             <>
                 <HeaderComponent />
-                <h1>Not simplified menu!</h1>
+                <section className="dashboard-header">
+                    <div>
+                        <p className="label">Welcome back</p>
+                        <h2 className="user-name">{user.name}</h2>
+                    </div>
+
+                    <div className="dashboard-total">
+                        <p className="label">Total balance</p>
+                        <p className="amount">
+                            {user.currency} {user.balance}
+                        </p>
+                    </div>
+                </section>
+                <section className="accounts-overview grid-3">
+                    <div className="account-card card-red">
+                        <p className="acc-title">Savings Account</p>
+                        <p className="acc-number">•••• {user.account_number.slice(-4)}</p>
+                        <p className="acc-label">Available Balance</p>
+                        <p className="acc-balance">SGD {user.balance}</p>
+                        <a className="acc-details" href="#">
+                            View Details →
+                        </a>
+                    </div>
+
+                    <div className="account-card card-blue">
+                        <p className="acc-title">Current Account</p>
+                        <p className="acc-number">•••• 3721</p>
+                        <p className="acc-label">Available Balance</p>
+                        <p className="acc-balance">SGD 8,950.25</p>
+                        <a className="acc-details" href="#">
+                            View Details →
+                        </a>
+                    </div>
+
+                    <div className="account-card card-purple">
+                        <p className="acc-title">Credit Card</p>
+                        <p className="acc-number">•••• 8904</p>
+                        <p className="acc-label">Available Credit</p>
+                        <p className="acc-balance">SGD 15,420.00</p>
+                        <a className="acc-details" href="#">
+                            View Details →
+                        </a>
+                    </div>
+                </section>
+                <section className="quick-actions card">
+                    <h3>Quick Actions</h3>
+
+                    <div className="quick-actions-row">
+                        <a className="qa-item" href="/transfer">
+                            Transfer
+                        </a>
+                        <a className="qa-item" href="#">
+                            Pay Bills
+                        </a>
+                        <a className="qa-item" href="#">
+                            Cards
+                        </a>
+                        <a className="qa-item" href="#">
+                            Mobile Top-up
+                        </a>
+                        <a className="qa-item" href="#">
+                            Statements
+                        </a>
+                        <a className="qa-item" href="#">
+                            Deposits
+                        </a>
+                    </div>
+                </section>
+                <section className="monthly-summary card">
+                    <p className="summary-title">This Month</p>
+                    <p className="summary-amount">$3,124</p>
+                    <p className="summary-sub">↑ 12% less than last month</p>
+
+                    <hr />
+
+                    <p className="summary-title">Total Balance</p>
+                    <p className="summary-amount">$33,530</p>
+                    <p className="summary-sub">↑ 5.2% growth</p>
+                </section>
+                <section className="transactions card">
+                    <h3>Recent Transactions</h3>
+
+                    <ul className="tx-list">
+                        <li className="tx-item">
+                            <span>Salary Credit</span>
+                            <span className="tx-amount income">+ $5500.00</span>
+                        </li>
+
+                        <li className="tx-item">
+                            <span>Amazon Shopping</span>
+                            <span className="tx-amount expense">- $124.99</span>
+                        </li>
+
+                        <li className="tx-item">
+                            <span>Starbucks Coffee</span>
+                            <span className="tx-amount expense">- $8.50</span>
+                        </li>
+                    </ul>
+                </section>
+                <AccessibilityComponent />
             </>
         );
     }
