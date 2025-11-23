@@ -79,7 +79,7 @@ function Dashboard() {
                         <h1 className="text-center">Welcome back</h1>
                         <p className="subtitle fs-2 text-center">{user.name}</p>
                         <section className={styles.subContainer}>
-                            <h2>What would you like to do?</h2>
+                            <h2 className="mb-2 mt-4">What would you like to do?</h2>
                             <div>
                                 <Link to={"/transaction"}>
                                     <button type="submit" className="spacing-md fs-3 important-button">
@@ -90,8 +90,8 @@ function Dashboard() {
                                 <button className="fs-3">View Transactions</button>
                             </div>
                         </section>
-                        <section className={`${styles.subContainer} mt-2`}>
-                            <h2>My Accounts</h2>
+                        <section className={styles.subContainer}>
+                            <h2 className="mb-2  mt-4">My Accounts</h2>
                             <AccountCardComponent
                                 accountData={{
                                     type: "Checking",
