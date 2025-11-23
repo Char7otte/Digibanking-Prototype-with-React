@@ -75,6 +75,7 @@ function Transaction() {
 
     useEffect(() => {
         const articles = document.querySelectorAll(".accountCard");
+        if (articles.length == 0) return;
         accountCardArticles.current = [...articles];
 
         articles.forEach((article) => {
@@ -87,7 +88,9 @@ function Transaction() {
             });
             accountCardArticles.current = [];
         };
-    }, [isSimplified]);
+    }, [isSimplified, isLoading, transactionStep]);
+    // Includes isLoading to allow for the accountCards to load on mount before getting them.
+    //Includes transactionStep to retrieve accountCards when the user returns.
 
     function selectCardArticle(e: Event) {
         updateSelectedAccountCard(e.currentTarget as HTMLElement);
