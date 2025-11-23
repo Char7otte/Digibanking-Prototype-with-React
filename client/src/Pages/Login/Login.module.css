@@ -8,6 +8,10 @@
         align-items: center;
 }
 
+.mainContainer>div {
+        width: 80%;
+}
+
 @media (max-width: 768px) {
         .mainContainer {
                 margin-bottom: 60px;
