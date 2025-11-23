@@ -38,6 +38,18 @@ function Transaction() {
     const selectedTransfereeAccount = useRef<string | null>(null);
     const transferAmount = useRef<number | null>(null);
     const [transactionStep, setTransactionStep] = useState(0);
+    const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+    const [tutorialStepIndex, setTutorialStepIndex] = useState(0);
+    const fromSelectRef = useRef<HTMLSelectElement | null>(null);
+    const toInputRef = useRef<HTMLInputElement | null>(null);
+    const amountInputRef = useRef<HTMLInputElement | null>(null);
+    const transferButtonRef = useRef<HTMLButtonElement | null>(null);
+    const tooltipRef = useRef<HTMLDivElement | null>(null);
+    const [tooltipPos, setTooltipPos] = useState<{ top: number; left: number; placement: "right" | "left" | "center" | "bottom" }>({
+        top: 0,
+        left: 0,
+        placement: "center",
+    });
 
     useEffect(() => {
         async function fetchUserData() {
@@ -140,6 +152,99 @@ function Transaction() {
         );
         setTransactionStep(0);
     }
+
+    const tutorialSteps = [
+        {
+            title: "Overview",
+            content: (
+                <>
+                    <p>This page lets you transfer money locally or overseas.</p>
+                    <p>Use the 'Local Transfer' and 'Overseas Transfer' tabs to switch modes.</p>
+                </>
+            ),
+        },
+        {
+            title: "From Account",
+            content: <p>The "From Account" selector pre-fills your default account. This is the account the money will be debited from.</p>,
+        },
+        {
+            title: "To Account",
+            content: <p>Enter the recipient's account number in the "To Account" field. Double-check the number before sending.</p>,
+        },
+        {
+            title: "Amount & Transfer",
+            content: <p>Enter the amount, add an optional remark, then press "Transfer Now" to complete the transfer.</p>,
+        },
+    ];
+
+    function openTutorial() {
+        setTutorialStepIndex(0);
+        setIsTutorialOpen(true);
+    }
+
+    function closeTutorial() {
+        setIsTutorialOpen(false);
+    }
+
+    function nextTutorialStep() {
+        setTutorialStepIndex((i) => Math.min(i + 1, tutorialSteps.length - 1));
+    }
+
+    function prevTutorialStep() {
+        setTutorialStepIndex((i) => Math.max(i - 1, 0));
+    }
+
+    // Update tooltip position based on current step and target element
+    useEffect(() => {
+        if (!isTutorialOpen) return;
+
+        function updatePosition() {
+            const margin = 12;
+            let target: Element | null = null;
+            if (tutorialStepIndex === 0) {
+                // center near the page title
+                setTooltipPos({ top: window.innerHeight / 2, left: window.innerWidth / 2, placement: "center" });
+                return;
+            }
+
+            if (tutorialStepIndex === 1) target = fromSelectRef.current;
+            if (tutorialStepIndex === 2) target = toInputRef.current;
+            if (tutorialStepIndex === 3) target = amountInputRef.current ?? transferButtonRef.current;
+
+            if (!target) {
+                setTooltipPos({ top: window.innerHeight / 2, left: window.innerWidth / 2, placement: "center" });
+                return;
+            }
+
+            const rect = target.getBoundingClientRect();
+
+            // Place tooltip centered under the field
+            const centerX = rect.left + rect.width / 2;
+            let left = centerX; // we'll use translateX(-50%) when rendering
+
+            // Compute top as just under the field
+            let top = rect.bottom + margin;
+
+            // Ensure tooltip doesn't go off the bottom of the viewport; if so, show above
+            const approxTooltipHeight = 120; // estimate
+            if (top + approxTooltipHeight > window.innerHeight - 8) {
+                // place above
+                top = rect.top - margin - approxTooltipHeight;
+                // if still negative, clamp
+                if (top < 8) top = 8;
+            }
+
+            setTooltipPos({ top, left, placement: "bottom" });
+        }
+
+        updatePosition();
+        window.addEventListener("resize", updatePosition);
+        window.addEventListener("scroll", updatePosition, true);
+        return () => {
+            window.removeEventListener("resize", updatePosition);
+            window.removeEventListener("scroll", updatePosition, true);
+        };
+    }, [isTutorialOpen, tutorialStepIndex]);
 
     if (isLoading) return <div className="loadingContainer">Loading...</div>;
     if (!user) return <div className="loadingContainer">Not authenticated</div>;
@@ -290,19 +395,40 @@ function Transaction() {
                         <form action="">
                             <input type="hidden" id="modeInput" name="mode" value={mode} />
                             <label>From Account</label>
-                            <select className="input-select spacing-md" required>
+                            <select
+                                ref={fromSelectRef}
+                                className={`${"input-select spacing-md"} ${
+                                    isTutorialOpen && tutorialStepIndex === 1 ? styles.tutorialHighlight : ""
+                                }`}
+                                required
+                            >
                                 <option value={user.account_number}>
                                     {user.account_type} — **** {String(user.account_number).slice(-4)} ({user.currency})
                                 </option>
                             </select>
                             <label>To Account</label>
-                            <input type="text" name="recipient" className="input spacing-md" placeholder="Enter account number" required />
+                            <input
+                                ref={toInputRef}
+                                type="text"
+                                name="recipient"
+                                className={`${"input spacing-md"} ${isTutorialOpen && tutorialStepIndex === 2 ? styles.tutorialHighlight : ""}`}
+                                placeholder="Enter account number"
+                                required
+                            />
                             <label>Amount</label>
-                            <input type="number" name="amount" className="input spacing-md" step="0.01" placeholder="Enter amount" required />
+                            <input
+                                ref={amountInputRef}
+                                type="number"
+                                name="amount"
+                                className={`${"input spacing-md"} ${isTutorialOpen && tutorialStepIndex === 3 ? styles.tutorialHighlight : ""}`}
+                                step="0.01"
+                                placeholder="Enter amount"
+                                required
+                            />
                             <label>Remarks (Optional)</label>
                             <input type="text" name="remarks spacing-md" className="input" placeholder="Add a note" />
                             <div className="transfer-buttons">
-                                <button type="submit" className="button red full">
+                                <button ref={transferButtonRef} type="submit" className="button red full">
                                     Transfer Now
                                 </button>
                                 <button type="button" className="button outline full">
@@ -312,7 +438,77 @@ function Transaction() {
                         </form>
                     </div>
                 </div>
-                <button className="tutorialButton">Tutorial❓</button>
+                <button className="tutorialButton" onClick={openTutorial}>
+                    Tutorial❓
+                </button>
+                {isTutorialOpen && (
+                    <div className={styles.tutorialOverlay} role="dialog" aria-modal="true">
+                        {/* If first step (overview) show centered modal, otherwise show tooltip beside field */}
+                        {tutorialStepIndex === 0 ? (
+                            <div className={styles.tutorialModal}>
+                                <div className={styles.tutorialHeader}>
+                                    <h3>
+                                        Step {tutorialStepIndex + 1}: {tutorialSteps[tutorialStepIndex].title}
+                                    </h3>
+                                    <button onClick={closeTutorial} aria-label="Close tutorial">
+                                        ✕
+                                    </button>
+                                </div>
+                                <div className={styles.tutorialBody}>{tutorialSteps[tutorialStepIndex].content}</div>
+                                <div className={styles.tutorialFooter}>
+                                    <button onClick={prevTutorialStep} disabled={tutorialStepIndex === 0} className="m-0">
+                                        Back
+                                    </button>
+                                    {tutorialStepIndex < tutorialSteps.length - 1 ? (
+                                        <button onClick={nextTutorialStep} className="important-button">
+                                            Next
+                                        </button>
+                                    ) : (
+                                        <button onClick={closeTutorial} className="important-button">
+                                            Done
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        ) : (
+                            <div
+                                ref={tooltipRef}
+                                className={styles.tutorialTooltip}
+                                style={{
+                                    position: "fixed",
+                                    left: tooltipPos.left,
+                                    top: tooltipPos.top,
+                                    transform: "translateX(-50%)",
+                                }}
+                            >
+                                <div className={styles.tooltipBubble}>
+                                    <div className={styles.tutorialHeader}>
+                                        <h4>{tutorialSteps[tutorialStepIndex].title}</h4>
+                                        <button onClick={closeTutorial} aria-label="Close tutorial">
+                                            ✕
+                                        </button>
+                                    </div>
+                                    <div className={styles.tutorialBody}>{tutorialSteps[tutorialStepIndex].content}</div>
+                                    <div className={styles.tutorialFooter}>
+                                        <button onClick={prevTutorialStep} disabled={tutorialStepIndex === 0} className="m-0">
+                                            Back
+                                        </button>
+                                        {tutorialStepIndex < tutorialSteps.length - 1 ? (
+                                            <button onClick={nextTutorialStep} className="important-button">
+                                                Next
+                                            </button>
+                                        ) : (
+                                            <button onClick={closeTutorial} className="important-button">
+                                                Done
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className={styles.tooltipArrow} data-placement={tooltipPos.placement}></div>
+                            </div>
+                        )}
+                    </div>
+                )}
                 <AccessibilityComponent />
             </>
         );

@@ -25,3 +25,139 @@
                 margin-bottom: 60px;
         }
 }
+
+/* Tutorial overlay styles */
+.tutorialOverlay {
+        position: fixed;
+        inset: 0;
+        /* no dark backdrop and allow interactions to pass through by default */
+        background: transparent;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1200;
+        pointer-events: none;
+        /* allow clicking form fields underneath */
+}
+
+.tutorialModal {
+        background: var(--card-bg, #fff);
+        color: var(--text-color, #111);
+        max-width: 520px;
+        width: 92%;
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        padding: 18px;
+        pointer-events: auto;
+        /* make modal interactive even though overlay is non-blocking */
+}
+
+.tutorialHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+}
+
+.tutorialBody {
+        padding: 8px 0 12px 0;
+        line-height: 1.45;
+}
+
+.tutorialFooter {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+}
+
+.tutorialFooter button[disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+}
+
+/* Tooltip-specific styling */
+.tutorialTooltip {
+        z-index: 1300;
+        pointer-events: auto;
+        /* tooltip remains interactive */
+}
+
+.tooltipBubble {
+        background: var(--card-bg, #fff);
+        color: var(--text-color, #111);
+        border-radius: 8px;
+        padding: 12px;
+        max-width: 340px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.tooltipArrow {
+        width: 14px;
+        height: 14px;
+        position: absolute;
+        transform: rotate(45deg);
+        background: var(--card-bg, #fff);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.tooltipArrow[data-placement="right"] {
+        left: -7px;
+        /* sits on left edge of bubble */
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+}
+
+.tooltipArrow[data-placement="left"] {
+        right: -7px;
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+}
+
+.tooltipArrow[data-placement="bottom"] {
+        top: -7px;
+        left: 50%;
+        transform: translateX(-50%) rotate(45deg);
+}
+
+/* Small responsiveness: make tooltip full-width on tiny screens */
+@media (max-width: 520px) {
+        .tooltipBubble {
+                position: fixed;
+                left: 50% !important;
+                transform: translateX(-50%);
+                top: auto !important;
+                bottom: 12px;
+                max-width: calc(100% - 24px);
+        }
+
+        .tooltipArrow {
+                display: none;
+        }
+}
+
+/* Highlight ring applied to the active field during tutorial */
+.tutorialHighlight {
+        position: relative;
+        border-radius: 6px;
+        box-shadow: 0 0 0 3px rgba(43, 140, 255, 0.12), 0 0 0 6px rgba(43, 140, 255, 0.06);
+        outline: 2px solid rgba(43, 140, 255, 0.14);
+        transition: box-shadow 180ms ease, outline 180ms ease, transform 180ms ease;
+        animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+        0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 3px rgba(43, 140, 255, 0.12), 0 0 0 6px rgba(43, 140, 255, 0.06);
+        }
+
+        50% {
+                transform: scale(1.02);
+                box-shadow: 0 0 0 6px rgba(43, 140, 255, 0.10), 0 0 0 12px rgba(43, 140, 255, 0.04);
+        }
+
+        100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 3px rgba(43, 140, 255, 0.12), 0 0 0 6px rgba(43, 140, 255, 0.06);
+        }
+}
