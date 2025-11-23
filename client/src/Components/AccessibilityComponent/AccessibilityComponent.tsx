@@ -2,12 +2,14 @@ import { useState, useEffect, type ChangeEvent } from "react";
 import ReactModal from "react-modal";
 import styles from "./AccessibilityComponent.module.css";
 
-const defaultElementDistanceMin = 16;
-const defaultElementDistanceMax = 48;
-const defaultButtonSizeMin = 50;
-const defaultButtonSizeMax = 150;
-
 function AccessibilityComponent() {
+    const defaultElementDistanceMin = 16;
+    const defaultElementDistanceMax = 48;
+    const [elementDistance, setElementDistance] = useState(defaultElementDistanceMin);
+    const defaultButtonSizeMin = 50;
+    const defaultButtonSizeMax = 150;
+    const [buttonSize, setButtonSize] = useState(defaultButtonSizeMin);
+
     const [isOpen, setIsOpen] = useState(false);
 
     function openModal() {
@@ -18,16 +20,11 @@ function AccessibilityComponent() {
         setIsOpen(false);
     }
 
-    //Controls the distance between elements.
-    const [elementDistance, setElementDistance] = useState(defaultElementDistanceMin);
-
     function handleDistanceChange(e: ChangeEvent<HTMLInputElement>) {
         const distance = e.target.value;
         setElementDistance(parseInt(distance));
         localStorage.setItem("elementDistance", distance);
     }
-
-    const [buttonSize, setButtonSize] = useState(defaultButtonSizeMin);
 
     function handlebuttonSizeChange(e: ChangeEvent<HTMLInputElement>) {
         const size = e.target.value;
