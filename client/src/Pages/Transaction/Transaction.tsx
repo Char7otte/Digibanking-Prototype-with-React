@@ -50,6 +50,11 @@ function Transaction() {
         left: 0,
         placement: "center",
     });
+    // simplified view refs
+    const simplifiedFromRef = useRef<HTMLDivElement | null>(null);
+    const simplifiedTransfereeRef = useRef<HTMLInputElement | null>(null);
+    const simplifiedAmountRef = useRef<HTMLInputElement | null>(null);
+    const [tutorialContextSimplified, setTutorialContextSimplified] = useState(false);
 
     useEffect(() => {
         async function fetchUserData() {
@@ -177,9 +182,10 @@ function Transaction() {
         },
     ];
 
-    function openTutorial() {
+    function openTutorial(simplified = false) {
         setTutorialStepIndex(0);
         setIsTutorialOpen(true);
+        setTutorialContextSimplified(!!simplified);
     }
 
     function closeTutorial() {
@@ -192,6 +198,16 @@ function Transaction() {
 
     function prevTutorialStep() {
         setTutorialStepIndex((i) => Math.max(i - 1, 0));
+    }
+    function nextTutorialStepSimple() {
+        setTutorialStepIndex((i) => Math.min(i + 1, tutorialSteps.length - 1));
+        if (tutorialStepIndex == 0) return;
+        moveTransactionStep();
+    }
+
+    function prevTutorialStepSimple() {
+        setTutorialStepIndex((i) => Math.max(i - 1, 0));
+        returnToDashboard();
     }
 
     // Update tooltip position based on current step and target element
@@ -207,9 +223,15 @@ function Transaction() {
                 return;
             }
 
-            if (tutorialStepIndex === 1) target = fromSelectRef.current;
-            if (tutorialStepIndex === 2) target = toInputRef.current;
-            if (tutorialStepIndex === 3) target = amountInputRef.current ?? transferButtonRef.current;
+            if (tutorialContextSimplified) {
+                if (tutorialStepIndex === 1) target = simplifiedFromRef.current;
+                if (tutorialStepIndex === 2) target = simplifiedTransfereeRef.current;
+                if (tutorialStepIndex === 3) target = simplifiedAmountRef.current;
+            } else {
+                if (tutorialStepIndex === 1) target = fromSelectRef.current;
+                if (tutorialStepIndex === 2) target = toInputRef.current;
+                if (tutorialStepIndex === 3) target = amountInputRef.current ?? transferButtonRef.current;
+            }
 
             if (!target) {
                 setTooltipPos({ top: window.innerHeight / 2, left: window.innerWidth / 2, placement: "center" });
@@ -301,9 +323,18 @@ function Transaction() {
                             {transactionStep == 0 && (
                                 <>
                                     <h2 className="mb-4">Step 1: What account do you want to transfer from?</h2>
-                                    {accounts.current.map((account) => {
-                                        return <AccountCardComponent accountData={account} key={account.number} />;
-                                    })}
+                                    <div
+                                        ref={simplifiedFromRef}
+                                        className={
+                                            isTutorialOpen && tutorialContextSimplified && tutorialStepIndex === 1
+                                                ? styles.tutorialHighlight
+                                                : undefined
+                                        }
+                                    >
+                                        {accounts.current.map((account) => {
+                                            return <AccountCardComponent accountData={account} key={account.number} />;
+                                        })}
+                                    </div>
                                 </>
                             )}
                             {transactionStep == 1 && (
@@ -314,13 +345,16 @@ function Transaction() {
                                         Account number
                                     </label>
                                     <input
+                                        ref={simplifiedTransfereeRef}
                                         type="text"
                                         name="transferee-account-number"
                                         id="transferee-account-number"
                                         required
                                         placeholder="Account number"
                                         onChange={updateTransfereeAccount}
-                                        className="spacing-md"
+                                        className={`${"spacing-md"} ${
+                                            isTutorialOpen && tutorialContextSimplified && tutorialStepIndex === 2 ? styles.tutorialHighlight : ""
+                                        }`}
                                     />
                                 </>
                             )}
@@ -333,6 +367,7 @@ function Transaction() {
                                         Transfer amount
                                     </label>
                                     <input
+                                        ref={simplifiedAmountRef}
                                         type="number"
                                         required
                                         min="0"
@@ -340,7 +375,9 @@ function Transaction() {
                                         id="transferee-account-number"
                                         placeholder="Transfer Amount"
                                         onChange={updateTransferAmount}
-                                        className="spacing-md"
+                                        className={`${"spacing-md"} ${
+                                            isTutorialOpen && tutorialContextSimplified && tutorialStepIndex === 3 ? styles.tutorialHighlight : ""
+                                        }`}
                                     />
                                 </>
                             )}
@@ -362,6 +399,76 @@ function Transaction() {
                         </section>
                     </main>
                 </div>
+                <button className="tutorialButton" onClick={() => openTutorial(true)}>
+                    Tutorial❓
+                </button>
+                {isTutorialOpen && (
+                    <div className={styles.tutorialOverlay} role="dialog" aria-modal="true">
+                        {tutorialStepIndex === 0 ? (
+                            <div className={styles.tutorialModal}>
+                                <div className={styles.tutorialHeader}>
+                                    <h3>
+                                        Step {tutorialStepIndex + 1}: {tutorialSteps[tutorialStepIndex].title}
+                                    </h3>
+                                    <button onClick={closeTutorial} aria-label="Close tutorial">
+                                        ✕
+                                    </button>
+                                </div>
+                                <div className={styles.tutorialBody}>{tutorialSteps[tutorialStepIndex].content}</div>
+                                <div className={styles.tutorialFooter}>
+                                    <button onClick={prevTutorialStepSimple} disabled={tutorialStepIndex === 0} className="m-0">
+                                        Back
+                                    </button>
+                                    {tutorialStepIndex < tutorialSteps.length - 1 ? (
+                                        <button onClick={nextTutorialStepSimple} className="important-button">
+                                            Next
+                                        </button>
+                                    ) : (
+                                        <button onClick={closeTutorial} className="important-button">
+                                            Done
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        ) : (
+                            <div
+                                ref={tooltipRef}
+                                className={styles.tutorialTooltip}
+                                style={{
+                                    position: "fixed",
+                                    left: tooltipPos.left,
+                                    top: tooltipPos.top,
+                                    transform: "translateX(-50%)",
+                                }}
+                            >
+                                <div className={styles.tooltipBubble}>
+                                    <div className={styles.tutorialHeader}>
+                                        <h4>{tutorialSteps[tutorialStepIndex].title}</h4>
+                                        <button onClick={closeTutorial} aria-label="Close tutorial">
+                                            ✕
+                                        </button>
+                                    </div>
+                                    <div className={styles.tutorialBody}>{tutorialSteps[tutorialStepIndex].content}</div>
+                                    <div className={styles.tutorialFooter}>
+                                        <button onClick={prevTutorialStepSimple} disabled={tutorialStepIndex === 0} className="m-0">
+                                            Back
+                                        </button>
+                                        {tutorialStepIndex < tutorialSteps.length - 1 ? (
+                                            <button onClick={nextTutorialStepSimple} className="important-button">
+                                                Next
+                                            </button>
+                                        ) : (
+                                            <button onClick={closeTutorial} className="important-button">
+                                                Done
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className={styles.tooltipArrow} data-placement={tooltipPos.placement}></div>
+                            </div>
+                        )}
+                    </div>
+                )}
                 <AccessibilityComponent />
             </div>
         );
@@ -438,7 +545,7 @@ function Transaction() {
                         </form>
                     </div>
                 </div>
-                <button className="tutorialButton" onClick={openTutorial}>
+                <button className="tutorialButton" onClick={() => openTutorial(false)}>
                     Tutorial❓
                 </button>
                 {isTutorialOpen && (
