@@ -61,7 +61,7 @@ function LoginComponent() {
                 <p className="subtitle pb-4">Internet Banking</p>
             </section>
             <main className={`${styles.mainContainer} `}>
-                <fieldset className="d-flex border-0">
+                <fieldset className={`${styles.radioFieldset} d-flex border-0`}>
                     <div className={styles.radioContainer}>
                         <input
                             type="radio"
