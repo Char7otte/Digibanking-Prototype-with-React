@@ -55,8 +55,8 @@ hr {
 }
 
 .important-button {
-  color: white;
-  background-color: var(--ocbc-red)
+  color: white !important;
+  background-color: var(--ocbc-red) !important;
 }
 
 .subtitle {
