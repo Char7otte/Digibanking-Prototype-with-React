@@ -116,3 +116,11 @@ hr {
   width: 10rem;
   background-color: #0e9ad2;
 }
+
+.assistanceButton {
+  position: fixed;
+  bottom: 120px;
+  right: 0;
+  width: 10rem;
+  background-color: #d00adb;
+}

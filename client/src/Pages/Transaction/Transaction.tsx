@@ -210,6 +210,11 @@ function Transaction() {
         returnToDashboard();
     }
 
+    function handleAssistance() {
+        const oneTimePassword = Math.floor(Math.random() * (999999 - 100000) + 100000);
+        alert(`Your one time password is: ${oneTimePassword}`);
+    }
+
     // Update tooltip position based on current step and target element
     useEffect(() => {
         if (!isTutorialOpen) return;
@@ -309,6 +314,7 @@ function Transaction() {
         return (
             <div className="d-flex justify-content-center">
                 <div className="bodyMini">
+                    <button>Assistance</button>
                     <HeaderComponent />
                     <main className={styles.mainContainer}>
                         <h1>Transfer money</h1>
@@ -399,7 +405,10 @@ function Transaction() {
                         </section>
                     </main>
                 </div>
-                <button className="tutorialButton" onClick={() => openTutorial(true)}>
+                <button className="assistanceButton ignore-sizing" onClick={handleAssistance}>
+                    Assistance
+                </button>
+                <button className="tutorialButton ignore-sizing" onClick={() => openTutorial(true)}>
                     Tutorial❓
                 </button>
                 {isTutorialOpen && (
@@ -545,7 +554,10 @@ function Transaction() {
                         </form>
                     </div>
                 </div>
-                <button className="tutorialButton" onClick={() => openTutorial(false)}>
+                <button className="assistanceButton ignore-sizing" onClick={handleAssistance}>
+                    Assistance
+                </button>
+                <button className="tutorialButton ignore-sizing" onClick={() => openTutorial(false)}>
                     Tutorial❓
                 </button>
                 {isTutorialOpen && (
