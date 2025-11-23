@@ -183,7 +183,7 @@ function Transaction() {
             <div className="d-flex justify-content-center">
                 <div className="bodyMini">
                     <HeaderComponent />
-                    <main>
+                    <main className={styles.mainContainer}>
                         <h1>Transfer money</h1>
                         <p className="d-flex justify-content-center align-items-center">
                             <span className={`${styles.stepCircle} ${transactionStep == 0 ? "important-button" : ""}`}>1</span>
@@ -195,7 +195,7 @@ function Transaction() {
                         <section>
                             {transactionStep == 0 && (
                                 <>
-                                    <h2>Step 1: What account do you want to transfer from?</h2>
+                                    <h2 className="mb-4">Step 1: What account do you want to transfer from?</h2>
                                     {accounts.current.map((account) => {
                                         return <AccountCardComponent accountData={account} key={account.number} />;
                                     })}
@@ -204,8 +204,10 @@ function Transaction() {
                             {transactionStep == 1 && (
                                 <>
                                     <h3>Transfering from: {selectedTransferorAccount.current}</h3>
-                                    <h2>Step 2: What account to you want to transfer to?</h2>
-                                    <label htmlFor="transferee-account-number">Account number</label>
+                                    <h2 className="spacing-md mt-2">Step 2: What account to you want to transfer to?</h2>
+                                    <label htmlFor="transferee-account-number" className={styles.label}>
+                                        Account number
+                                    </label>
                                     <input
                                         type="text"
                                         name="transferee-account-number"
@@ -213,6 +215,7 @@ function Transaction() {
                                         required
                                         placeholder="Account number"
                                         onChange={updateTransfereeAccount}
+                                        className="spacing-md"
                                     />
                                 </>
                             )}
@@ -220,8 +223,10 @@ function Transaction() {
                                 <>
                                     <h3>Transfering from: {selectedTransferorAccount.current}</h3>
                                     <h3>Transfering to: {selectedTransfereeAccount.current}</h3>
-                                    <h2>Step 3: How much do you want to transfer?</h2>
-                                    <label htmlFor="transferee-account-number">Transfer amount</label>
+                                    <h2 className="spacing-md mt-2">Step 3: How much do you want to transfer?</h2>
+                                    <label htmlFor="transferee-account-number" className="">
+                                        Transfer amount
+                                    </label>
                                     <input
                                         type="number"
                                         required
@@ -230,6 +235,7 @@ function Transaction() {
                                         id="transferee-account-number"
                                         placeholder="Transfer Amount"
                                         onChange={updateTransferAmount}
+                                        className="spacing-md"
                                     />
                                 </>
                             )}

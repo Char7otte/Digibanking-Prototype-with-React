@@ -13,3 +13,15 @@
         height: 5px;
         background-color: white;
 }
+
+.mainContainer {
+        background-color: var(--secondary-bg-color);
+        padding: 20px;
+        min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+        .mainContainer {
+                margin-bottom: 60px;
+        }
+}

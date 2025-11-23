@@ -5,7 +5,12 @@
         border-radius: 15px;
         display: flex;
         justify-content: center;
-        margin-bottom: 60px;
+}
+
+@media (max-width: 768px) {
+        .mainContainer {
+                margin-bottom: 60px;
+        }
 }
 
 .loginForm {

@@ -58,7 +58,7 @@ function AccessibilityComponent() {
 
     return (
         <div>
-            <button onClick={openModal} className={`${styles.helpButton} important-button ignore-sizing`}>
+            <button onClick={openModal} className={`${styles.helpButton} ignore-sizing`}>
                 Assistance♿
             </button>
             <ReactModal isOpen={isOpen} onRequestClose={closeModal}>

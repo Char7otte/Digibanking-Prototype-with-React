@@ -5,6 +5,12 @@
         background-color: var(--secondary-bg-color)
 }
 
+@media (max-width: 768px) {
+        .mainContainer {
+                margin-bottom: 60px;
+        }
+}
+
 .subContainer {
         width: 90%;
 }

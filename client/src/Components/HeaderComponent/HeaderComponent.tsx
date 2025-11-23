@@ -18,7 +18,7 @@ function HeaderComponent() {
     }
 
     return (
-        <header className="d-flex justify-content-between">
+        <header className="d-flex justify-content-between p-2">
             <input type="text" placeholder="Search transactions, payments" className={styles.headerInput} />
             <button className={styles.modifierButton} onClick={toggleSimplifiedMenu}>
                 👁️

@@ -61,7 +61,9 @@ function LoginComponent() {
                         <a href="" className="spacing-md d-block text-start w-100 mt-2">
                             Forgot password?
                         </a>
-                        <button type="submit">Sign In</button>
+                        <button type="submit" className="important-button">
+                            Sign In
+                        </button>
                         <hr />
                         <p>
                             New to OCBC? <a href="">Open an Account</a>
