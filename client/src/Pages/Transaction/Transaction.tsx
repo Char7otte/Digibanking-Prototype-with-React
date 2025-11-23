@@ -312,6 +312,7 @@ function Transaction() {
                         </form>
                     </div>
                 </div>
+                <button className="tutorialButton">Tutorial❓</button>
                 <AccessibilityComponent />
             </>
         );
