@@ -314,7 +314,6 @@ function Transaction() {
         return (
             <div className="d-flex justify-content-center">
                 <div className="bodyMini">
-                    <button>Assistance</button>
                     <HeaderComponent />
                     <main className={styles.mainContainer}>
                         <h1>Transfer money</h1>
