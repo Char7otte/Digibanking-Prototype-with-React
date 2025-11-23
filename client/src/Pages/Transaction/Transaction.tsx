@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import styles from "./Transaction.module.css";
 import HeaderComponent from "../../Components/HeaderComponent/HeaderComponent";
 import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
@@ -21,6 +22,7 @@ interface Account {
     number: string;
     currency: string;
     money: number;
+    isHidden: boolean;
 }
 
 function Transaction() {
@@ -32,6 +34,10 @@ function Transaction() {
     const accountCardArticles = useRef<Element[]>([]);
     const [selectedAccountCardArticle, setSelectedAccountCardArticle] = useState<Element>();
     const accounts = useRef<Account[]>([]);
+    const selectedTransferorAccount = useRef<string | null>(null);
+    const selectedTransfereeAccount = useRef<string | null>(null);
+    const transferAmount = useRef<number | null>(null);
+    const [transactionStep, setTransactionStep] = useState(0);
 
     useEffect(() => {
         async function fetchUserData() {
@@ -94,6 +100,7 @@ function Transaction() {
     function updateSelectedAccountCard(newSelectedCard: HTMLElement) {
         setSelectedAccountCardArticle(newSelectedCard);
         newSelectedCard.classList.add("selected");
+        selectedTransferorAccount.current = newSelectedCard.getAttribute("data-account-number");
         accountCardArticles.current.forEach((article) => {
             if (article != newSelectedCard) article.classList.remove("selected");
         });
@@ -104,11 +111,43 @@ function Transaction() {
     }
 
     function returnToDashboard() {
-        navigate("/dashboard");
+        const newTransactionStep = transactionStep - 1;
+        if (newTransactionStep < 0) {
+            navigate("/dashboard");
+        } else {
+            setTransactionStep(newTransactionStep);
+        }
+    }
+
+    function moveTransactionStep() {
+        setTransactionStep(transactionStep + 1);
+    }
+
+    function updateTransfereeAccount(e: ChangeEvent<HTMLInputElement>) {
+        selectedTransfereeAccount.current = e.target.value;
+    }
+
+    function updateTransferAmount(e: ChangeEvent<HTMLInputElement>) {
+        transferAmount.current = parseInt(e.target.value);
+    }
+
+    function executeTransfer() {
+        alert(
+            `Transfering $${transferAmount.current} from your account ${selectedTransferorAccount.current} to ${selectedTransfereeAccount.current}`
+        );
+        setTransactionStep(0);
     }
 
     if (isLoading) return <div className="loadingContainer">Loading...</div>;
     if (!user) return <div className="loadingContainer">Not authenticated</div>;
+
+    const currentAccount = {
+        type: "Checking",
+        currency: user.currency,
+        number: user.account_number,
+        money: user.balance,
+        isHidden: false,
+    };
 
     const savingsAccount = {
         type: "Savings",
@@ -134,6 +173,8 @@ function Transaction() {
         isHidden: true,
     };
 
+    accounts.current = [currentAccount, savingsAccount, checkingAccount, creditAccount];
+
     if (isSimplified) {
         return (
             <div className="d-flex justify-content-center">
@@ -141,30 +182,70 @@ function Transaction() {
                     <HeaderComponent />
                     <main>
                         <h1>Transfer money</h1>
-                        <p>
-                            <span>1</span>
-                            <span>2</span>
-                            <span>3</span>
+                        <p className="d-flex justify-content-center align-items-center">
+                            <span className={`${styles.stepCircle} ${transactionStep == 0 ? "important-button" : ""}`}>1</span>
+                            <span className={styles.stepLine}></span>
+                            <span className={`${styles.stepCircle} ${transactionStep == 1 ? "important-button" : ""}`}>2</span>
+                            <span className={styles.stepLine}></span>
+                            <span className={`${styles.stepCircle} ${transactionStep == 2 ? "important-button" : ""}`}>3</span>
                         </p>
-                        <h2>Step 1: What account do you want to transfer from? </h2>
-                        <AccountCardComponent
-                            accountData={{
-                                type: "Checking",
-                                currency: user.currency,
-                                number: user.account_number,
-                                money: user.balance,
-                                isHidden: false,
-                            }}
-                        />
-                        <AccountCardComponent accountData={savingsAccount} />
-                        <AccountCardComponent accountData={creditAccount} />
-                        <AccountCardComponent accountData={checkingAccount} />
-                        <div className="d-flex justify-content-between">
-                            <button className="m-2" onClick={returnToDashboard}>
-                                Cancel
-                            </button>
-                            <button className="important-button m-2">Continue</button>
-                        </div>
+                        <section>
+                            {transactionStep == 0 && (
+                                <>
+                                    <h2>Step 1: What account do you want to transfer from?</h2>
+                                    {accounts.current.map((account) => {
+                                        return <AccountCardComponent accountData={account} key={account.number} />;
+                                    })}
+                                </>
+                            )}
+                            {transactionStep == 1 && (
+                                <>
+                                    <h3>Transfering from: {selectedTransferorAccount.current}</h3>
+                                    <h2>Step 2: What account to you want to transfer to?</h2>
+                                    <label htmlFor="transferee-account-number">Account number</label>
+                                    <input
+                                        type="text"
+                                        name="transferee-account-number"
+                                        id="transferee-account-number"
+                                        required
+                                        placeholder="Account number"
+                                        onChange={updateTransfereeAccount}
+                                    />
+                                </>
+                            )}
+                            {transactionStep == 2 && (
+                                <>
+                                    <h3>Transfering from: {selectedTransferorAccount.current}</h3>
+                                    <h3>Transfering to: {selectedTransfereeAccount.current}</h3>
+                                    <h2>Step 3: How much do you want to transfer?</h2>
+                                    <label htmlFor="transferee-account-number">Transfer amount</label>
+                                    <input
+                                        type="number"
+                                        required
+                                        min="0"
+                                        name="transferee-account-number"
+                                        id="transferee-account-number"
+                                        placeholder="Transfer Amount"
+                                        onChange={updateTransferAmount}
+                                    />
+                                </>
+                            )}
+                            <div className="d-flex justify-content-between">
+                                <button className="m-2 ms-0" onClick={returnToDashboard}>
+                                    Return
+                                </button>
+                                {transactionStep! < 2 && (
+                                    <button className="important-button m-2 me-0" onClick={moveTransactionStep}>
+                                        Continue
+                                    </button>
+                                )}
+                                {transactionStep == 2 && (
+                                    <button className="important-button m-2" onClick={executeTransfer}>
+                                        Transfer
+                                    </button>
+                                )}
+                            </div>
+                        </section>
                     </main>
                 </div>
                 <AccessibilityComponent />
