@@ -4,7 +4,8 @@
         border: 1px solid var(--secondary-input-color);
         border-radius: 15px;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
 }
 
 @media (max-width: 768px) {
@@ -24,4 +25,13 @@
         width: 100%;
         display: block;
         text-align: start;
+}
+
+.radioContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 5px;
+        margin: 5px;
 }
