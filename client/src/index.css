@@ -108,3 +108,11 @@ hr {
 .accountCard {
   background-color: white;
 }
+
+.tutorialButton {
+  position: fixed;
+  bottom: 60px;
+  right: 0;
+  width: 10rem;
+  background-color: #0e9ad2;
+}
