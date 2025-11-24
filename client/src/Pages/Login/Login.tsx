@@ -8,7 +8,7 @@ import OCBCLogo from "../../assets/ocbc.svg";
 function LoginComponent() {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
-    const [signOption, setSignOption] = useState("otp");
+    const [signOption, setSignOption] = useState("login");
 
     async function handleLogin(e: FormEvent) {
         e.preventDefault();
