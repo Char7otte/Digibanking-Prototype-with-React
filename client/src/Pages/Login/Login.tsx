@@ -101,7 +101,7 @@ function LoginComponent() {
                             <label htmlFor="username" className="m-2">
                                 PIN
                             </label>
-                            <input type="text" name="password" id="password" placeholder="Enter your PIN number" className="spacing-md" />
+                            <input type="password" name="password" id="password" placeholder="Enter your PIN number" className="spacing-md" />
                             <a href="" className="spacing-md d-block text-start w-100 mt-2">
                                 Forgot password?
                             </a>
