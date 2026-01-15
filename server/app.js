@@ -58,7 +58,7 @@ app.use((err, req, res, next) => {
   res.status(500).send("<h1>500 - Server Error</h1>");
 });
 
-app.get("/api", req, (res) => {
+app.get("/api", (req, res) => {
   res.json({ message: "API is working!" });
 });
 
