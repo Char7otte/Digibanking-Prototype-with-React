@@ -22,16 +22,12 @@ function LoginComponent() {
 
     try {
       setIsLoading(true);
-      await axios.post(
-        "https://digibanking-prototype-with-react-git-9a8d1d-char7ottes-projects.vercel.app/login",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          withCredentials: true,
-        }
-      );
+      await axios.post("http://localhost:8080/login", data, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        withCredentials: true,
+      });
       setIsLoading(false);
       navigate("/dashboard");
     } catch (error: any) {
