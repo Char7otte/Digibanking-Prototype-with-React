@@ -14,7 +14,7 @@ interface props {
 function AccountCardComponent({
   accountData: { type, currency, number, money, isHidden },
 }: props) {
-  const [_isHidden, setIsHidden] = useState(isHidden);
+  const [_isHidden, _setIsHidden] = useState(isHidden);
 
   // function toggleHideMoney() {
   //     setIsHidden(!_isHidden);
