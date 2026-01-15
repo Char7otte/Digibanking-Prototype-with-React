@@ -8,6 +8,7 @@ import OCBCLogo from "../../assets/ocbc.svg";
 function LoginComponent() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [signOption, setSignOption] = useState("login");
 
   async function handleLogin(e: FormEvent) {
     e.preventDefault();
@@ -21,7 +22,7 @@ function LoginComponent() {
 
     try {
       setIsLoading(true);
-      await axios.post("http://localhost:8080/login", data, {
+      const res = await axios.post("http://localhost:8080/login", data, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
@@ -37,6 +38,20 @@ function LoginComponent() {
     }
   }
 
+  async function handleRegister(e: FormEvent) {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+  }
+
+  async function handleAssistance(e: FormEvent) {
+    e.preventDefault();
+  }
+
+  function updateSignOption(newOption: string) {
+    setSignOption(newOption);
+  }
+
   if (isLoading) return <div className="loadingContainer">Logging in...</div>;
 
   return (
@@ -46,42 +61,168 @@ function LoginComponent() {
         <p className="subtitle pb-4">Internet Banking</p>
       </section>
       <main className={`${styles.mainContainer} `}>
-        <div>
-          <h1>Welcome Back</h1>
-          <p className="subtitle pb-4">Sign in to access your bank account</p>
-          <form onSubmit={handleLogin} className={styles.loginForm}>
-            <label htmlFor="username" className="m-2">
-              Username
-            </label>
+        <fieldset className={`${styles.radioFieldset} d-flex border-0`}>
+          <div className={styles.radioContainer}>
             <input
-              type="text"
-              name="username"
-              id="username"
-              placeholder="Enter your username"
-              className="spacing-md"
+              type="radio"
+              name="radio"
+              id="login"
+              value="login"
+              checked={signOption === "login"}
+              onChange={() => setSignOption("login")}
             />
-            <label htmlFor="username" className="m-2">
-              PIN
-            </label>
+            <label htmlFor="login">Sign in</label>
+          </div>
+          <div className={styles.radioContainer}>
             <input
-              type="text"
-              name="password"
-              id="password"
-              placeholder="Enter your PIN number"
-              className="spacing-md"
+              type="radio"
+              name="radio"
+              id="register"
+              value="register"
+              checked={signOption === "register"}
+              onChange={() => setSignOption("register")}
             />
-            <a href="" className="spacing-md d-block text-start w-100 mt-2">
-              Forgot password?
-            </a>
-            <button type="submit" className="important-button">
-              Sign In
-            </button>
-            <hr />
-            <p>
-              New to OCBC? <a href="">Open an Account</a>
+            <label htmlFor="register">Sign up</label>
+          </div>
+          <div className={styles.radioContainer}>
+            <input
+              type="radio"
+              name="radio"
+              id="otp"
+              value="otp"
+              checked={signOption === "otp"}
+              onChange={() => setSignOption("otp")}
+            />
+            <label htmlFor="otp">Limited Access</label>
+          </div>
+        </fieldset>
+        {signOption == "login" && (
+          <div>
+            <h1>Welcome Back</h1>
+            <p className="subtitle pb-4">Sign in to access your bank account</p>
+            <form onSubmit={handleLogin} className={styles.loginForm}>
+              <label htmlFor="username" className="m-2">
+                Username
+              </label>
+              <input
+                type="text"
+                name="username"
+                id="username"
+                placeholder="Enter your username"
+                className="spacing-md"
+              />
+              <label htmlFor="username" className="m-2">
+                PIN
+              </label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Enter your PIN number"
+                className="spacing-md"
+              />
+              <a href="" className="spacing-md d-block text-start w-100 mt-2">
+                Forgot password?
+              </a>
+              <button type="submit" className="important-button">
+                Sign In
+              </button>
+              <hr />
+              <p>
+                New to OCBC? <a href="">Open an Account</a>
+              </p>
+            </form>
+          </div>
+        )}
+        {signOption == "register" && (
+          <div>
+            <h1>Welcome</h1>
+            <p className="subtitle pb-4">Create a new bank account</p>
+            <form onSubmit={handleRegister} className={styles.loginForm}>
+              <label htmlFor="username" className="m-2">
+                Username
+              </label>
+              <input
+                type="text"
+                name="username"
+                id="username"
+                placeholder="Enter your username"
+                className="spacing-md"
+              />
+              <label htmlFor="name" className="m-2">
+                Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                placeholder="Enter your name"
+                className="spacing-md"
+              />
+              <label htmlFor="username" className="m-2">
+                PIN
+              </label>
+              <input
+                type="text"
+                name="password"
+                id="password"
+                placeholder="Enter your PIN number"
+                className="spacing-md"
+              />
+              <button type="submit" className="important-button mt-2">
+                Sign up
+              </button>
+              <hr />
+              <p>
+                New to OCBC? <a href="">Open an Account</a>
+              </p>
+            </form>
+          </div>
+        )}
+        {signOption == "otp" && (
+          <div>
+            <h1>Limited Access</h1>
+            <p className="subtitle pb-4">
+              Enter the generated OTP to gain access to the account
             </p>
-          </form>
-        </div>
+            <form onSubmit={handleLogin} className={styles.loginForm}>
+              <input
+                type="hidden"
+                name="username"
+                id="username"
+                placeholder="Enter your username"
+                className="spacing-md"
+                value="bob"
+              />
+              <input
+                type="hidden"
+                name="password"
+                id="password"
+                placeholder="Enter your PIN number"
+                className="spacing-md"
+                value="bobpass"
+              />
+              <label htmlFor="otp" className="m-2">
+                One Time Password
+              </label>
+              <input
+                type="text"
+                name="otp"
+                id="otp"
+                placeholder="Enter your otp"
+                className="spacing-md"
+              />
+              <button type="submit" className="important-button mt-2">
+                Login
+              </button>
+              <hr />
+              <p>
+                New to OCBC? <a href="">Open an Account</a>
+              </p>
+            </form>
+          </div>
+        )}
+
         <AccessibilityComponent />
       </main>
     </div>
