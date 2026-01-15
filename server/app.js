@@ -46,7 +46,7 @@ app.use(
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-ROUTES;
+//ROUTES;
 app.use("/", mainRoutes);
 
 // ERRORS
