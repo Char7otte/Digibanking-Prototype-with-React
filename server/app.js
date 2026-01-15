@@ -51,7 +51,7 @@ app.set("view engine", "ejs");
 
 // ERRORS
 app.use((req, res) => {
-  res.status(404).send("<h1>404 Not Found</h1>");
+  res.status(404).send("<h1>wot</h1>");
 });
 app.use((err, req, res, next) => {
   console.error("SERVER ERROR:", err);
