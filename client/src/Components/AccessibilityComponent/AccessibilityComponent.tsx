@@ -1,8 +1,15 @@
 import { useState, useEffect, type ChangeEvent } from "react";
 import ReactModal from "react-modal";
-import styles from "./AssistanceComponent.module.css";
+import styles from "./AccessibilityComponent.module.css";
 
-function AssistanceComponent() {
+function AccessibilityComponent() {
+    const defaultElementDistanceMin = 16;
+    const defaultElementDistanceMax = 48;
+    const [elementDistance, setElementDistance] = useState(defaultElementDistanceMin);
+    const defaultButtonSizeMin = 50;
+    const defaultButtonSizeMax = 150;
+    const [buttonSize, setButtonSize] = useState(defaultButtonSizeMin);
+
     const [isOpen, setIsOpen] = useState(false);
 
     function openModal() {
@@ -13,16 +20,11 @@ function AssistanceComponent() {
         setIsOpen(false);
     }
 
-    //Controls the distance between elements.
-    const [elementDistance, setElementDistance] = useState(16);
-
     function handleDistanceChange(e: ChangeEvent<HTMLInputElement>) {
         const distance = e.target.value;
         setElementDistance(parseInt(distance));
         localStorage.setItem("elementDistance", distance);
     }
-
-    const [buttonSize, setButtonSize] = useState(50);
 
     function handlebuttonSizeChange(e: ChangeEvent<HTMLInputElement>) {
         const size = e.target.value;
@@ -52,24 +54,30 @@ function AssistanceComponent() {
     ReactModal.setAppElement("#root");
 
     return (
-        <div className={styles.assistanceButtonContainer}>
-            <button onClick={openModal} className="important-button">
+        <div>
+            <button onClick={openModal} className={`${styles.helpButton} ignore-sizing`}>
                 Assistance♿
             </button>
             <ReactModal isOpen={isOpen} onRequestClose={closeModal}>
-                <label className={styles.label}>
+                <label>
                     Distance between buttons: <strong>{elementDistance}</strong>
                 </label>
                 <br />
-                <input type="range" className={styles.rangeInput} min="16" max="48" onChange={handleDistanceChange} value={elementDistance} />
+                <input
+                    type="range"
+                    min={defaultElementDistanceMin}
+                    max={defaultElementDistanceMax}
+                    onChange={handleDistanceChange}
+                    value={elementDistance}
+                />
                 <hr />
-                <label className={styles.label}>
+                <label>
                     Button size: <strong>{buttonSize}</strong>
                 </label>
-                <input type="range" className={styles.rangeInput} min="50" max="150" onChange={handlebuttonSizeChange} value={buttonSize} />
+                <input type="range" min={defaultButtonSizeMin} max={defaultButtonSizeMax} onChange={handlebuttonSizeChange} value={buttonSize} />
             </ReactModal>
         </div>
     );
 }
 
-export default AssistanceComponent;
+export default AccessibilityComponent;

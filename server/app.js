@@ -1,69 +1,62 @@
 const express = require("express");
 const path = require("path");
+const helmet = require("helmet");
+const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+const session = require("express-session");
 const cors = require("cors");
-require('dotenv').config();
-const { getPool } = require('./db');
-const authController = require('./api-mvc/controllers/authController');
-const accountsController = require('./api-mvc/controllers/accountsController');
-const { requireAuth } = require('./api-mvc/middlewares/authMiddleware');
+require("dotenv").config();
+
+const mainRoutes = require("./routes.js");
 
 const app = express();
-const port = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080;
 
-// Allow local client during development
-app.use(cors({ origin: 'http://localhost:5173' }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// SECURITY
+app.use(
+    helmet({
+        contentSecurityPolicy: false,
+    })
+);
+app.use(morgan("dev"));
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+
+// STATIC FILES
 app.use(express.static(path.join(__dirname, "public")));
 
-app.set("view engine", "ejs");
+// BODY PARSERS
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// SESSIONS
+app.use(
+    session({
+        secret: "supersecretkey",
+        resave: false,
+        saveUninitialized: true,
+        cookie: { httpOnly: true },
+    })
+);
+
+// EJS
 app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
 
-app.get("", (req, res) => {
-    res.render("login");
+// ROUTES
+app.use("/", mainRoutes);
+
+// ERRORS
+app.use((req, res) => {
+    res.status(404).send("<h1>404 Not Found</h1>");
+});
+app.use((err, req, res, next) => {
+    console.error("SERVER ERROR:", err);
+    res.status(500).send("<h1>500 - Server Error</h1>");
 });
 
-app.get("/dashboard", (req, res) => {
-    const { assistance } = req.query;
-    res.render("dashboard", { assistance });
-});
-
-app.get("/transaction/1", (req, res) => {
-    res.render("transaction-step1");
-});
-
-app.get("/transaction/2", (req, res) => {
-    res.render("transaction-step2");
-});
-
-app.get("/transaction/3", (req, res) => {
-    res.render("transaction-step3");
-});
-
-// auth routes (handled in controller)
-app.post('/api/register', authController.register);
-app.post('/api/login', authController.login);
-
-// protected endpoints
-app.get('/api/accounts', requireAuth, accountsController.getAll);
-app.get('/api/me', requireAuth, accountsController.getMe);
-
-app.listen(port, () => {
-    console.log("Server running on port " + port);
-});
-
-// Graceful shutdown: close DB pool when process exits
-async function closePoolAndExit(signal) {
-    console.log(`Server is gracefully shutting down (${signal})`);
-    try {
-        const pool = await getPool();
-        await pool.close();
-        console.log('Database pool closed');
-    } catch (e) {
-        // ignore shutdown errors
-    }
-    process.exit(0);
-}
-
-process.on('SIGINT', () => closePoolAndExit('SIGINT'));
-process.on('SIGTERM', () => closePoolAndExit('SIGTERM'));
+// START SERVER
+app.listen(PORT, () => console.log(`Server running on ${PORT}`));

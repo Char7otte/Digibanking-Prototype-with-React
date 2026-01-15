@@ -1,0 +1,783 @@
+/* ============================================================
+   OCBC DIGITAL BANKING — FULL STYLE FILE
+   Premium UI • Clean Red Theme • Dashboard Enhanced
+   ============================================================ */
+
+/* ROOT VARIABLES */
+:root {
+    --primary: #d7261e;
+    --primary-dark: #b51c16;
+    --background: #f5f5f7;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --radius: 16px;
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-size: 1rem;
+}
+
+
+/* GLOBAL RESET */
+*:not(dialog) {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+    background: radial-gradient(circle at top left, #ffe9e7 0%, #f5f5f7 40%, #f5f5f7 100%);
+    color: var(--text);
+}
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    background: #ffffff;
+    border-bottom: 1px solid #f3f4f6;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.logo-mark {
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 30% 30%, #ffb3aa, #d7261e);
+    box-shadow: 0 0 0 3px rgba(215, 38, 30, 0.15);
+}
+
+.logo-text {
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--primary);
+    font-size: 1rem;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.95rem;
+    padding: 6px 10px;
+    border-radius: 999px;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.nav-link:hover {
+    background: rgba(215, 38, 30, 0.06);
+    color: var(--primary);
+}
+
+.btn-login {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.btn-login:hover {
+    background: var(--primary-dark);
+    color: #ffffff;
+}
+
+.nav-toggle {
+    display: none;
+    border: none;
+    background: transparent;
+    font-size: 1.4rem;
+}
+
+/* ============================================================
+   PAGE LAYOUT
+   ============================================================ */
+.page-container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 32px 16px 48px;
+}
+
+/* ============================================================
+   HERO SECTION
+   ============================================================ */
+.hero {
+    margin-top: 8px;
+    margin-bottom: 32px;
+}
+
+.hero-ocbc {
+    padding: 32px 24px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #d7261e, #b51c16);
+    color: #ffffff;
+    box-shadow: var(--shadow-soft);
+}
+
+.container {
+    max-width: 1080px;
+    margin: 0 auto;
+}
+
+.hero-inner {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    justify-content: space-between;
+}
+
+.hero-copy h1 {
+    font-size: 2rem;
+    margin-bottom: 12px;
+}
+
+.hero-copy p {
+    font-size: 0.98rem;
+    max-width: 380px;
+    opacity: 0.95;
+}
+
+.hero-cta {
+    display: flex;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+/* Phone mockup */
+.phone-frame {
+    width: 220px;
+    height: 420px;
+    border-radius: 28px;
+    background: #0f172a;
+    padding: 10px;
+    box-shadow: 0 24px 50px rgba(15, 23, 42, 0.6);
+}
+
+.phone-status-bar {
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, 0.4);
+    margin-bottom: 10px;
+}
+
+.phone-screen {
+    background: radial-gradient(circle at top, #f97373, #111827);
+    border-radius: 22px;
+    padding: 18px;
+    color: #f9fafb;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100% - 10px);
+}
+
+.phone-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.phone-actions span {
+    flex: 1;
+    padding: 6px 0;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.75);
+    text-align: center;
+    font-size: 0.75rem;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 8px 18px;
+    font-size: 0.95rem;
+    border: 1px solid transparent;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+.button.primary {
+    background: #ffffff;
+    color: var(--primary);
+}
+
+.button.primary:hover {
+    background: #fef2f2;
+}
+
+.button.ghost {
+    border-color: rgba(255, 255, 255, 0.8);
+    color: #ffffff;
+    background: transparent;
+}
+
+.button.ghost:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.button.full {
+    width: 100%;
+}
+
+/* ============================================================
+   GRID & CARDS
+   ============================================================ */
+.grid {
+    display: grid;
+    gap: 18px;
+}
+
+.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+/* ============================================================
+   AUTHENTICATION
+   ============================================================ */
+.auth-card {
+    max-width: 420px;
+    margin: 0 auto;
+    background: var(--card);
+    padding: 24px 22px;
+    border-radius: 18px;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.form {
+    margin-top: 16px;
+}
+
+.form label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+    display: block;
+}
+
+.form input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
+
+/* ============================================================
+   DASHBOARD (Premium restored version)
+   ============================================================ */
+
+.dashboard {
+    margin-top: 40px;
+}
+
+/* Header card */
+.dashboard-header {
+    background: linear-gradient(135deg, #ffffff 0%, #fafafb 50%, #f2f3f5 100%);
+    border-radius: 22px;
+    padding: 32px 36px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0px 18px 40px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(200, 200, 200, 0.25);
+}
+
+.dashboard-header .label {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+.user-name {
+    font-size: 2.1rem;
+    font-weight: 700;
+}
+
+.dashboard-total {
+    text-align: right;
+}
+
+.dashboard-total .amount {
+    margin-top: 4px;
+    font-size: 1.9rem;
+    font-weight: 700;
+}
+
+/* Account card */
+.account-card,
+.account-summary .card {
+    background: #ffffff;
+    border-radius: 22px;
+    padding: 24px 28px;
+    box-shadow: 0px 16px 36px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(180, 180, 180, 0.18);
+}
+
+.account-type {
+    font-size: 1.05rem;
+    color: var(--muted);
+}
+
+.account-number {
+    font-size: 0.92rem;
+    color: var(--muted);
+    margin-top: 6px;
+}
+
+.account-balance {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-top: 12px;
+}
+
+/* Quick actions */
+.quick-actions {
+    border-radius: 22px;
+    padding: 24px 28px;
+    background: #ffffff;
+    box-shadow: 0px 16px 36px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(180, 180, 180, 0.18);
+}
+
+.quick-actions-grid {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.quick-action {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: #fff7f7;
+    color: var(--primary);
+    border: 1px dashed rgba(215, 38, 30, 0.4);
+    text-decoration: none;
+    font-size: 1rem;
+    transition: 0.2s ease-in-out;
+}
+
+.quick-action:hover {
+    background: #ffeaea;
+    border-color: var(--primary);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+    text-align: center;
+    padding: 24px 10px 36px;
+    margin-top: 24px;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+
+    .grid-3,
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-right {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 56px;
+        right: 16px;
+        background: #ffffff;
+        padding: 10px 14px;
+        border-radius: 14px;
+        box-shadow: var(--shadow-soft);
+    }
+
+    .nav-toggle {
+        display: block;
+    }
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    background: var(--primary);
+    color: #ffffff;
+    text-decoration: none;
+
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    border: none;
+    cursor: pointer;
+
+    transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.back-button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.back-button:active {
+    transform: translateY(0px);
+}
+
+.profile-details p {
+    font-size: 0.95rem;
+    color: var(--text);
+    margin-bottom: 10px;
+}
+
+.profile-details .label {
+    color: var(--muted);
+    margin-right: 6px;
+}
+
+/* ===== Multi-Account Cards ===== */
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.account-card {
+    border-radius: 20px;
+    padding: 20px;
+    color: white;
+    box-shadow: var(--shadow-soft);
+}
+
+.card-red {
+    background: linear-gradient(135deg, #d7261e, #a10f0a);
+}
+
+.card-blue {
+    background: linear-gradient(135deg, #216aff, #0b3ca8);
+}
+
+.card-purple {
+    background: linear-gradient(135deg, #a218ff, #5e0bb4);
+}
+
+.acc-title {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.acc-number {
+    font-size: 1rem;
+    margin-top: 4px;
+    opacity: 0.9;
+}
+
+.acc-label {
+    margin-top: 14px;
+    opacity: 0.8;
+}
+
+.acc-balance {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.acc-details {
+    margin-top: 12px;
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+}
+
+/* ===== Quick Actions ===== */
+
+.quick-actions-row {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    text-align: center;
+}
+
+.qa-item {
+    padding: 14px;
+    border-radius: 14px;
+    background: #fff7f7;
+    border: 1px dashed #fecaca;
+    color: var(--primary-dark);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+/* ===== Spending Overview ===== */
+
+.chart-placeholder {
+    height: 180px;
+    border-radius: 14px;
+    background: #ffe9e7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+}
+
+/* ===== Monthly Summary ===== */
+
+.monthly-summary {
+    margin-top: 18px;
+    padding: 20px;
+}
+
+.summary-title {
+    color: var(--muted);
+}
+
+.summary-amount {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.summary-sub {
+    font-size: 0.85rem;
+    color: green;
+}
+
+/* ===== Transactions ===== */
+
+.tx-list {
+    list-style: none;
+    margin-top: 10px;
+}
+
+.tx-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.tx-item:last-child {
+    border-bottom: none;
+}
+
+.tx-amount.income {
+    color: green;
+}
+
+.tx-amount.expense {
+    color: red;
+}
+
+/* === CONSISTENT SPACING BETWEEN DASHBOARD GROUPS === */
+.dashboard section,
+.accounts-overview,
+.quick-actions,
+.monthly-summary,
+.transactions {
+    margin-top: 32px !important;
+}
+
+/* First section should not have extra margin */
+.dashboard-header {
+    margin-top: 0 !important;
+}
+
+/* Better spacing inside sections */
+.card,
+.account-card {
+    margin-bottom: 0;
+    padding: 24px;
+}
+
+/* ===== Transfer Page Styling ===== */
+
+.transfer-page {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.page-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+
+.page-subtitle {
+    color: var(--muted);
+    margin-bottom: 20px;
+}
+
+/* Tabs */
+.transfer-tabs {
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.transfer-tabs .tab {
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: #fff;
+    cursor: pointer;
+}
+
+.transfer-tabs .tab.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+/* Card */
+.transfer-card {
+    margin-top: 10px;
+    padding: 24px;
+}
+
+.transfer-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.icon-circle {
+    width: 40px;
+    height: 40px;
+    background: #ffe4e2;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1.2rem;
+}
+
+/* Inputs */
+.input,
+.input-select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #fafafa;
+    margin-bottom: 14px;
+}
+
+.input:focus,
+.input-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: #fff;
+}
+
+/* Buttons */
+.transfer-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.button.red {
+    background: var(--primary);
+    color: #fff;
+}
+
+.button.red:hover {
+    background: var(--primary-dark);
+}
+
+.button.outline {
+    border: 1px solid var(--border);
+    background: #fff;
+}
+
+/* ===== Recent Transfers ===== */
+
+.recent-transfers {
+    margin-top: 32px;
+    padding: 24px;
+}
+
+.recent-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.transfer-list {
+    margin-top: 16px;
+}
+
+.transfer-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.transfer-item:last-child {
+    border-bottom: none;
+}
+
+.amount-col {
+    text-align: right;
+}
+
+.amount {
+    font-weight: 600;
+}
+
+.small {
+    font-size: 0.85rem;
+}

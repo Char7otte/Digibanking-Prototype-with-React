@@ -1,0 +1,27 @@
+.stepCircle {
+        width: 50px;
+        height: 50px;
+        background-color: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+}
+
+.stepLine {
+        width: 50px;
+        height: 5px;
+        background-color: white;
+}
+
+.mainContainer {
+        background-color: var(--secondary-bg-color);
+        padding: 20px;
+        min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+        .mainContainer {
+                margin-bottom: 60px;
+        }
+}

@@ -1,6 +1,66 @@
 :root {
-  --spacing: 16px;
+  --spacing: 8;
   --buttonSize: 50px;
+  --secondary-text-color: #978b8b;
+  --secondary-input-color: #e2e2e2;
+  --secondary-bg-color: #f9f9f9;
+  --ocbc-red: #ed1c24;
+}
+
+body {
+  margin: 0;
+  font-family: "Trebuchet MS", sans-serif;
+}
+
+a {
+  text-decoration: none;
+  width: 100%;
+}
+
+button,
+input,
+select {
+  min-height: var(--buttonSize);
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  background-color: var(--secondary-input-color);
+}
+
+input[type=range] {
+  width: 100%;
+  margin: 0;
+}
+
+input {
+  padding: 0px;
+  padding-left: 10px;
+}
+
+h1 {
+  font-weight: normal;
+  margin: 10px 0;
+}
+
+p {
+  margin: 10px 0;
+}
+
+hr {
+  height: 1px;
+  width: 100%;
+  background-color: var(--secondary-input-color);
+  border: none;
+  margin: 0;
+}
+
+.important-button {
+  color: white !important;
+  background-color: var(--ocbc-red) !important;
+}
+
+.subtitle {
+  color: var(--secondary-text-color);
 }
 
 .spacing-md {
@@ -8,68 +68,43 @@
   margin-bottom: var(--spacing);
 }
 
-.spacing-lg {
-  margin-bottom: calc(var(--spacing) * 2);
+.ignore-sizing {
+  min-height: 0px;
+  height: 50px;
 }
 
-.spacing-sm {
-  margin-bottom: calc(var(--spacing) / 2);
-}
-
-.padding-md {
-  padding: var(--spacing);
-}
-
-.gap-md {
-  gap: var(--spacing);
-}
-
-body {
-  margin: 0;
-  font-family: arial, sans-serif;
-}
-
-a {
-  text-decoration: none;
-}
-
-#root {
-  font-size: 2rem;
-  margin: 0;
-  width: 100vw;
-  height: 100vh;
+.loadingContainer {
   display: flex;
-  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
   align-items: center;
 }
 
-input {
-  font-size: 2rem;
-  min-height: var(--buttonSize);
+.bodyMini {
   width: 100%;
-  padding: 0;
+  max-width: 768px;
 }
 
-button {
-  font-size: 2rem;
-  min-height: var(--buttonSize);
-  border-radius: 10px;
-  border: none;
-  padding: 0;
+.selectedAccountCard {
+  border: 5px solid var(--ocbc-red);
 }
 
-h1,
-h2 {
-  all: unset;
-  display: block;
+.selected {
+  border: 5px solid var(--ocbc-red) !important;
 }
 
-hr {
-  margin: 0;
-  margin-bottom: 10px;
+@media (min-width: 1000px) {
+  .ReactModal__Content {
+    inset: 20% !important;
+  }
 }
 
-.important-button {
-  color: white;
-  background-color: red;
+@media (max-width: 1000px) {
+  .ReactModal__Content {
+    inset: 15% !important;
+  }
+}
+
+.accountCard {
+  background-color: white;
 }

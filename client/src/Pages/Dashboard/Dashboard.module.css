@@ -1,23 +1,26 @@
-.title {
-        margin: 20px;
-        text-align: center;
-}
-
-.myAccountsTitle {
-        margin: 20px;
-        margin-bottom: 10px;
-}
-
-.buttonContainer {
+.mainContainer {
         display: flex;
         flex-direction: column;
         align-items: center;
+        background-color: var(--secondary-bg-color)
 }
 
-.buttonContainer button {
-        width: 90vw;
+@media (max-width: 768px) {
+        .mainContainer {
+                margin-bottom: 60px;
+        }
 }
 
-.lastButtonOfDiv {
-        margin-bottom: 20px;
+.subContainer {
+        width: 90%;
+}
+
+.mainContainerRegular {
+        display: flex;
+        justify-content: center;
+}
+
+.bodyRegular {
+        width: 100%;
+        max-width: 1080px;
 }

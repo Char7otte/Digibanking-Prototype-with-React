@@ -1,11 +1,27 @@
-.loginButton {
-        width: 90vw;
+.mainContainer {
+        margin: 0 30px;
+        padding: 30px;
+        border: 1px solid var(--secondary-input-color);
+        border-radius: 15px;
+        display: flex;
+        justify-content: center;
 }
 
-.container {
+@media (max-width: 768px) {
+        .mainContainer {
+                margin-bottom: 60px;
+        }
+}
+
+.loginForm {
         display: flex;
         flex-direction: column;
+        align-items: center;
         justify-content: center;
-        height: 100vh;
-        margin: 0 25px;
+}
+
+.loginForm label {
+        width: 100%;
+        display: block;
+        text-align: start;
 }

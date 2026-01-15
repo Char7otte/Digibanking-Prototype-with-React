@@ -1,0 +1,7 @@
+.helpButton {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        width: 10rem;
+        background-color: #02db02;
+}
