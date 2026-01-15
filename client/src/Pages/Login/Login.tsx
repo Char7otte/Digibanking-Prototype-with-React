@@ -22,7 +22,7 @@ function LoginComponent() {
 
     try {
       setIsLoading(true);
-      const res = await axios.post("http://localhost:8080/login", data, {
+      await axios.post("http://localhost:8080/login", data, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
@@ -40,17 +40,17 @@ function LoginComponent() {
 
   async function handleRegister(e: FormEvent) {
     e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const formData = new FormData(form);
+    // const form = e.target as HTMLFormElement;
+    // const formData = new FormData(form);
   }
 
-  async function handleAssistance(e: FormEvent) {
-    e.preventDefault();
-  }
+  //   async function handleAssistance(e: FormEvent) {
+  //     e.preventDefault();
+  //   }
 
-  function updateSignOption(newOption: string) {
-    setSignOption(newOption);
-  }
+  //   function updateSignOption(newOption: string) {
+  //     setSignOption(newOption);
+  //   }
 
   if (isLoading) return <div className="loadingContainer">Logging in...</div>;
 
