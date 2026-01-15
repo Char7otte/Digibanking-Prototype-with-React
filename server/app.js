@@ -47,7 +47,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 // ROUTES
-app.use("/", mainRoutes);
+// app.use("/", mainRoutes);
 
 // ERRORS
 app.use((req, res) => {
