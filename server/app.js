@@ -46,21 +46,19 @@ app.use(
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-// ROUTES
-// app.use("/", mainRoutes);
+ROUTES;
+app.use("/", mainRoutes);
 
 // ERRORS
 app.use((req, res) => {
-  res.status(404).send("<h1>wot</h1>");
+  res.status(404).send("<h1>404 Not Found</h1>");
 });
 app.use((err, req, res, next) => {
   console.error("SERVER ERROR:", err);
-  res.status(500).send("<h1>500 - Server Error</h1>");
-});
-
-app.get("/api", (req, res) => {
-  res.json({ message: "API is working!" });
+  res.status(500).send("<h1>500 Server Error</h1>");
 });
 
 // START SERVER
 app.listen(PORT, () => console.log(`Server running on ${PORT}`));
+
+module.exports = app;
