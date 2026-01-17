@@ -1,0 +1,9 @@
+{
+  "wallets": [],
+  "payees": [],
+  "transactions": [],
+  "counters": {
+    "transactionId": 0,
+    "payeeId": 0
+  }
+}
