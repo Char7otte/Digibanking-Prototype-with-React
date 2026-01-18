@@ -9,6 +9,7 @@ import Login from "./Pages/Login/Login.tsx";
 import Transaction from "./Pages/Transaction/Transaction.tsx";
 import NotFound from "./Pages/NotFound/NotFound.tsx";
 import { MenuContextProvider } from "./MenuContext.tsx";
+import { EyeTrackingProvider } from "./Components/EyeTracking/EyeTrackingProvider.tsx";
 
 export const UseSimplified = createContext(true);
 
@@ -23,6 +24,7 @@ createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <MenuContextProvider>
             <RouterProvider router={router} />
+            <EyeTrackingProvider />
         </MenuContextProvider>
     </StrictMode>
 );
