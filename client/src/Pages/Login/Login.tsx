@@ -127,6 +127,22 @@ function LoginComponent() {
               <button type="submit" className="important-button">
                 Sign In
               </button>
+              <button 
+                type="button" 
+                onClick={() => navigate("/demo")}
+                style={{ 
+                  marginTop: "10px", 
+                  backgroundColor: "#4caf50", 
+                  color: "white", 
+                  border: "none", 
+                  padding: "10px 20px", 
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  width: "100%"
+                }}
+              >
+                Try Demo Account
+              </button>
               <hr />
               <p>
                 New to OCBC? <a href="">Open an Account</a>

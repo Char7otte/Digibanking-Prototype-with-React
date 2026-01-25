@@ -9,6 +9,7 @@ import Login from "./Pages/Login/Login.tsx";
 import Transaction from "./Pages/Transaction/Transaction.tsx";
 import NotFound from "./Pages/NotFound/NotFound.tsx";
 import { MenuContextProvider } from "./MenuContext.tsx";
+import Demo from "./Pages/Demo/Demo.tsx";  
 
 export const UseSimplified = createContext(true);
 
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
     { path: "/", element: <Login /> },
     { path: "/dashboard", element: <Dashboard /> },
     { path: "/transaction", element: <Transaction /> },
+    { path: "/demo", element: <Demo /> },
     { path: "*", element: <NotFound /> },
 ]);
 

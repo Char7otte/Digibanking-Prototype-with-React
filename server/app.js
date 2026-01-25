@@ -13,13 +13,22 @@ const mainRoutes = require("./routes.js");
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+// CORS - Must be applied early
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+
+// BODY PARSERS - Must be before routes
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 // DEMO ACCOUNT
-const demoModeMiddleware = require("./demo-account/demo.middleware");
+const { extractMode } = require("./demo-account/demo-middleware.js");
 const demoAccountRoutes = require("./demo-account/demo.routes");
 
 // MIDDLEWARE DEMO ACCOUNTTTTTT
-app.use(demoModeMiddleware);
-app.use("/api", demoAccountRoutes);
+app.use("/api", extractMode, demoAccountRoutes);
 
 // SECURITY
 app.use(
@@ -28,17 +37,9 @@ app.use(
   })
 );
 app.use(morgan("dev"));
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
 // STATIC FILES
 app.use(express.static(path.join(__dirname, "public")));
-
-// BODY PARSERS
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 
 // SESSIONS
 app.use(

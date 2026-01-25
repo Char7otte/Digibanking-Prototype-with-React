@@ -1,5 +1,5 @@
 // server/demo-account/demo.seed.js
-const { readDB, writeDB } = require("./data/fileDb");
+const { readDB, writeDB } = require("../data/fileDb");
 const { DEMO_START_BALANCE, DEMO_PAYEES } = require("./demo.data");
 
 function ensureDemoData(userId) {
