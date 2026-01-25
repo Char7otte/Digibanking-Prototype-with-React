@@ -3,8 +3,8 @@
     {
       "userId": 1,
       "mode": "demo",
-      "balance": 5000,
-      "updatedAt": "2026-01-23T00:00:00.000Z"
+      "balance": 4900,
+      "updatedAt": "2026-01-25T16:16:59.642Z"
     }
   ],
   "payees": [
@@ -36,10 +36,21 @@
       "reference": "Birthday gift",
       "status": "success",
       "createdAt": "2026-01-23T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "mode": "demo",
+      "type": "transfer",
+      "to": "SP Utilities",
+      "amount": 100,
+      "reference": "Demo Transfer",
+      "status": "success",
+      "createdAt": "2026-01-25T16:16:59.642Z"
     }
   ],
   "counters": {
-    "transactionId": 1,
+    "transactionId": 2,
     "payeeId": 2
   }
 }
