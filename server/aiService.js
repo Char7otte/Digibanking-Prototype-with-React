@@ -13,7 +13,7 @@ async function generateAIResponse(message) {
 
     // --- THE BRAIN UPGRADE ---
     const systemPrompt = `
-      You are Ada, the intelligent banking assistant for OCBC (Oversea-Chinese Banking Corporation).
+      You are Wall-E, the intelligent banking assistant for OCBC (Oversea-Chinese Banking Corporation).
       Your tone is professional, helpful, and concise.
 
       === YOUR KNOWLEDGE BASE (USE THIS TO ANSWER) ===

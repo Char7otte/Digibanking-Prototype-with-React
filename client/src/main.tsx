@@ -10,23 +10,25 @@ import Transaction from "./Pages/Transaction/Transaction.tsx";
 import NotFound from "./Pages/NotFound/NotFound.tsx";
 import { MenuContextProvider } from "./MenuContext.tsx";
 
-// --- 1. Import the Chat Assistant ---
+// --- 1. Import the Assistants ---
 import ChatAssistant from "./Components/ChatAssistant/ChatAssistant.tsx";
+import VoiceAssistant from "./Components/VoiceAssistant/VoiceAssistant.tsx"; // <--- ADDED THIS IMPORT
 
 export const UseSimplified = createContext(true);
 
-// --- 2. Create a "Layout" component ---
-// This acts as a frame: it holds the current page (Outlet) AND the Chatbot
+// --- 2. Update Layout ---
+// This acts as a frame: it holds the current page (Outlet) AND the Assistants
 const AppLayout = () => {
   return (
     <>
       <Outlet /> {/* Renders the current page (Login, Dashboard, etc.) */}
-      <ChatAssistant /> {/* Renders the Chatbot on top of EVERY page */}
+      <ChatAssistant /> {/* Renders the Chatbot */}
+      <VoiceAssistant /> {/* <--- ADDED THIS COMPONENT */}
     </>
   );
 };
 
-// --- 3. Update the Router to use the Layout ---
+// --- 3. Router Setup (Unchanged) ---
 const router = createBrowserRouter([
     {
         element: <AppLayout />, // Wrap all routes in our Layout

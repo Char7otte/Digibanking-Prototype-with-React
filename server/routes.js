@@ -5,7 +5,9 @@ const loginController = require("./api-mvc/controllers/loginController.js");
 const dashboardController = require("./api-mvc/controllers/dashboardController");
 const profileController = require("./api-mvc/controllers/profileController");
 const transferController = require("./api-mvc/controllers/transferController");
-const { generateAIResponse } = require("./aiService");
+const { generateAIResponse } = require("./aiService"); //AI chatbot
+const { generateGeminiVoiceResponse } = require("./geminiService");
+
 // Login action
 router.post("/login", loginController.login);
 
@@ -57,6 +59,33 @@ router.post("/api/ai/chat", async (req, res) => {
 
     // 3. Send back to Frontend
     res.json(parsedResult);
+});
+
+// voice assistant route
+router.post('/api/voice/process', async (req, res) => {
+  try {
+    const { command } = req.body;
+    
+    if (!command) {
+      return res.status(400).json({ error: "No command provided" });
+    }
+
+    const aiResponseRaw = await generateGeminiVoiceResponse(command);
+    
+    // Gemini with JSON mode usually returns a stringified JSON
+    let result;
+    try {
+      result = JSON.parse(aiResponseRaw);
+    } catch (e) {
+      // Fallback if parsing fails
+      result = { action: "chat", reply: aiResponseRaw };
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error("Route Error:", error);
+    res.status(500).json({ error: "Failed to process voice command" });
+  }
 });
 
 module.exports = router;

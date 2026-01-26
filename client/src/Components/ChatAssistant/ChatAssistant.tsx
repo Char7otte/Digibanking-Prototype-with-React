@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageSquare, Send, X, Zap } from 'lucide-react';
 import axios from 'axios';
-import styles from './ChatAssistant.module.css'; // Import CSS Module
+import styles from './ChatAssistant.module.css';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -14,7 +14,8 @@ const ChatAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', text: "Hello! I'm Ada. How can I help you with your banking today?" }
+    // RENAMED: Greeting message
+    { role: 'assistant', text: "Hello! I'm Wall-E. How can I help you with your banking today?" }
   ]);
   const [isTyping, setIsTyping] = useState(false);
   
@@ -65,18 +66,17 @@ const ChatAssistant = () => {
 
       {isOpen && (
         <div className={`${styles.chatWindow} shadow-lg`}>
-          {/* Header */}
           <div className={styles.header}>
              <div className="d-flex align-items-center gap-2">
                 <div className={styles.statusDot}></div>
-                <span className="fw-bold">Ada Assistant</span>
+                {/* RENAMED: Header Name */}
+                <span className="fw-bold">Wall-E Assistant</span>
              </div>
              <div style={{ cursor: 'pointer' }} onClick={() => setIsOpen(false)}>
                 <X size={20} />
              </div>
           </div>
 
-          {/* Messages Area */}
           <div className={styles.messagesArea}>
             {messages.map((msg, idx) => (
               <div key={idx} className={`${styles.messageWrapper} ${msg.role === 'user' ? styles.userWrapper : styles.assistantWrapper}`}>
@@ -87,13 +87,13 @@ const ChatAssistant = () => {
             ))}
             {isTyping && (
                 <div className={styles.typingIndicator}>
-                    <Zap size={14} className="text-warning" /> Ada is typing...
+                    {/* RENAMED: Typing text */}
+                    <Zap size={14} className="text-warning" /> Wall-E is thinking...
                 </div>
             )}
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Area */}
           <div className={styles.inputArea}>
             <input 
               type="text" 
