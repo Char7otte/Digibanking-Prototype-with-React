@@ -105,7 +105,7 @@ function Transaction() {
     setSelectedAccountCardArticle(newSelectedCard);
     newSelectedCard.classList.add("selected");
     selectedTransferorAccount.current = newSelectedCard.getAttribute(
-      "data-account-number"
+      "data-account-number",
     );
     accountCardArticles.current.forEach((article) => {
       if (article != newSelectedCard) article.classList.remove("selected");
@@ -139,7 +139,7 @@ function Transaction() {
 
   function executeTransfer() {
     alert(
-      `Transfering $${transferAmount.current} from your account ${selectedTransferorAccount.current} to ${selectedTransfereeAccount.current}`
+      `Transfering $${transferAmount.current} from your account ${selectedTransferorAccount.current} to ${selectedTransfereeAccount.current}`,
     );
     setTransactionStep(0);
   }
