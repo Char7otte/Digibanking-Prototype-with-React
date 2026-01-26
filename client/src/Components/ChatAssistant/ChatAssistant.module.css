@@ -1,0 +1,124 @@
+/* client/src/Components/ChatAssistant/ChatAssistant.module.css */
+
+.container {
+    position: fixed;
+    bottom: 100px; /* Adjusted to clear your assistance button */
+    right: 24px;
+    z-index: 9999;
+    font-family: sans-serif;
+}
+
+.toggleButton {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #ec3832;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.toggleButton:hover {
+    transform: scale(1.05);
+}
+
+.chatWindow {
+    width: 350px;
+    height: 500px;
+    background-color: white;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.header {
+    background-color: #ec3832;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.statusDot {
+    width: 10px;
+    height: 10px;
+    background-color: #4ade80;
+    border-radius: 50%;
+}
+
+.messagesArea {
+    flex-grow: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+}
+
+.messageWrapper {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.userWrapper {
+    justify-content: flex-end;
+}
+
+.assistantWrapper {
+    justify-content: flex-start;
+}
+
+.bubble {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 14px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.userBubble {
+    background-color: #ec3832;
+    color: white;
+    border-top-right-radius: 2px;
+}
+
+.assistantBubble {
+    background-color: white;
+    color: #333;
+    border-top-left-radius: 2px;
+}
+
+.typingIndicator {
+    color: #6c757d;
+    font-size: 12px;
+    margin-left: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.inputArea {
+    padding: 1rem;
+    background-color: white;
+    border-top: 1px solid #ddd;
+    display: flex;
+    gap: 8px;
+}
+
+.sendButton {
+    background-color: #ec3832;
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    border-radius: 6px;
+}
