@@ -75,8 +75,8 @@ export function Calibration({ onComplete }: { onComplete?: () => void }) {
     if (!webgazerRef.current) return;
 
     // Collect multiple samples for this point
-    const samples = 30;
-    const sampleDelay = 50; // ms
+    const samples = 5;
+    const sampleDelay = 80; // ms
 
     for (let i = 0; i < samples; i++) {
       await new Promise((resolve) => setTimeout(resolve, sampleDelay));

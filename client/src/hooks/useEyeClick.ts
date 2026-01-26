@@ -13,7 +13,6 @@ export function useEyeClick({
   const offsetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const rafRef = useRef<number | null>(null); //added this ETHAN
   const [isInitialized, setIsInitialized] = useState(false);
-  const mouseRef = useRef({ x: -9999, y: -9999 }); //added this Ethan
 
   // Smoothing for better accuracy
   const predictionHistoryRef = useRef<Array<{ x: number; y: number }>>([]);
@@ -35,10 +34,6 @@ export function useEyeClick({
     let running = true;
     let webgazer: any = null;
     let predictionDot: HTMLElement | null = null;
-    const onMouseMove = (e: MouseEvent) => {
-      mouseRef.current = { x: e.clientX, y: e.clientY };
-    };
-    window.addEventListener("mousemove", onMouseMove); //added this const ETHAN
 
     // Enhanced smoothing function for better accuracy
     const smoothPrediction = async (rawPrediction: {
@@ -137,11 +132,13 @@ export function useEyeClick({
 
             // Begin WebGazer initialization
             await webgazer.begin();
+            webgazer.removeMouseEventListeners?.(); //added ethan
+
             // ✅ correct WebGazer APIs      //added Ethan
             webgazer.showVideo(false);
             webgazer.showFaceOverlay(false);
             webgazer.showFaceFeedbackBox(false);
-            webgazer.showPredictionPoints(false);
+            //webgazer.showPredictionPoints(false);    ethan commented out
 
             // ✅ disables click/mouse-based training (what you actually want)   //Added Ethan
             webgazer.applyKalmanFilter(true); // optional stabilizer //added Ethan
@@ -298,29 +295,6 @@ export function useEyeClick({
                   smoothedPrediction.x + offsetRef.current.x - window.scrollX;
                 const correctedY =
                   smoothedPrediction.y + offsetRef.current.y - window.scrollY;
-
-                const mx = mouseRef.current.x;
-                const my = mouseRef.current.y;
-                const distToMouse = Math.hypot(
-                  correctedX - mx,
-                  correctedY - my,
-                );
-                console.log("mouse", mouseRef.current, "corrected", {
-                  correctedX,
-                  correctedY,
-                  distToMouse,
-                });
-                console.log("mouse", mouseRef.current, "corrected", {
-                  correctedX,
-                  correctedY,
-                  distToMouse,
-                }); //debugger ETHAN
-
-                if (distToMouse < 25) {
-                  // Looks like mouse-fallback, ignore this frame
-                  if (predictionDot) predictionDot.style.opacity = "0.15";
-                  return;
-                } //added const mx onwards until comment ETHAN
 
                 // Update prediction dot
                 /*if (predictionDot) {
@@ -506,7 +480,6 @@ export function useEyeClick({
 
       // 🔐 RELEASE GLOBAL LOCK
       globalEyeTrackingStarted = false;
-      window.removeEventListener("mousemove", onMouseMove);
     };
   }, [dwellMs, enabled]);
 

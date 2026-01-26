@@ -1,4 +1,4 @@
-import { StrictMode, createContext } from "react";
+import { createContext } from "react"; //ethan removed StrictMode
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./bootstrap-utilities.css";
@@ -14,17 +14,15 @@ import { EyeTrackingProvider } from "./Components/EyeTracking/EyeTrackingProvide
 export const UseSimplified = createContext(true);
 
 const router = createBrowserRouter([
-    { path: "/", element: <Login /> },
-    { path: "/dashboard", element: <Dashboard /> },
-    { path: "/transaction", element: <Transaction /> },
-    { path: "*", element: <NotFound /> },
+  { path: "/", element: <Login /> },
+  { path: "/dashboard", element: <Dashboard /> },
+  { path: "/transaction", element: <Transaction /> },
+  { path: "*", element: <NotFound /> },
 ]);
 
 createRoot(document.getElementById("root")!).render(
-    <StrictMode>
-        <MenuContextProvider>
-            <RouterProvider router={router} />
-            <EyeTrackingProvider />
-        </MenuContextProvider>
-    </StrictMode>
+  <MenuContextProvider>
+    <RouterProvider router={router} />
+    <EyeTrackingProvider />
+  </MenuContextProvider>, //stictmode gone ethan
 );
