@@ -1,48 +1,41 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mic, Activity, Zap, X } from 'lucide-react';
+import { Mic, Activity, Zap, X, Globe } from 'lucide-react';
 import styles from './VoiceAssistant.module.css';
 
-// Define message type
-type Message = {
-  role: 'user' | 'assistant';
-  text: string;
-};
+type Message = { role: 'user' | 'assistant'; text: string; };
 
 const VoiceAssistant: React.FC = () => {
   const [mode, setMode] = useState<"offline" | "sentry" | "listening" | "processing" | "speaking">("offline");
   const [transcript, setTranscript] = useState("");
-  // New state for conversation history
   const [messages, setMessages] = useState<Message[]>([]);
+  const [inputLang, setInputLang] = useState<"en-US" | "zh-CN">("en-US");
   const [isMicAlive, setIsMicAlive] = useState(false);
   const navigate = useNavigate();
 
   const recognitionRef = useRef<any>(null);
   const synthRef = useRef<SpeechSynthesis>(window.speechSynthesis);
-  const assistantVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const isSystemActive = useRef(localStorage.getItem('assistant_active') === 'true');
-  
-  // Ref to auto-scroll to bottom of chat
   const chatEndRef = useRef<HTMLDivElement>(null);
-  // Ref for the read-time delay
   const readTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const loadVoices = () => {
-      const voices = window.speechSynthesis.getVoices();
-      assistantVoiceRef.current = voices.find(v => v.lang.includes("en-US")) || voices[0];
-    };
+    const loadVoices = () => window.speechSynthesis.getVoices();
     loadVoices();
     window.speechSynthesis.onvoiceschanged = loadVoices;
-
     if (isSystemActive.current) startSentryMode();
     return () => fullStop();
   }, []);
 
-  // Auto-scroll whenever messages change
+  // --- RESTART MIC WHEN LANGUAGE CHANGES ---
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (isSystemActive.current && mode === "sentry") {
+      fullStop(); 
+      setTimeout(() => startSentryMode(), 200);
+    }
+  }, [inputLang]);
+
+  useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
   const fullStop = () => {
     if (recognitionRef.current) {
@@ -50,10 +43,7 @@ const VoiceAssistant: React.FC = () => {
       recognitionRef.current.abort();
     }
     synthRef.current.cancel();
-    
-    // Clear the read timer if we force stop
     if (readTimer.current) clearTimeout(readTimer.current);
-    
     setIsMicAlive(false);
   };
 
@@ -61,7 +51,7 @@ const VoiceAssistant: React.FC = () => {
     fullStop();
     isSystemActive.current = false;
     localStorage.setItem('assistant_active', 'false');
-    setMessages([]); // Clear history on close
+    setMessages([]);
     setMode("offline");
   };
 
@@ -69,10 +59,13 @@ const VoiceAssistant: React.FC = () => {
     if (mode === "offline") {
       isSystemActive.current = true;
       localStorage.setItem('assistant_active', 'true');
-      speak("Echo online.", () => startSentryMode());
-    } else {
-      turnOff();
-    }
+      speak(inputLang === "en-US" ? "Echo online." : "系统启动", () => startSentryMode());
+    } else { turnOff(); }
+  };
+
+  const cycleLanguage = () => {
+    const newLang = inputLang === "en-US" ? "zh-CN" : "en-US";
+    setInputLang(newLang);
   };
 
   const startSentryMode = () => {
@@ -87,6 +80,7 @@ const VoiceAssistant: React.FC = () => {
     const recognition = new Recognition();
     recognition.continuous = true;
     recognition.interimResults = true;
+    recognition.lang = inputLang; // Apply current language
     
     recognition.onstart = () => setIsMicAlive(true);
     recognition.onend = () => { 
@@ -95,9 +89,15 @@ const VoiceAssistant: React.FC = () => {
 
     recognition.onresult = (event: any) => {
       const text = Array.from(event.results).map((r: any) => r[0].transcript).join("").toLowerCase();
-      if (text.includes("echo")) { 
+      
+      const wakeWords = inputLang === "en-US" 
+        ? ["echo", "hey echo"] 
+        : ["echo", "爱可", "你好", "哈喽", "hi"];
+
+      if (wakeWords.some(word => text.includes(word))) { 
         recognition.stop(); 
-        speak("Yes?", () => startCommandMode()); 
+        const reply = inputLang === "en-US" ? "Yes?" : "我在"; 
+        speak(reply, () => startCommandMode()); 
       }
     };
     recognitionRef.current = recognition;
@@ -109,11 +109,12 @@ const VoiceAssistant: React.FC = () => {
     setMode("listening");
     const Recognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     const recognition = new Recognition();
+    recognition.lang = inputLang; // Apply current language
     
     recognition.onstart = () => setIsMicAlive(true);
     recognition.onresult = (event: any) => {
       const text = event.results[0][0].transcript;
-      setTranscript(text); // Show live text
+      setTranscript(text);
       if (event.results[0].isFinal) handleCommand(text);
     };
     recognition.onend = () => { 
@@ -125,9 +126,8 @@ const VoiceAssistant: React.FC = () => {
 
   const handleCommand = async (command: string) => {
     setMode("processing");
-    // Add User Message to History
     setMessages(prev => [...prev, { role: 'user', text: command }]);
-    setTranscript(""); // Clear live transcript
+    setTranscript("");
 
     try {
       const res = await fetch('/api/voice/process', {
@@ -137,7 +137,6 @@ const VoiceAssistant: React.FC = () => {
       });
       const data = await res.json();
       
-      // Add Echo Message to History
       setMessages(prev => [...prev, { role: 'assistant', text: data.reply }]);
 
       if (data.action === "navigate") navigate(data.route);
@@ -146,26 +145,49 @@ const VoiceAssistant: React.FC = () => {
       const nextStep = data.action === "close" ? () => turnOff() : () => startSentryMode();
       speak(data.reply, nextStep);
     } catch (err) { 
-      speak("Error connecting.", () => startSentryMode()); 
+      speak("Connection Error.", () => startSentryMode()); 
     }
   };
 
+  // --- UPDATED SPEAK FUNCTION (Female Voice Priority) ---
   const speak = (text: string, onComplete?: () => void) => {
     synthRef.current.cancel();
     setMode("speaking");
-    
-    // Clear any pending timers
     if (readTimer.current) clearTimeout(readTimer.current);
 
     const utterance = new SpeechSynthesisUtterance(text);
-    if (assistantVoiceRef.current) utterance.voice = assistantVoiceRef.current;
+    const voices = window.speechSynthesis.getVoices();
+    let selectedVoice = null;
     
+    // Determine target language based on state or text content
+    const isChinese = inputLang === "zh-CN" || /[\u4e00-\u9fa5]/.test(text);
+    
+    if (isChinese) {
+      // 1. Try finding specific Female Chinese voices (Google, Huihui, Yaoyao)
+      selectedVoice = voices.find(v => (v.lang.includes("zh") || v.lang.includes("CN")) && 
+        (v.name.includes("Google") || v.name.includes("Huihui") || v.name.includes("Yaoyao")));
+      
+      // 2. Fallback to any Chinese voice
+      if (!selectedVoice) {
+        selectedVoice = voices.find(v => v.lang.includes("zh") || v.lang.includes("CN"));
+      }
+    } else {
+      // 1. Try finding specific Female English voices (Google US, Zira, Samantha)
+      selectedVoice = voices.find(v => v.lang.includes("en-US") && 
+        (v.name.includes("Google") || v.name.includes("Zira") || v.name.includes("Samantha")));
+      
+      // 2. Fallback to any English voice
+      if (!selectedVoice) {
+        selectedVoice = voices.find(v => v.lang.includes("en-US"));
+      }
+    }
+
+    if (selectedVoice) utterance.voice = selectedVoice;
+
     utterance.onend = () => { 
-      // --- ADDED 3 SECOND DELAY HERE ---
-      // This keeps the overlay open for 3s after speaking finishes
       readTimer.current = setTimeout(() => {
         if (onComplete) onComplete(); 
-      }, 3000);
+      }, 3000); 
     };
     
     synthRef.current.speak(utterance);
@@ -185,7 +207,9 @@ const VoiceAssistant: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.statusBadge}>
         <div className={`${styles.indicatorDot} ${isMicAlive ? styles.indicatorActive : ''}`}></div>
-        <span>{mode}</span>
+        <span onClick={cycleLanguage} style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px'}}>
+          {inputLang === "en-US" ? "EN" : "中文"} <Globe size={10} />
+        </span>
       </div>
       
       <button 
@@ -202,10 +226,11 @@ const VoiceAssistant: React.FC = () => {
                <X size={20} />
             </button>
 
-            {/* --- Chat History Section --- */}
             <div className={styles.chatHistory}>
               {messages.length === 0 && (
-                <p className="text-gray-400 text-sm mt-4 italic">Say "Echo" to start...</p>
+                <p className="text-gray-400 text-sm mt-4 italic">
+                  {inputLang === "en-US" ? 'Say "Echo" to start...' : '请说 "你好" (Nǐ hǎo) 开始...'}
+                </p>
               )}
               
               {messages.map((msg, index) => (
@@ -219,7 +244,6 @@ const VoiceAssistant: React.FC = () => {
               <div ref={chatEndRef} />
             </div>
 
-            {/* --- Live Status / Transcript --- */}
             <div className={styles.liveTranscript}>
               {mode === "processing" && <Zap size={20} className="animate-pulse mx-auto text-yellow-500" />}
               {transcript && <span>"{transcript}..."</span>}
