@@ -3,10 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { Mic, Activity, Zap, X } from 'lucide-react';
 import styles from './VoiceAssistant.module.css';
 
+// Define message type
+type Message = {
+  role: 'user' | 'assistant';
+  text: string;
+};
+
 const VoiceAssistant: React.FC = () => {
   const [mode, setMode] = useState<"offline" | "sentry" | "listening" | "processing" | "speaking">("offline");
   const [transcript, setTranscript] = useState("");
-  const [assistantReply, setAssistantReply] = useState("");
+  // New state for conversation history
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isMicAlive, setIsMicAlive] = useState(false);
   const navigate = useNavigate();
 
@@ -14,12 +21,16 @@ const VoiceAssistant: React.FC = () => {
   const synthRef = useRef<SpeechSynthesis>(window.speechSynthesis);
   const assistantVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const isSystemActive = useRef(localStorage.getItem('assistant_active') === 'true');
-  const watchdogTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  
+  // Ref to auto-scroll to bottom of chat
+  const chatEndRef = useRef<HTMLDivElement>(null);
+  // Ref for the read-time delay
+  const readTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const loadVoices = () => {
       const voices = window.speechSynthesis.getVoices();
-      assistantVoiceRef.current = voices.find(v => v.name.includes("Google US English") || v.name.includes("Samantha")) || voices[0];
+      assistantVoiceRef.current = voices.find(v => v.lang.includes("en-US")) || voices[0];
     };
     loadVoices();
     window.speechSynthesis.onvoiceschanged = loadVoices;
@@ -28,14 +39,21 @@ const VoiceAssistant: React.FC = () => {
     return () => fullStop();
   }, []);
 
+  // Auto-scroll whenever messages change
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
   const fullStop = () => {
     if (recognitionRef.current) {
       recognitionRef.current.onend = null;
       recognitionRef.current.abort();
-      recognitionRef.current = null;
     }
     synthRef.current.cancel();
-    if (watchdogTimer.current) clearTimeout(watchdogTimer.current);
+    
+    // Clear the read timer if we force stop
+    if (readTimer.current) clearTimeout(readTimer.current);
+    
     setIsMicAlive(false);
   };
 
@@ -43,6 +61,7 @@ const VoiceAssistant: React.FC = () => {
     fullStop();
     isSystemActive.current = false;
     localStorage.setItem('assistant_active', 'false');
+    setMessages([]); // Clear history on close
     setMode("offline");
   };
 
@@ -60,29 +79,25 @@ const VoiceAssistant: React.FC = () => {
     if (!isSystemActive.current) return;
     fullStop();
     setMode("sentry");
-    setTranscript("");
-
+    setTranscript(""); 
+    
     const Recognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!Recognition) return;
 
     const recognition = new Recognition();
     recognition.continuous = true;
     recognition.interimResults = true;
-    recognition.lang = 'en-US';
-
+    
     recognition.onstart = () => setIsMicAlive(true);
-    recognition.onend = () => {
-      setIsMicAlive(false);
-      if (isSystemActive.current && mode === "sentry") setTimeout(startSentryMode, 500);
+    recognition.onend = () => { 
+      if (isSystemActive.current && mode === "sentry") setTimeout(startSentryMode, 500); 
     };
 
     recognition.onresult = (event: any) => {
-      const results = Array.from(event.results);
-      const text = (results[results.length - 1] as any)[0].transcript.toLowerCase();
-      
-      if (text.includes("echo") || text.includes("hey echo")) {
-        recognition.stop();
-        speak("Yes?", () => startCommandMode());
+      const text = Array.from(event.results).map((r: any) => r[0].transcript).join("").toLowerCase();
+      if (text.includes("echo")) { 
+        recognition.stop(); 
+        speak("Yes?", () => startCommandMode()); 
       }
     };
     recognitionRef.current = recognition;
@@ -92,20 +107,17 @@ const VoiceAssistant: React.FC = () => {
   const startCommandMode = () => {
     fullStop();
     setMode("listening");
-    
     const Recognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     const recognition = new Recognition();
-    recognition.lang = 'en-US';
-
+    
     recognition.onstart = () => setIsMicAlive(true);
     recognition.onresult = (event: any) => {
       const text = event.results[0][0].transcript;
-      setTranscript(text);
+      setTranscript(text); // Show live text
       if (event.results[0].isFinal) handleCommand(text);
     };
-    recognition.onend = () => {
-      setIsMicAlive(false);
-      if (mode === "listening" && !transcript && isSystemActive.current) startSentryMode();
+    recognition.onend = () => { 
+      if (mode === "listening" && !transcript) startSentryMode(); 
     };
     recognitionRef.current = recognition;
     recognition.start();
@@ -113,6 +125,10 @@ const VoiceAssistant: React.FC = () => {
 
   const handleCommand = async (command: string) => {
     setMode("processing");
+    // Add User Message to History
+    setMessages(prev => [...prev, { role: 'user', text: command }]);
+    setTranscript(""); // Clear live transcript
+
     try {
       const res = await fetch('/api/voice/process', {
         method: 'POST',
@@ -121,32 +137,37 @@ const VoiceAssistant: React.FC = () => {
       });
       const data = await res.json();
       
-      setAssistantReply(data.reply);
+      // Add Echo Message to History
+      setMessages(prev => [...prev, { role: 'assistant', text: data.reply }]);
 
-      if (data.action === "navigate" && data.route) {
-        navigate(data.route);
-        speak(data.reply, () => startSentryMode());
-      } else if (data.action === "theme") {
-        document.documentElement.classList.toggle("dark");
-        speak(data.reply, () => startSentryMode());
-      } else if (data.action === "close") {
-        speak(data.reply, () => turnOff());
-      } else {
-        speak(data.reply, () => startSentryMode());
-      }
-
-    } catch (err) {
-      speak("I'm sorry, I couldn't process that.", () => startSentryMode());
+      if (data.action === "navigate") navigate(data.route);
+      if (data.action === "theme") document.documentElement.classList.toggle("dark");
+      
+      const nextStep = data.action === "close" ? () => turnOff() : () => startSentryMode();
+      speak(data.reply, nextStep);
+    } catch (err) { 
+      speak("Error connecting.", () => startSentryMode()); 
     }
   };
 
   const speak = (text: string, onComplete?: () => void) => {
     synthRef.current.cancel();
     setMode("speaking");
+    
+    // Clear any pending timers
+    if (readTimer.current) clearTimeout(readTimer.current);
+
     const utterance = new SpeechSynthesisUtterance(text);
     if (assistantVoiceRef.current) utterance.voice = assistantVoiceRef.current;
     
-    utterance.onend = () => { if (onComplete) onComplete(); };
+    utterance.onend = () => { 
+      // --- ADDED 3 SECOND DELAY HERE ---
+      // This keeps the overlay open for 3s after speaking finishes
+      readTimer.current = setTimeout(() => {
+        if (onComplete) onComplete(); 
+      }, 3000);
+    };
+    
     synthRef.current.speak(utterance);
   };
 
@@ -180,8 +201,29 @@ const VoiceAssistant: React.FC = () => {
             <button onClick={() => startSentryMode()} className={styles.closeButton}>
                <X size={20} />
             </button>
-            <p>"{transcript || assistantReply}"</p>
-            {mode === "processing" && <Zap size={32} color="#eab308" style={{margin: '1rem auto', display:'block'}} className={styles.indicatorActive} />}
+
+            {/* --- Chat History Section --- */}
+            <div className={styles.chatHistory}>
+              {messages.length === 0 && (
+                <p className="text-gray-400 text-sm mt-4 italic">Say "Echo" to start...</p>
+              )}
+              
+              {messages.map((msg, index) => (
+                <div key={index} className={`${styles.messageRow} ${msg.role === 'user' ? styles.userRow : styles.echoRow}`}>
+                  <span className={styles.messageLabel}>{msg.role === 'user' ? 'You' : 'Echo'}</span>
+                  <div className={`${styles.bubble} ${msg.role === 'user' ? styles.userBubble : styles.echoBubble}`}>
+                    {msg.text}
+                  </div>
+                </div>
+              ))}
+              <div ref={chatEndRef} />
+            </div>
+
+            {/* --- Live Status / Transcript --- */}
+            <div className={styles.liveTranscript}>
+              {mode === "processing" && <Zap size={20} className="animate-pulse mx-auto text-yellow-500" />}
+              {transcript && <span>"{transcript}..."</span>}
+            </div>
           </div>
         </div>
       )}

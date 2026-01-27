@@ -1,7 +1,6 @@
 .container {
   position: fixed;
-  /* Positioned to align vertically under the ChatAssistant bubble */
-  bottom: 85px; 
+  bottom: 70px;
   right: 24px;
   z-index: 1050;
   display: flex;
@@ -27,11 +26,11 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: #ef4444; /* Red */
+  background-color: #ef4444;
 }
 
 .indicatorActive {
-  background-color: #22c55e; /* Green */
+  background-color: #22c55e;
   animation: pulse 1.5s infinite;
 }
 
@@ -43,85 +42,115 @@
   align-items: center;
   justify-content: center;
   color: white;
-  border: 2px solid transparent;
+  border: none;
   cursor: pointer;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease;
 }
 
-.mainButton:hover {
-  transform: scale(1.1);
-}
+.mainButton:hover { transform: scale(1.1); }
+.modeSentry { background-color: #4f46e5; }
+.modeListening { background-color: #22c55e; animation: bounce 1s infinite; }
+.modeOffline { background-color: #dc2626; }
 
-.modeSentry {
-  background-color: #4f46e5; /* Indigo */
-  border-color: #818cf8;
-}
-
-.modeListening {
-  background-color: #22c55e; /* Green */
-  border-color: #86efac;
-  animation: bounce 1s infinite;
-}
-
-.modeOffline {
-  background-color: #dc2626; /* Red */
-}
-
-/* Modal / Overlay Styles */
+/* --- UPDATED OVERLAY STYLES --- */
 .overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(3px);
   z-index: 1040;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
 }
 
 .modalCard {
-  position: relative; 
-  background-color: white;
-  padding: 40px 32px 32px 32px; 
-  border-radius: 16px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 448px;
-  text-align: center;
-  font-size: 1.25rem;
-  font-weight: 500;
+  position: relative;
+  background: white;
+  padding: 20px; /* Reduced padding for more space */
+  border-radius: 20px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh; /* Prevent it from being too tall */
+}
+
+/* Chat History Area */
+.chatHistory {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 24px; /* Space for close button */
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 4px;
+  min-height: 100px;
+}
+
+.messageRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.userRow {
+  align-items: flex-end;
+}
+
+.echoRow {
+  align-items: flex-start;
+}
+
+.messageLabel {
+  font-size: 10px;
+  color: #6b7280;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.bubble {
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 85%;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.userBubble {
+  background-color: #ef4444; /* Red */
+  color: white;
+  border-bottom-right-radius: 2px;
+}
+
+.echoBubble {
+  background-color: #f3f4f6; /* Gray */
   color: #1f2937;
+  border-bottom-left-radius: 2px;
+}
+
+.liveTranscript {
+  text-align: center;
+  font-style: italic;
+  color: #9ca3af;
+  margin-top: 8px;
+  min-height: 24px;
 }
 
 .closeButton {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  background: transparent;
+  top: 12px;
+  right: 12px;
+  background: none;
   border: none;
   cursor: pointer;
   color: #9ca3af;
-  padding: 6px;
-  border-radius: 50%;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
+.closeButton:hover { color: #ef4444; }
 
-.closeButton:hover {
-  color: #ef4444;
-  background-color: #f3f4f6;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10%); }
-}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
