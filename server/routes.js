@@ -39,25 +39,25 @@ router.get("/logout", (req, res) => {
     });
 });
 
+// server/routes.js (Find the AI Chat Route and update it to this)
+
 // --- AI Chat Route ---
 router.post("/api/ai/chat", async (req, res) => {
-    const { message } = req.body;
+    // 1. Destructure BOTH message and lang from the request body
+    const { message, lang } = req.body;
 
-    // 1. Ask the AI Service
-    const aiResult = await generateAIResponse(message || "");
+    // 2. Pass BOTH to the AI service
+    const aiResult = await generateAIResponse(message || "", lang || "en");
 
-    // 2. Parse the JSON result safely
+    // 3. Parse the JSON result safely
     let parsedResult;
     try {
-        // Clean up any potential markdown formatting from Gemini
         const cleanText = aiResult.replace(/```json/g, "").replace(/```/g, "").trim();
         parsedResult = JSON.parse(cleanText);
     } catch (e) {
-        // Fallback if AI didn't return perfect JSON
         parsedResult = { action: "chat", reply: aiResult };
     }
 
-    // 3. Send back to Frontend
     res.json(parsedResult);
 });
 

@@ -122,3 +122,23 @@
     padding: 0 12px;
     border-radius: 6px;
 }
+
+/* Add this to your existing ChatAssistant.module.css */
+
+.langBtn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid white;
+    color: white;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.langBtn:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
