@@ -4,63 +4,93 @@ require("dotenv").config();
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+// --- 🧠 WALL-E'S LOCAL KNOWLEDGE BASE (OFFLINE FALLBACK) ---
+function getLocalResponse(command) {
+  const cmd = command.toLowerCase();
+
+  // --- 1. Greetings (English & Chinese) ---
+  if (cmd.includes("hello") || cmd === "hi" || cmd.includes("你好") || cmd.includes("早安")) {
+    return { action: "chat", reply: "Hello! I am Wall-E, your OCBC assistant. I can tell you about our accounts, cards, or help you navigate. (Offline Mode)" };
+  }
+  if (cmd.includes("bye") || cmd.includes("thank") || cmd.includes("谢谢")) {
+    return { action: "chat", reply: "You're welcome! Thank you for banking with OCBC. Goodbye!" };
+  }
+
+  // --- 2. Bank Information (OCBC Info) ---
+  if (cmd.includes("what is ocbc") || cmd.includes("whats ocbc") || cmd.includes("about ocbc") || cmd.includes("华侨银行")) {
+    return { 
+      action: "chat", 
+      reply: "OCBC Bank, founded in 1932, is the longest established Singapore bank and the second largest financial services group in Southeast Asia by assets. We are consistently ranked among the World's Top 50 Safest Banks." 
+    };
+  }
+
+  // --- 3. Bank Accounts ---
+  if (cmd.includes("frank")) {
+    return { action: "chat", reply: "The FRANK Account is designed for youths and young adults. It has no initial deposit requirement and no fall-below fee for those under 26." };
+  }
+  if (cmd.includes("360")) {
+    return { action: "chat", reply: "The OCBC 360 Account is a bonus interest account. You earn more by crediting salary, saving, spending, and investing." };
+  }
+
+  // --- 4. Credit Cards ---
+  if (cmd.includes("365")) {
+    return { action: "chat", reply: "The OCBC 365 Credit Card gives you cashback on daily dining (5%), groceries (3%), and fuel (6%)." };
+  }
+  if (cmd.includes("90n") || cmd.includes("miles")) {
+    return { action: "chat", reply: "The OCBC 90°N Card is built for travelers. You earn Travel$ on spend that never expire." };
+  }
+
+  // --- 5. Services & Info ---
+  if (cmd.includes("hotline") || cmd.includes("number") || cmd.includes("热线")) {
+    return { action: "chat", reply: "Our 24-hour customer hotline is 1800 363 3333. For overseas, call +65 6363 3333." };
+  }
+
+  // --- 6. Navigation ---
+  if (cmd.includes("transfer") || cmd.includes("pay") || cmd.includes("transaction") || cmd.includes("转账")) {
+    return { action: "navigate", route: "/transaction", reply: "Sure, taking you to the transfer page now." };
+  }
+  if (cmd.includes("balance") || cmd.includes("dashboard") || cmd.includes("home") || cmd.includes("余额")) {
+    return { action: "navigate", route: "/dashboard", reply: "Opening your dashboard now." };
+  }
+
+  // Default fallback if no keywords match
+  return { action: "chat", reply: "I am currently in offline mode. I can help with 'What is OCBC', 'Frank Account', '360 Account', or taking you to 'Transactions'." };
+}
+
 async function generateAIResponse(message) {
   try {
-    // We stick with the working model
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-flash-latest"
-    });
+    const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
-    // --- THE BRAIN UPGRADE ---
     const systemPrompt = `
-      You are Wall-E, the intelligent banking assistant for OCBC (Oversea-Chinese Banking Corporation).
-      Your tone is professional, helpful, and concise.
+      You are Wall-E, the intelligent banking assistant for OCBC.
+      User Message: "${message}"
 
-      === YOUR KNOWLEDGE BASE (USE THIS TO ANSWER) ===
-      
-      1. ACCOUNTS:
-         - **OCBC 360 Account**: Earn bonus interest up to 7.65% a year. You earn more by doing these categories: Salary, Save, Spend, Insure, Invest, and Grow.
-         - **FRANK Account**: No initial deposit required. No fall-below fee for customers under 26 years old. Great for students.
-         - **Global Savings**: Manage 8 major currencies in one account.
-      
-      2. CREDIT CARDS:
-         - **OCBC 365 Card**: 5% cashback on dining and food delivery, 6% on fuel, 3% on groceries. Min spend $800/month.
-         - **FRANK Credit Card**: 6% cashback on online shopping and mobile contactless payments.
-         - **90°N Card**: Travel rewards card. Earn Travel$ that never expire.
+      === KNOWLEDGE BASE ===
+      1. OCBC Info: Founded 1932, longest established Singapore bank, 2nd largest in SE Asia.
+      2. OCBC 360 Account: Up to 7.65% interest.
+      3. FRANK Account: No fall-below fee for under 26.
+      4. OCBC 365 Card: Cashback on dining/fuel.
+      5. Hotline: 1800 363 3333.
 
-      3. SUPPORT & CONTACT:
-         - Personal Banking Hotline: 1800 363 3333
-         - Overseas Hotline: +65 6363 3333
-         - You can also find help at the nearest branch or ocbc.com.
+      === ROUTING ===
+      - Transfer/Pay -> route: "/transaction"
+      - Balance/Home -> route: "/dashboard"
+      - Login/Logout -> route: "/login"
 
-      === ROUTING RULES (WHEN TO NAVIGATE) ===
-      - If user wants to **Transfer**, **Pay Someone**, **Send Money** -> Action: "navigate", Route: "/transaction"
-      - If user wants to **See Balance**, **Dashboard**, **Home**, **Check Accounts** -> Action: "navigate", Route: "/dashboard"
-      - If user mentions **Login** or **Logout** -> Action: "navigate", Route: "/login"
-      - If user asks for **Information** (e.g., "Tell me about 365 card") -> Action: "chat" (Do not navigate, just explain).
-
-      === RESPONSE FORMAT (STRICT JSON) ===
-      You must return ONLY this JSON structure. No markdown formatting.
-      {
-        "action": "navigate" | "theme" | "chat",
-        "route": "/dashboard" | "/transaction" | "/login" (Required if action is navigate),
-        "theme": "dark" | "light" (Required if action is theme),
-        "reply": "Your conversational answer here."
-      }
-
-      USER MESSAGE: "${message}"
+      RETURN JSON ONLY: { "action": "navigate"|"chat", "reply": "...", "route": "..." }
     `;
 
     const result = await model.generateContent(systemPrompt);
     const response = result.response.text();
-    return response;
+    
+    // Clean JSON formatting if Gemini adds markdown
+    return response.replace(/```json/g, "").replace(/```/g, "").trim();
     
   } catch (err) {
-    console.error("Gemini AI Error:", err);
-    return JSON.stringify({ 
-      action: "chat", 
-      reply: "I am currently updating my banking database. Please try again shortly." 
-    });
+    console.error("Gemini AI Error (Switching to Local Brain):", err.message);
+    
+    // Use the Local Brain fallback
+    return JSON.stringify(getLocalResponse(message));
   }
 }
 
