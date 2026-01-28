@@ -15,9 +15,9 @@ const PORT = process.env.PORT || 8080;
 
 // SECURITY
 app.use(
-    helmet({
-        contentSecurityPolicy: false,
-    })
+  helmet({
+    contentSecurityPolicy: false,
+  }),
 );
 app.use(morgan("dev"));
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
@@ -34,12 +34,12 @@ app.use(bodyParser.json());
 
 // SESSIONS
 app.use(
-    session({
-        secret: "supersecretkey",
-        resave: false,
-        saveUninitialized: true,
-        cookie: { httpOnly: true },
-    })
+  session({
+    secret: "supersecretkey",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { httpOnly: true },
+  }),
 );
 
 // EJS
@@ -51,11 +51,11 @@ app.use("/", mainRoutes);
 
 // ERRORS
 app.use((req, res) => {
-    res.status(404).send("<h1>404 Not Found</h1>");
+  res.status(404).send("<h1>404 Not Found</h1>");
 });
 app.use((err, req, res, next) => {
-    console.error("SERVER ERROR:", err);
-    res.status(500).send("<h1>500 - Server Error</h1>");
+  console.error("SERVER ERROR:", err);
+  res.status(500).send("<h1>500 - Server Error</h1>");
 });
 
 // START SERVER
