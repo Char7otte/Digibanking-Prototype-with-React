@@ -6,6 +6,7 @@ import HeaderComponent from "../../Components/HeaderComponent/HeaderComponent";
 import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 import { useMenuContext } from "../../MenuContext";
+import { io } from "socket.io-client";
 
 interface User {
   id: number;
