@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, type ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axios";
 import styles from "./Transaction.module.css";
 import HeaderComponent from "../../Components/HeaderComponent/HeaderComponent";
 import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent";
@@ -43,9 +43,7 @@ function Transaction() {
   useEffect(() => {
     async function fetchUserData() {
       try {
-        const res = await axios.get("http://localhost:8080/dashboard", {
-          withCredentials: true,
-        });
+        const res = await api.get("/dashboard");
         setUser(res.data.user);
       } catch (error: any) {
         console.error("Error fetching user data:", error);
@@ -105,7 +103,7 @@ function Transaction() {
     setSelectedAccountCardArticle(newSelectedCard);
     newSelectedCard.classList.add("selected");
     selectedTransferorAccount.current = newSelectedCard.getAttribute(
-      "data-account-number"
+      "data-account-number",
     );
     accountCardArticles.current.forEach((article) => {
       if (article != newSelectedCard) article.classList.remove("selected");
@@ -139,7 +137,7 @@ function Transaction() {
 
   function executeTransfer() {
     alert(
-      `Transfering $${transferAmount.current} from your account ${selectedTransferorAccount.current} to ${selectedTransfereeAccount.current}`
+      `Transfering $${transferAmount.current} from your account ${selectedTransferorAccount.current} to ${selectedTransfereeAccount.current}`,
     );
     setTransactionStep(0);
   }

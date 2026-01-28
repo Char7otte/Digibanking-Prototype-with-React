@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axios";
 import styles from "./Dashboard.module.css";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent.tsx";
@@ -23,14 +23,10 @@ function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const { isSimplified } = useMenuContext();
 
-  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
-
   useEffect(() => {
     async function fetchUserData() {
       try {
-        const res = await axios.get(`${API_BASE_URL}/dashboard`, {
-          withCredentials: true,
-        });
+        const res = await api.get("/dashboard");
         setUser(res.data.user);
       } catch (error: any) {
         console.error("Error fetching user data:", error);
