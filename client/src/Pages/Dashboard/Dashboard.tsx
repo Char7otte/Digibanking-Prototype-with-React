@@ -23,10 +23,12 @@ function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const { isSimplified } = useMenuContext();
 
+  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
   useEffect(() => {
     async function fetchUserData() {
       try {
+        const res = await axios.get(`${API_BASE_URL}/dashboard`, {
           withCredentials: true,
         });
         setUser(res.data.user);
