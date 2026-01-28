@@ -20,9 +20,11 @@ function LoginComponent() {
       password: formData.get("password"),
     };
 
+    const API_BASE_URL = import.meta.env.API_URL || "http://localhost:8080";
+
     try {
       setIsLoading(true);
-      await axios.post("http://localhost:8080/login", data, {
+      await axios.post(`${API_BASE_URL}/login`, data, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
