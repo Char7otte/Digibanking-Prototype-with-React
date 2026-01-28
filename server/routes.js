@@ -6,6 +6,10 @@ const dashboardController = require("./api-mvc/controllers/dashboardController")
 const profileController = require("./api-mvc/controllers/profileController");
 const transferController = require("./api-mvc/controllers/transferController");
 
+router.get("/api", (req, res) => {
+  res.send("API is working");
+});
+
 // Login action
 router.post("/login", loginController.login);
 
