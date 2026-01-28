@@ -1,6 +1,6 @@
 import { type FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axios";
 import styles from "./Login.module.css";
 import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent";
 import OCBCLogo from "../../assets/ocbc.svg";
@@ -20,17 +20,9 @@ function LoginComponent() {
       password: formData.get("password"),
     };
 
-    const API_BASE_URL =
-      import.meta.env.VITE_API_URL || "http://localhost:8080";
-
     try {
       setIsLoading(true);
-      await axios.post(`${API_BASE_URL}/login`, data, {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        withCredentials: true,
-      });
+      await api.get("/login");
       setIsLoading(false);
       navigate("/dashboard");
     } catch (error: any) {
