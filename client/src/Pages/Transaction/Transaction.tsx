@@ -27,6 +27,19 @@ interface Account {
 }
 
 function Transaction() {
+  useEffect(() => {
+    const URL = import.meta.env.VITE_SERVER_URL || "http://localhost:8080";
+    const socket = io(URL);
+    socket.connect();
+    socket.on("connect", () => {
+      console.log("Connected to server with ID:", socket.id);
+    });
+    return () => {
+      console.log("Leaving page... disconnecting.");
+      socket.off("connection");
+    };
+  }, []);
+
   const navigate = useNavigate();
   const [mode, setMode] = useState("local");
   const [user, setUser] = useState<User>();
