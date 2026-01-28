@@ -22,7 +22,7 @@ function LoginComponent() {
 
     try {
       setIsLoading(true);
-      await api.get("/login");
+      await api.post("/login", data);
       setIsLoading(false);
       navigate("/dashboard");
     } catch (error: any) {
