@@ -6,6 +6,13 @@ import AccessibilityComponent from "../../Components/AccessibilityComponent/Acce
 import OCBCLogo from "../../assets/ocbc.svg";
 import supabase from "../../utils/supabase";
 
+interface id {
+    token_id: string;
+    user_id: string;
+    code: string;
+    expires_at: Date;
+}
+
 function LoginComponent() {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
@@ -41,20 +48,29 @@ function LoginComponent() {
     async function handleOTP(e: FormEvent) {
         e.preventDefault();
         const code = new FormData(e.target as HTMLFormElement).get("otp");
+        const fiveMinsAgo = new Date(Date.now() - 1000 * 60 * 5).toISOString();
         const { data, error } = await supabase
             .from("token")
             .select()
-            .eq("code", code);
+            .eq("code", code)
+            .gt("expires_at", fiveMinsAgo);
         if (error || data == null) {
             console.error(error);
-            alert("Error. Please try again later.");
-            return;
-        } else console.log(data);
-
-        if (data.length == 0) {
-            alert("Incorrect token. Please try again.");
+            alert("Server error. Please try again later.");
             return;
         }
+
+        if (data.length == 0) {
+            alert("Incorrect/expired token. Please try again.");
+            return;
+        }
+
+        setIsLoading(true);
+        await api.get("/login/token", {
+            params: { id: data[0].user_id },
+        });
+        setIsLoading(false);
+        navigate("/dashboard");
     }
 
     if (isLoading) return <div className="loadingContainer">Logging in...</div>;
