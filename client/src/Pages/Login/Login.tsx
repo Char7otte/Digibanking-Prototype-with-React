@@ -6,13 +6,6 @@ import AccessibilityComponent from "../../Components/AccessibilityComponent/Acce
 import OCBCLogo from "../../assets/ocbc.svg";
 import supabase from "../../utils/supabase";
 
-interface id {
-    token_id: string;
-    user_id: string;
-    code: string;
-    expires_at: Date;
-}
-
 function LoginComponent() {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
