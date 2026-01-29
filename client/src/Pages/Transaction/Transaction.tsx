@@ -7,7 +7,7 @@ import AccessibilityComponent from "../../Components/AccessibilityComponent/Acce
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 import { useMenuContext } from "../../MenuContext";
 import { io } from "socket.io-client";
-import { supabase } from "../../utils/supabase";
+import supabase from "../../utils/supabase";
 
 interface User {
     id: number;
