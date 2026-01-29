@@ -84,6 +84,7 @@ function Transaction() {
             .from("token")
             .insert({ user_id: userID, code: code });
         if (error) console.error(error);
+        alert(`Your code is: ${code}`);
     }
 
     function handleModeChange(newMode: string) {
