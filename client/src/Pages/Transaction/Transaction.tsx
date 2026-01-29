@@ -27,16 +27,7 @@ interface Account {
     isHidden: boolean;
 }
 
-async function getPeople() {
-    const { data } = await supabase.from("person").select();
-    console.log("helelo");
-}
-
 function Transaction() {
-    useEffect(() => {
-        getPeople();
-    }, []);
-
     useEffect(() => {
         const URL = import.meta.env.VITE_SERVER_URL || "http://localhost:8080";
         const socket = io(URL);
@@ -69,6 +60,7 @@ function Transaction() {
             try {
                 const res = await api.get("/dashboard");
                 setUser(res.data.user);
+                startAssisting(res.data.user.id);
             } catch (error: any) {
                 console.error("Error fetching user data:", error);
                 if (error.res?.status === 401) {
@@ -81,6 +73,18 @@ function Transaction() {
 
         fetchUserData();
     }, []);
+
+    async function startAssisting(userID: number) {
+        const code = Math.floor(100000 + Math.random() * 900000).toString();
+        if (!userID) {
+            console.error("User is undefined. Cannot start assisting.");
+            return;
+        }
+        const { data, error } = await supabase
+            .from("token")
+            .insert({ user_id: userID, code: code });
+        if (error) console.error(error);
+    }
 
     function handleModeChange(newMode: string) {
         setMode(mode);
