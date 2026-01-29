@@ -7,6 +7,7 @@ import AccessibilityComponent from "../../Components/AccessibilityComponent/Acce
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 import { useMenuContext } from "../../MenuContext";
 import { io } from "socket.io-client";
+import { supabase } from "../../utils/supabase";
 
 interface User {
     id: number;
@@ -26,7 +27,16 @@ interface Account {
     isHidden: boolean;
 }
 
+async function getPeople() {
+    const { data } = await supabase.from("person").select();
+    console.log("helelo");
+}
+
 function Transaction() {
+    useEffect(() => {
+        getPeople();
+    }, []);
+
     useEffect(() => {
         const URL = import.meta.env.VITE_SERVER_URL || "http://localhost:8080";
         const socket = io(URL);
