@@ -5,7 +5,9 @@ import styles from "./AccessibilityComponent.module.css";
 function AccessibilityComponent() {
     const defaultElementDistanceMin = 16;
     const defaultElementDistanceMax = 48;
-    const [elementDistance, setElementDistance] = useState(defaultElementDistanceMin);
+    const [elementDistance, setElementDistance] = useState(
+        defaultElementDistanceMin,
+    );
     const defaultButtonSizeMin = 50;
     const defaultButtonSizeMax = 150;
     const [buttonSize, setButtonSize] = useState(defaultButtonSizeMin);
@@ -44,18 +46,27 @@ function AccessibilityComponent() {
     }, []);
 
     useEffect(() => {
-        document.documentElement.style.setProperty("--spacing", elementDistance + "px");
+        document.documentElement.style.setProperty(
+            "--spacing",
+            elementDistance + "px",
+        );
     }, [elementDistance]);
 
     useEffect(() => {
-        document.documentElement.style.setProperty("--buttonSize", buttonSize + "px");
+        document.documentElement.style.setProperty(
+            "--buttonSize",
+            buttonSize + "px",
+        );
     }, [buttonSize]);
 
     ReactModal.setAppElement("#root");
 
     return (
         <div>
-            <button onClick={openModal} className={`${styles.helpButton} ignore-sizing`}>
+            <button
+                onClick={openModal}
+                className={`${styles.helpButton} ignore-sizing`}
+            >
                 Assistance♿
             </button>
             <ReactModal isOpen={isOpen} onRequestClose={closeModal}>
@@ -74,7 +85,13 @@ function AccessibilityComponent() {
                 <label>
                     Button size: <strong>{buttonSize}</strong>
                 </label>
-                <input type="range" min={defaultButtonSizeMin} max={defaultButtonSizeMax} onChange={handlebuttonSizeChange} value={buttonSize} />
+                <input
+                    type="range"
+                    min={defaultButtonSizeMin}
+                    max={defaultButtonSizeMax}
+                    onChange={handlebuttonSizeChange}
+                    value={buttonSize}
+                />
             </ReactModal>
         </div>
     );
