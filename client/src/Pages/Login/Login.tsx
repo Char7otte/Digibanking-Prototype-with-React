@@ -4,6 +4,7 @@ import api from "../../api/axios";
 import styles from "./Login.module.css";
 import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent";
 import OCBCLogo from "../../assets/ocbc.svg";
+import supabase from "../../utils/supabase";
 
 function LoginComponent() {
     const navigate = useNavigate();
@@ -35,17 +36,26 @@ function LoginComponent() {
 
     async function handleRegister(e: FormEvent) {
         e.preventDefault();
-        // const form = e.target as HTMLFormElement;
-        // const formData = new FormData(form);
     }
 
-    //   async function handleAssistance(e: FormEvent) {
-    //     e.preventDefault();
-    //   }
+    async function handleOTP(e: FormEvent) {
+        e.preventDefault();
+        const code = new FormData(e.target as HTMLFormElement).get("otp");
+        const { data, error } = await supabase
+            .from("token")
+            .select()
+            .eq("code", code);
+        if (error || data == null) {
+            console.error(error);
+            alert("Error. Please try again later.");
+            return;
+        } else console.log(data);
 
-    //   function updateSignOption(newOption: string) {
-    //     setSignOption(newOption);
-    //   }
+        if (data.length == 0) {
+            alert("Incorrect token. Please try again.");
+            return;
+        }
+    }
 
     if (isLoading) return <div className="loadingContainer">Logging in...</div>;
 
@@ -197,26 +207,7 @@ function LoginComponent() {
                             Enter the generated OTP to gain access to the
                             account
                         </p>
-                        <form
-                            onSubmit={handleLogin}
-                            className={styles.loginForm}
-                        >
-                            <input
-                                type="hidden"
-                                name="username"
-                                id="username"
-                                placeholder="Enter your username"
-                                className="spacing-md"
-                                value="bob"
-                            />
-                            <input
-                                type="hidden"
-                                name="password"
-                                id="password"
-                                placeholder="Enter your PIN number"
-                                className="spacing-md"
-                                value="bobpass"
-                            />
+                        <form onSubmit={handleOTP} className={styles.loginForm}>
                             <label htmlFor="otp" className="m-2">
                                 One Time Password
                             </label>
@@ -226,6 +217,8 @@ function LoginComponent() {
                                 id="otp"
                                 placeholder="Enter your otp"
                                 className="spacing-md"
+                                minLength={6}
+                                maxLength={6}
                             />
                             <button
                                 type="submit"

@@ -80,10 +80,28 @@ function Transaction() {
             console.error("User is undefined. Cannot start assisting.");
             return;
         }
-        const { data, error } = await supabase
+
+        const tenMinsAgo = new Date(Date.now() - 1000 * 60 * 10).toISOString();
+        const { data, error: checkDupesError } = await supabase
+            .from("token")
+            .select()
+            .eq("code", code)
+            .gt("expires_at", tenMinsAgo);
+
+        if (checkDupesError) {
+            console.error(checkDupesError);
+            return;
+        }
+
+        if (data.length != 0) {
+            startAssisting(userID);
+            console.log("Duplicate entry located, generating a new code");
+        }
+
+        const { error: insertCodeError } = await supabase
             .from("token")
             .insert({ user_id: userID, code: code });
-        if (error) console.error(error);
+        if (insertCodeError) console.error(insertCodeError);
         alert(`Your code is: ${code}`);
     }
 
