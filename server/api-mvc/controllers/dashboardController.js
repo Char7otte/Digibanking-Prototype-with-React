@@ -6,8 +6,7 @@ async function dashboard(req, res) {
     try {
         const pool = await getPool();
 
-        const result = await pool.request().input("id", req.session.user.id)
-            .query(`
+        const result = await pool.request().input("id", req.session.user.id).query(`
         SELECT first_name, account_number, balance, account_type, currency
         FROM UsersAccounts
         WHERE id = @id
@@ -19,11 +18,9 @@ async function dashboard(req, res) {
         req.session.user = {
             ...req.session.user,
             name: row.first_name || req.session.user.name,
-            account_number:
-                row.account_number || req.session.user.account_number,
+            account_number: row.account_number || req.session.user.account_number,
             balance: row.balance ?? req.session.user.balance,
-            account_type:
-                row.account_type || req.session.user.account_type || "Savings",
+            account_type: row.account_type || req.session.user.account_type || "Savings",
             currency: row.currency || req.session.user.currency || "SGD",
         };
 

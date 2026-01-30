@@ -5,11 +5,6 @@ const loginController = require("./api-mvc/controllers/loginController.js");
 const dashboardController = require("./api-mvc/controllers/dashboardController");
 const profileController = require("./api-mvc/controllers/profileController");
 const transferController = require("./api-mvc/controllers/transferController");
-const accountsController = require("./api-mvc/controllers/accountsController.js");
-
-router.get("/api", (req, res) => {
-    res.send("API is working");
-});
 
 // Login action
 router.post("/login", loginController.login);
@@ -41,7 +36,5 @@ router.get("/logout", (req, res) => {
         res.redirect("/");
     });
 });
-
-router.get("/login/token", accountsController.getViaUserID);
 
 module.exports = router;
