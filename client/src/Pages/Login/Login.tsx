@@ -212,7 +212,7 @@ function LoginComponent() {
             <p className="subtitle pb-4">
               Enter the generated OTP to gain access to the account
             </p>
-            <form onSubmit={handleLogin} className={styles.loginForm}>
+            <form onSubmit={handleOTP} className={styles.loginForm}>
               <input
                 type="hidden"
                 name="username"

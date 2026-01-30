@@ -24,6 +24,7 @@ export const UseSimplified = createContext(true);
 const AppLayout = () => {
   return (
     <>
+      <NavBar />
       <Outlet /> {/* Renders the current page (Login, Dashboard, etc.) */}
       <ChatAssistant /> {/* Renders the Chatbot */}
       <VoiceAssistant /> {/* <--- ADDED THIS COMPONENT */}
@@ -39,8 +40,8 @@ const router = createBrowserRouter([
             { path: "/", element: <Login /> },
             { path: "/dashboard", element: <Dashboard /> },
             { path: "/transaction", element: <Transaction /> },
-            { path: "/demo", element: <><NavBar /><Demo /></> },
-            { path: "/demo/transaction", element: <><NavBar /><DemoTransaction /></> },
+            { path: "/demo", element: <Demo /> },
+            { path: "/demo/transaction", element: <DemoTransaction /> },
             { path: "*", element: <NotFound /> },
         ]
     }
