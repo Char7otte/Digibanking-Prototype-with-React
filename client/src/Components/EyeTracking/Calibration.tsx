@@ -11,39 +11,51 @@ export function Calibration({ onComplete }: { onComplete?: () => void }) {
   const [isCalibrating, setIsCalibrating] = useState(false);
   const [currentPoint, setCurrentPoint] = useState(0);
   const [progress, setProgress] = useState(0);
-  const [calibrationPoints, setCalibrationPoints] = useState<
-    CalibrationPoint[]
-  >([]);
+  const [calibrationPoints, setCalibrationPoints] = useState<CalibrationPoint[]>([]);
+  
   const collectedDataRef = useRef<
     Array<{
       screen: { x: number; y: number };
       prediction: { x: number; y: number };
     }>
   >([]);
+  
   const webgazerRef = useRef<any>(null);
 
   useEffect(() => {
-    // Get webgazer instance
     webgazerRef.current = (window as any).webgazer;
   }, []);
 
   const generateCalibrationPoints = () => {
     const points: CalibrationPoint[] = [];
-    const padding = 100;
+    const padding = 80;
     const width = window.innerWidth;
     const height = window.innerHeight;
+    const centerX = width / 2;
+    const centerY = height / 2;
 
-    // Generate 9 calibration points in a grid
+    // INCREASED: 13-Point High Precision Grid
     const positions = [
-      { x: padding, y: padding }, // Top-left
-      { x: width / 2, y: padding }, // Top-center
-      { x: width - padding, y: padding }, // Top-right
-      { x: padding, y: height / 2 }, // Middle-left
-      { x: width / 2, y: height / 2 }, // Center
-      { x: width - padding, y: height / 2 }, // Middle-right
-      { x: padding, y: height - padding }, // Bottom-left
-      { x: width / 2, y: height - padding }, // Bottom-center
-      { x: width - padding, y: height - padding }, // Bottom-right
+      // 1. Corners
+      { x: padding, y: padding },
+      { x: width - padding, y: padding },
+      { x: padding, y: height - padding },
+      { x: width - padding, y: height - padding },
+      
+      // 2. Edges Midpoints
+      { x: centerX, y: padding },
+      { x: width - padding, y: centerY },
+      { x: centerX, y: height - padding },
+      { x: padding, y: centerY },
+      
+      // 3. Center
+      { x: centerX, y: centerY },
+
+      // 4. "Sweet Spot" Inner Corners (Helps with accuracy in the middle-zone)
+      { x: width * 0.3, y: height * 0.3 },
+      { x: width * 0.7, y: height * 0.3 },
+      { x: width * 0.3, y: height * 0.7 },
+      { x: width * 0.7, y: height * 0.7 },
     ];
 
     positions.forEach((pos, i) => {
@@ -54,7 +66,8 @@ export function Calibration({ onComplete }: { onComplete?: () => void }) {
   };
 
   const startCalibration = () => {
-    webgazerRef.current = (window as any).webgazer; //added ETHAN
+    webgazerRef.current = (window as any).webgazer;
+    const wg = webgazerRef.current;
 
     const points = generateCalibrationPoints();
     setCalibrationPoints(points);
@@ -62,29 +75,29 @@ export function Calibration({ onComplete }: { onComplete?: () => void }) {
     setProgress(0);
     setIsCalibrating(true);
     collectedDataRef.current = [];
+
     try {
-      const wg = webgazerRef.current;
-      wg?.showVideo?.(true);
-      wg?.showFaceOverlay?.(true);
-      wg?.showFaceFeedbackBox?.(true);
-      wg?.showPredictionPoints?.(true);
-    } catch {} //try catch added ETHAn
+      if (wg) {
+        wg.clearData?.(); 
+        wg.showVideo?.(true);
+        wg.showFaceOverlay?.(true);
+        wg.showFaceFeedbackBox?.(true);
+        wg.showPredictionPoints?.(true); 
+      }
+    } catch (e) {
+      console.error("Error starting calibration UI:", e);
+    }
   };
 
   const collectCalibrationData = async (point: CalibrationPoint) => {
     if (!webgazerRef.current) return;
 
-    // Collect multiple samples for this point
-    const samples = 5;
-    const sampleDelay = 80; // ms
+    // Increased samples for better accuracy
+    const samples = 12; 
+    const sampleDelay = 60; 
 
     for (let i = 0; i < samples; i++) {
       await new Promise((resolve) => setTimeout(resolve, sampleDelay));
-
-      // ✅ Always train WebGazer even if prediction is null
-      try {
-        webgazerRef.current?.recordScreenPosition?.(point.x, point.y, "click");
-      } catch {}
 
       const prediction = webgazerRef.current.getCurrentPrediction?.();
       if (
@@ -119,12 +132,13 @@ export function Calibration({ onComplete }: { onComplete?: () => void }) {
 
   const handlePointClick = async (point: CalibrationPoint) => {
     if (currentPoint !== point.id) return;
-    // ✅ Train WebGazer with this known "truth" point
+
+    // Train WebGazer
     try {
       webgazerRef.current?.recordScreenPosition?.(point.x, point.y, "click");
-    } catch {} //added ETHAN
+    } catch {}
 
-    // Collect data for this point
+    await new Promise(resolve => setTimeout(resolve, 100));
     await collectCalibrationData(point);
 
     const nextPoint = currentPoint + 1;
@@ -132,31 +146,28 @@ export function Calibration({ onComplete }: { onComplete?: () => void }) {
     setProgress((nextPoint / calibrationPoints.length) * 100);
 
     if (nextPoint >= calibrationPoints.length) {
-      // Calibration complete
       const offset = calculateOffset();
-
-      // Save calibration data
+      
       localStorage.setItem(
         "eye_calibration",
         JSON.stringify({
           offsetX: offset.x,
           offsetY: offset.y,
           timestamp: Date.now(),
-        }),
+        })
       );
 
-      // Dispatch event to notify other components
-      window.dispatchEvent(new Event("eyeCalibrationUpdated"));
-
+      // Cleanup
       try {
         const wg = webgazerRef.current;
         wg?.showVideo?.(false);
         wg?.showFaceOverlay?.(false);
         wg?.showFaceFeedbackBox?.(false);
-        wg?.showPredictionPoints?.(false);
-      } catch {} //added EThan
+        wg?.showPredictionPoints?.(false); 
+      } catch {}
 
       setIsCalibrating(false);
+      window.dispatchEvent(new Event("eyeCalibrationUpdated"));
 
       if (onComplete) {
         onComplete();
@@ -166,20 +177,16 @@ export function Calibration({ onComplete }: { onComplete?: () => void }) {
 
   const clearCalibration = () => {
     localStorage.removeItem("eye_calibration");
-
     try {
       webgazerRef.current?.clearData?.();
-    } catch {}
-    try {
       const wg = webgazerRef.current;
       wg?.showVideo?.(false);
       wg?.showFaceOverlay?.(false);
       wg?.showFaceFeedbackBox?.(false);
       wg?.showPredictionPoints?.(false);
-    } catch {} //added Ethan
-
+    } catch {}
     window.dispatchEvent(new Event("eyeCalibrationUpdated"));
-  }; //added ETHAN
+  };
 
   if (!isCalibrating) {
     return (
@@ -187,34 +194,35 @@ export function Calibration({ onComplete }: { onComplete?: () => void }) {
         <div className={styles.calibrationCard}>
           <h2>Eye Tracker Calibration</h2>
           <p>
-            Calibration improves the accuracy of eye tracking by learning where
-            you look on the screen.
+            The eye tracker is currently <strong>uncalibrated</strong>.
           </p>
 
           <div className={styles.instructions}>
             <h3>Instructions:</h3>
             <ol>
-              <li>Click "Start Calibration" below</li>
-              <li>Look at each orange circle as it appears</li>
-              <li>Click on the circle while looking at it</li>
-              <li>Repeat for all 9 points</li>
+              <li>Click "Start Calibration" below.</li>
+              <li>
+                <strong>IMPORTANT:</strong> Use your <strong>MOUSE</strong> to click the 13 orange circles.
+              </li>
+              <li>Look directly at the circle while clicking it.</li>
+              <li>Keep your head still.</li>
             </ol>
-            <p>
-              <strong>Tips:</strong>
-            </p>
-            <ul>
-              <li>Keep your head still during calibration</li>
-              <li>Ensure good lighting on your face</li>
-              <li>Position yourself centered in front of the camera</li>
-            </ul>
           </div>
 
           <div className={styles.buttonGroup}>
-            <button className={styles.startButton} onClick={startCalibration}>
-              Start Calibration
+            <button 
+              className={styles.startButton} 
+              onClick={startCalibration}
+              data-eye-clickable="true"
+            >
+              Start Calibration (13 Points)
             </button>
-            <button className={styles.clearButton} onClick={clearCalibration}>
-              Clear Calibration
+            <button 
+              className={styles.clearButton} 
+              onClick={clearCalibration}
+              data-eye-clickable="true"
+            >
+              Reset Data
             </button>
           </div>
         </div>
@@ -232,13 +240,13 @@ export function Calibration({ onComplete }: { onComplete?: () => void }) {
       </div>
 
       <div className={styles.instruction}>
-        Look at the orange circle and click it ({currentPoint + 1}/
-        {calibrationPoints.length})
+        Look at the circle and click it ({currentPoint + 1}/{calibrationPoints.length})
       </div>
 
       {calibrationPoints.map((point) => (
         <div
           key={point.id}
+          data-eye-clickable="true" 
           className={`${styles.calibrationPoint} ${
             point.id === currentPoint ? styles.active : ""
           } ${point.id < currentPoint ? styles.completed : ""}`}

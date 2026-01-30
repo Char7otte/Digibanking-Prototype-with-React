@@ -1,29 +1,57 @@
 import { useEffect, useRef, useState } from "react";
-let globalEyeTrackingStarted = false; //Added this EthAn
+
+// --- INTERFACE ---
+interface WebGazer {
+  setRegression: (type: string) => WebGazer;
+  setGazeListener: (listener: (data: any, clock: any) => void) => WebGazer;
+  begin: () => Promise<void>;
+  clearData?: () => void;
+  removeMouseEventListeners?: () => void;
+  showVideo?: (val: boolean) => void;
+  showFaceOverlay?: (val: boolean) => void;
+  showFaceFeedbackBox?: (val: boolean) => void;
+  showPredictionPoints?: (val: boolean) => void;
+  applyKalmanFilter?: (val: boolean) => void;
+  getCurrentPrediction: () => { x: number; y: number } | null;
+  pause?: () => void;
+  resume?: () => void;
+  recordScreenPosition?: (x: number, y: number, type: string) => void;
+  setData?: (data: any[]) => void;
+}
+
+let globalEyeTrackingStarted = false;
 
 type UseEyeClickOpts = { dwellMs?: number; enabled?: boolean };
 
-//edited the line beolow. i removed the async keyword ETHAN
 export function useEyeClick({
   dwellMs = 800,
   enabled = true,
 }: UseEyeClickOpts = {}) {
   const lastElementRef = useRef<HTMLElement | null>(null);
-  const timerRef = useRef<number | null>(null);
-  const offsetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const rafRef = useRef<number | null>(null); //added this ETHAN
+  const dwellTimerRef = useRef<number | null>(null);
+  const graceTimerRef = useRef<number | null>(null);
+  const rafRef = useRef<number | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Smoothing for better accuracy
+  // Smoothing Window
   const predictionHistoryRef = useRef<Array<{ x: number; y: number }>>([]);
-  const smoothingWindowSize = 5;
+  const smoothingWindowSize = 8; 
 
   useEffect(() => {
-    if (!enabled) {
-      if (timerRef.current) {
-        window.clearTimeout(timerRef.current);
-        timerRef.current = null;
+    // --- CLEANUP HELPER ---
+    const clearTimers = () => {
+      if (dwellTimerRef.current) {
+        window.clearTimeout(dwellTimerRef.current);
+        dwellTimerRef.current = null;
       }
+      if (graceTimerRef.current) {
+        window.clearTimeout(graceTimerRef.current);
+        graceTimerRef.current = null;
+      }
+    };
+
+    if (!enabled) {
+      clearTimers();
       if (lastElementRef.current) {
         lastElementRef.current.classList.remove("eye-hover");
         lastElementRef.current = null;
@@ -32,454 +60,227 @@ export function useEyeClick({
     }
 
     let running = true;
-    let webgazer: any = null;
     let predictionDot: HTMLElement | null = null;
+    let webgazer: WebGazer | null = null;
 
-    // Enhanced smoothing function for better accuracy
-    const smoothPrediction = async (rawPrediction: {
-      x: number;
-      y: number;
-    }) => {
-      const maxOutlierDistance = 50; // Maximum distance to consider a prediction valid
+    // --- CORNER CLICKING TRAINER ---
+    const handleManualClick = (e: MouseEvent) => {
+      if (!isInitialized || !webgazer) return;
 
-      // Add the new prediction to the history
+      try {
+        webgazer.recordScreenPosition?.(e.clientX, e.clientY, "click");
+        
+        // Visual Feedback (Blue Flash)
+        if (predictionDot) {
+          predictionDot.style.backgroundColor = "#0088ff";
+          predictionDot.style.transform = "translate(-50%, -50%) scale(1.5)";
+          predictionDot.style.boxShadow = "0 0 20px #0088ff";
+          
+          setTimeout(() => {
+            if (predictionDot) {
+              predictionDot.style.backgroundColor = "rgba(255, 100, 0, 0.7)";
+              predictionDot.style.transform = "translate(-50%, -50%) scale(1)";
+              predictionDot.style.boxShadow = "0 0 10px rgba(255, 100, 0, 0.5)";
+            }
+          }, 200);
+        }
+      } catch (err) {
+        console.warn("Training error:", err);
+      }
+    };
+
+    // --- MAGNETISM SEARCH (40px) ---
+    const findNearbyClickable = (x: number, y: number): HTMLElement | null => {
+      const radius = 40; 
+
+      const exactEl = document.elementFromPoint(x, y) as HTMLElement;
+      if (exactEl) {
+        const clickable = exactEl.closest('[data-eye-clickable="true"], button, a, [role="button"]') as HTMLElement;
+        if (clickable) return clickable;
+      }
+
+      const offsets = [
+        { dx: radius, dy: 0 },
+        { dx: -radius, dy: 0 },
+        { dx: 0, dy: radius },
+        { dx: 0, dy: -radius },
+      ];
+
+      for (const o of offsets) {
+        const el = document.elementFromPoint(x + o.dx, y + o.dy) as HTMLElement;
+        if (el) {
+           const clickable = el.closest('[data-eye-clickable="true"], button, a, [role="button"]') as HTMLElement;
+           if (clickable) return clickable;
+        }
+      }
+      return null;
+    };
+
+    // --- SMOOTHING ---
+    const smoothPrediction = async (rawPrediction: { x: number; y: number }) => {
       predictionHistoryRef.current.push(rawPrediction);
-
-      // Add a delay to stabilize predictions
-      await new Promise((resolve) => setTimeout(resolve, 50));
-
-      // Keep only recent predictions
       if (predictionHistoryRef.current.length > smoothingWindowSize) {
         predictionHistoryRef.current.shift();
       }
-
-      // Remove outliers based on distance from the average
-      const average = predictionHistoryRef.current.reduce(
-        (acc, pred) => ({ x: acc.x + pred.x, y: acc.y + pred.y }),
-        { x: 0, y: 0 },
+      const avg = predictionHistoryRef.current.reduce(
+        (acc, curr) => ({ x: acc.x + curr.x, y: acc.y + curr.y }),
+        { x: 0, y: 0 }
       );
       const count = predictionHistoryRef.current.length;
-      const center = { x: average.x / count, y: average.y / count };
-
-      predictionHistoryRef.current = predictionHistoryRef.current.filter(
-        (pred) => {
-          const distance = Math.sqrt(
-            Math.pow(pred.x - center.x, 2) + Math.pow(pred.y - center.y, 2),
-          );
-          return distance <= maxOutlierDistance;
-        },
-      );
-
-      // Recalculate weighted average after filtering
-      let totalWeight = 0;
-      let weightedX = 0;
-      let weightedY = 0;
-
-      predictionHistoryRef.current.forEach((pred, index) => {
-        const weight = index + 1; // Recent predictions get higher weight
-        weightedX += pred.x * weight;
-        weightedY += pred.y * weight;
-        totalWeight += weight;
-      });
-
-      return {
-        x: weightedX / totalWeight,
-        y: weightedY / totalWeight,
-      };
+      return { x: avg.x / count, y: avg.y / count };
     };
 
     const start = async () => {
       try {
-        console.log("Starting WebGazer initialization...");
-
-        // Load WebGazer
-        // @ts-ignore - webgazer types are defined in src/types/webgazer.d.ts
+        // @ts-ignore
         const mod = await import("webgazer");
-        webgazer = mod?.default || mod;
-        if (!webgazer) {
-          console.error("WebGazer module not found");
-          return;
-        }
+        webgazer = (mod?.default || mod) as any;
 
-        // Set global reference
+        if (!webgazer) return;
         (window as any).webgazer = webgazer;
 
-        // Configure WebGazer
-        if (webgazer.setRegression) webgazer.setRegression("ridge");
+        // FIXED: Removed "webgazer.clearData()" here.
+        // This allows WebGazer to load previous calibration data from localStorage
+        // automatically when the user navigates between pages.
+        
+        await webgazer.setRegression("ridge").setGazeListener(() => {}).begin();
 
-        // Initialize WebGazer with retry and CPU fallback
-        let initSuccess = false;
-        for (let attempt = 1; attempt <= 2; attempt++) {
-          try {
-            console.log(`WebGazer initialization attempt ${attempt}`);
+        const removeListeners = () => {
+             if (webgazer?.removeMouseEventListeners) {
+                 webgazer.removeMouseEventListeners();
+             }
+             // Ensure we don't accidentally record mouse moves
+             // Note: We leave existing data intact!
+        };
+        removeListeners();
 
-            // Force CPU backend on first attempt to avoid WebGL texture errors
-            if (attempt === 1) {
-              try {
-                const tf = (window as any).tf;
-                if (tf && tf.setBackend) {
-                  console.log("Attempting to switch to CPU backend...");
-                  await tf.setBackend("cpu");
-                  await tf.ready();
-                  console.log("Successfully switched to CPU backend");
-                }
-              } catch (tfErr) {
-                console.log(
-                  "CPU backend unavailable, proceeding with default backend",
-                );
-              }
-            }
+        // Attach Click Trainer
+        document.addEventListener("click", handleManualClick);
 
-            // Begin WebGazer initialization
-            await webgazer.begin();
-            webgazer.removeMouseEventListeners?.(); //added ethan
-
-            // ✅ correct WebGazer APIs      //added Ethan
-            webgazer.showVideo(false);
-            webgazer.showFaceOverlay(false);
-            webgazer.showFaceFeedbackBox(false);
-            //webgazer.showPredictionPoints(false);    ethan commented out
-
-            // ✅ disables click/mouse-based training (what you actually want)   //Added Ethan
-            webgazer.applyKalmanFilter(true); // optional stabilizer //added Ethan
-
-            console.log("WebGazer.begin() completed");
-
-            // Wait for stabilization
-            await new Promise((resolve) => setTimeout(resolve, 3000));
-
-            // Test predictions
-            // Test predictions (don't fail hard if not ready yet)  //added Ethan
-            let hasValidPredictions = false;
-            for (let i = 0; i < 10; i++) {
-              const testPred = webgazer.getCurrentPrediction?.();
-              if (
-                testPred &&
-                typeof testPred.x === "number" &&
-                typeof testPred.y === "number"
-              ) {
-                hasValidPredictions = true;
-                break;
-              }
-              await new Promise((resolve) => setTimeout(resolve, 500));
-            }
-
-            if (!hasValidPredictions) {
-              console.warn(
-                "No valid predictions yet — continuing anyway (needs calibration).",
-              );
-              // ✅ DO NOT throw / return
-            }
-
-            initSuccess = true;
-            console.log("WebGazer initialization successful!");
-            break;
-          } catch (err: any) {
-            console.warn(`Attempt ${attempt} failed:`, err.message);
-
-            if (attempt === 2) {
-              console.error("All initialization attempts failed");
-              return;
-            }
-
-            // Pause and wait before retry
-            try {
-              webgazer?.pause?.();
-            } catch {}
-
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-          }
-        }
-
-        if (!initSuccess) {
-          console.error("WebGazer initialization completely failed");
-          return;
-        }
-
-        // Hide WebGazer overlays
-        webgazer.showVideo?.(false);
-        webgazer.showPredictionPoints?.(false);
-        webgazer.showFaceOverlay?.(false);
+        // UI Setup
+        if (webgazer.showVideo) webgazer.showVideo(false);
+        if (webgazer.showFaceOverlay) webgazer.showFaceOverlay(false);
+        if (webgazer.showFaceFeedbackBox) webgazer.showFaceFeedbackBox(false);
+        if (webgazer.showPredictionPoints) webgazer.showPredictionPoints(false);
+        if (webgazer.applyKalmanFilter) webgazer.applyKalmanFilter(true);
 
         setIsInitialized(true);
 
-        // Load calibration data
-        try {
-          const calibData = localStorage.getItem("eye_calibration");
-          if (calibData) {
-            const parsed = JSON.parse(calibData);
-            offsetRef.current = {
-              x: parsed.offsetX || 0,
-              y: parsed.offsetY || 0,
-            };
-            console.log("Loaded calibration offset:", offsetRef.current);
-          }
-        } catch {}
-
-        // Listen for calibration updates
-        const handleCalibrationUpdate = () => {
-          try {
-            const calibData = localStorage.getItem("eye_calibration");
-            if (calibData) {
-              const parsed = JSON.parse(calibData);
-              offsetRef.current = {
-                x: parsed.offsetX || 0,
-                y: parsed.offsetY || 0,
-              };
-              console.log("Updated calibration offset:", offsetRef.current);
-            }
-          } catch {}
-        };
-        window.addEventListener(
-          "eyeCalibrationUpdated",
-          handleCalibrationUpdate,
-        );
-
-        // Create prediction dot
-
-        document.getElementById("eye-prediction-dot")?.remove(); //added this line
-
+        // Visual Dot
+        document.getElementById("eye-prediction-dot")?.remove();
         predictionDot = document.createElement("div");
         predictionDot.id = "eye-prediction-dot";
         predictionDot.style.cssText = `
           position: fixed;
-          width: 18px;
-          height: 18px;
+          width: 20px;
+          height: 20px;
           border-radius: 50%;
-          background: rgba(255, 100, 0, 0.9);
-          border: 2px solid rgba(255, 255, 255, 0.8);
+          background: rgba(255, 100, 0, 0.7);
+          border: 2px solid rgba(255, 255, 255, 0.9);
           pointer-events: none;
           z-index: 999999;
           transform: translate(-50%, -50%);
-          box-shadow: 0 0 8px rgba(255, 100, 0, 0.6);
-          transition: opacity 100ms ease-out;
+          box-shadow: 0 0 10px rgba(255, 100, 0, 0.5);
+          transition: left 0.1s ease-out, top 0.1s ease-out, transform 0.2s; 
           display: block;
         `;
         document.body.appendChild(predictionDot);
-        predictionDot.style.left = "50%";
-        predictionDot.style.top = "50%";
-        predictionDot.style.opacity = "0.3"; //3lines added Ethan
 
-        console.log("Prediction dot created");
-
-        // Main prediction loop with error recovery
-        let consecutiveErrors = 0;
-        const maxConsecutiveErrors = 10;
-        let blinkTimeout: number | null = null;
-        const blinkDuration = 300; // Time in ms to consider as a blink
-        const stablePredictionThreshold = 3; // Number of stable predictions needed to recover
-
-        const loop = () => {
+        const loop = async () => {
           if (!running) return;
 
           try {
-            const prediction = webgazer.getCurrentPrediction?.();
+            const prediction = await webgazer?.getCurrentPrediction();
 
-            if (
-              prediction &&
-              typeof prediction.x === "number" &&
-              typeof prediction.y === "number"
-            ) {
-              // Reset blink timeout on valid prediction
-              if (blinkTimeout) {
-                clearTimeout(blinkTimeout);
-                blinkTimeout = null;
+            if (prediction && typeof prediction.x === "number") {
+              const smoothed = await smoothPrediction(prediction);
+              
+              const correctedX = smoothed.x;
+              const correctedY = smoothed.y;
+
+              if (predictionDot) {
+                const clampX = Math.max(0, Math.min(window.innerWidth, correctedX));
+                const clampY = Math.max(0, Math.min(window.innerHeight, correctedY));
+                
+                predictionDot.style.left = `${clampX}px`;
+                predictionDot.style.top = `${clampY}px`;
+                predictionDot.style.opacity = "1";
               }
 
-              consecutiveErrors = 0; // Reset error counter
+              // --- INTERACTION LOGIC ---
+              const clickableEl = findNearbyClickable(correctedX, correctedY);
 
-              // Apply smoothing for better accuracy
-              smoothPrediction(prediction).then((smoothedPrediction) => {
-                // Apply calibration offset and convert to viewport coordinates
-                const correctedX =
-                  smoothedPrediction.x + offsetRef.current.x - window.scrollX;
-                const correctedY =
-                  smoothedPrediction.y + offsetRef.current.y - window.scrollY;
-
-                // Update prediction dot
-                /*if (predictionDot) {
-                  predictionDot.style.left = `${correctedX}px`;
-                  predictionDot.style.top = `${correctedY}px`;
-                  predictionDot.style.opacity = "0.9";
-                } */ //this one is the old one ETHAN
-
-                if (
-                  predictionDot &&
-                  correctedX >= 0 &&
-                  correctedY >= 0 &&
-                  correctedX <= window.innerWidth &&
-                  correctedY <= window.innerHeight
-                ) {
-                  predictionDot.style.left = `${correctedX}px`;
-                  predictionDot.style.top = `${correctedY}px`;
-                  predictionDot.style.opacity = "0.9";
+              if (clickableEl) {
+                // ON TARGET
+                if (graceTimerRef.current) {
+                    window.clearTimeout(graceTimerRef.current);
+                    graceTimerRef.current = null;
                 }
 
-                // Find clickable element under gaze
-                const elements = document.elementsFromPoint(
-                  correctedX,
-                  correctedY,
-                );
-                const clickableEl = elements.find(
-                  (el) =>
-                    el instanceof HTMLElement &&
-                    (el.tagName === "BUTTON" ||
-                      el.getAttribute("role") === "button" ||
-                      el.tagName === "A" ||
-                      el.onclick !== null ||
-                      el.getAttribute("data-eye-clickable") === "true"),
-                ) as HTMLElement | undefined;
-
-                if (clickableEl && clickableEl !== lastElementRef.current) {
-                  // New element - start dwell timer
+                if (clickableEl !== lastElementRef.current) {
                   if (lastElementRef.current) {
-                    lastElementRef.current.classList.remove(
-                      "eye-hover",
-                      "eye-dwelling",
-                    );
+                    lastElementRef.current.classList.remove("eye-hover", "eye-dwelling");
                   }
-                  if (timerRef.current) {
-                    clearTimeout(timerRef.current);
-                  }
+                  clearTimers(); 
 
                   lastElementRef.current = clickableEl;
                   clickableEl.classList.add("eye-hover");
 
-                  timerRef.current = window.setTimeout(() => {
-                    clickableEl.classList.add("eye-dwelling");
-
-                    // Trigger click
-                    console.log("Eye-clicking element:", clickableEl);
-                    const clickEvent = new MouseEvent("click", {
-                      view: window,
-                      bubbles: true,
-                      cancelable: true,
-                    });
-                    clickableEl.dispatchEvent(clickEvent);
-
-                    // Visual feedback
-                    clickableEl.style.transform = "scale(0.95)";
-                    setTimeout(() => {
-                      clickableEl.style.transform = "";
-                    }, 150);
+                  dwellTimerRef.current = window.setTimeout(() => {
+                      if (clickableEl) {
+                          clickableEl.classList.add("eye-dwelling");
+                          clickableEl.click();
+                          
+                          // Visual Feedback
+                          clickableEl.style.transform = "scale(0.95)";
+                          setTimeout(() => {
+                             if (clickableEl) clickableEl.style.transform = "";
+                          }, 150);
+                      }
                   }, dwellMs);
-                } else if (!clickableEl && lastElementRef.current) {
-                  // No element - clear hover
-                  lastElementRef.current.classList.remove(
-                    "eye-hover",
-                    "eye-dwelling",
-                  );
-                  lastElementRef.current = null;
-                  if (timerRef.current) {
-                    clearTimeout(timerRef.current);
-                    timerRef.current = null;
-                  }
                 }
-              });
+              } else {
+                // LOST TARGET
+                if (lastElementRef.current && !graceTimerRef.current) {
+                    // Grace Period 200ms
+                    graceTimerRef.current = window.setTimeout(() => {
+                        if (lastElementRef.current) {
+                            lastElementRef.current.classList.remove("eye-hover", "eye-dwelling");
+                            lastElementRef.current = null;
+                        }
+                        clearTimers();
+                    }, 200);
+                }
+              }
+
             } else {
-              // No prediction - fade out dot
-              if (predictionDot) {
-                predictionDot.style.opacity = "0.2";
-              }
-
-              // Clear any active hover
-              if (lastElementRef.current) {
-                lastElementRef.current.classList.remove(
-                  "eye-hover",
-                  "eye-dwelling",
-                );
-                lastElementRef.current = null;
-              }
-              if (timerRef.current) {
-                clearTimeout(timerRef.current);
-                timerRef.current = null;
-              }
-
-              // Start blink timeout if not already started
-              if (!blinkTimeout) {
-                blinkTimeout = window.setTimeout(() => {
-                  console.log("Blink detected, pausing gaze tracking...");
-                }, blinkDuration);
-              }
+                if (predictionDot) predictionDot.style.opacity = "0.2";
             }
-          } catch (error: any) {
-            consecutiveErrors++;
+          } catch (err) {}
 
-            // Only log first few errors to avoid spam
-            if (consecutiveErrors <= 3) {
-              console.warn(
-                `Prediction error ${consecutiveErrors}:`,
-                error.message,
-              );
-            }
-
-            // If too many consecutive errors, restart WebGazer
-            if (consecutiveErrors >= maxConsecutiveErrors) {
-              console.error(
-                "Too many consecutive errors, restarting WebGazer...",
-              );
-              try {
-                webgazer?.pause?.();
-                setTimeout(async () => {
-                  try {
-                    await webgazer?.begin?.();
-                    consecutiveErrors = 0;
-                    console.log("WebGazer restarted successfully");
-                  } catch (restartErr) {
-                    console.error("WebGazer restart failed:", restartErr);
-                  }
-                }, 3000);
-              } catch (pauseErr) {
-                console.error("WebGazer pause failed:", pauseErr);
-              }
-              return;
-            }
-          }
-
-          rafRef.current = requestAnimationFrame(loop); //added this Ethan
+          rafRef.current = requestAnimationFrame(loop);
         };
 
-        // Start the prediction loop
-        rafRef.current = requestAnimationFrame(loop); //changed this Ethan
-        console.log("Prediction loop started");
-
-        return () => {
-          running = false;
-          window.removeEventListener(
-            "eyeCalibrationUpdated",
-            handleCalibrationUpdate,
-          );
-        };
+        rafRef.current = requestAnimationFrame(loop);
       } catch (error) {
-        console.error("Eye tracking initialization failed:", error);
+        console.error("Init failed:", error);
       }
     };
 
     if (!globalEyeTrackingStarted) {
       globalEyeTrackingStarted = true;
       start();
-    } //added this ETHan
+    }
 
     return () => {
       running = false;
-      if (timerRef.current) clearTimeout(timerRef.current);
-      if (lastElementRef.current) {
-        lastElementRef.current.classList.remove("eye-hover", "eye-dwelling");
-      }
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
-      } //added this loop Ethan
-
-      //added this try catch Ethan
-      try {
-        webgazer?.pause?.();
-      } catch {}
-
-      document.getElementById("eye-prediction-dot")?.remove();
-
-      // 🔐 RELEASE GLOBAL LOCK
       globalEyeTrackingStarted = false;
+      clearTimers();
+      document.removeEventListener("click", handleManualClick);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (lastElementRef.current) lastElementRef.current.classList.remove("eye-hover", "eye-dwelling");
+      document.getElementById("eye-prediction-dot")?.remove();
+      try { if (webgazer) webgazer.pause?.(); } catch {}
     };
   }, [dwellMs, enabled]);
 
