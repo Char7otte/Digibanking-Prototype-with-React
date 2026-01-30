@@ -5,15 +5,17 @@
 
 /* ROOT VARIABLES */
 :root {
-    --primary: #d7261e;
-    --primary-dark: #b51c16;
-    --background: #f5f5f7;
+    --primary: #ED1C24;
+    --primary-dark: #C41519;
+    --primary-hover: #B51419;
+    --background: #F9FAFB;
     --card: #ffffff;
     --text: #111827;
-    --muted: #6b7280;
-    --border: #e5e7eb;
+    --muted: #6B7280;
+    --border: #E5E7EB;
     --radius: 16px;
     --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.06);
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 html {
@@ -34,8 +36,9 @@ body {
 }
 
 body {
-    background: radial-gradient(circle at top left, #ffe9e7 0%, #f5f5f7 40%, #f5f5f7 100%);
+    background: linear-gradient(135deg, #FFE9EA 0%, #F9FAFB 50%, #F3F4F6 100%);
     color: var(--text);
+    min-height: 100vh;
 }
 
 /* ============================================================
@@ -45,12 +48,13 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 24px;
+    padding: 16px 32px;
     background: #ffffff;
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid #F3F4F6;
     position: sticky;
     top: 0;
     z-index: 50;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .logo {
@@ -313,15 +317,15 @@ body {
 
 /* Header card */
 .dashboard-header {
-    background: linear-gradient(135deg, #ffffff 0%, #fafafb 50%, #f2f3f5 100%);
-    border-radius: 22px;
-    padding: 32px 36px;
+    background: white;
+    border-radius: 20px;
+    padding: 36px 40px;
     margin-bottom: 32px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0px 18px 40px rgba(0, 0, 0, 0.06);
-    border: 1px solid rgba(200, 200, 200, 0.25);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(229, 231, 235, 0.8);
 }
 
 .dashboard-header .label {
@@ -349,10 +353,16 @@ body {
 .account-card,
 .account-summary .card {
     background: #ffffff;
-    border-radius: 22px;
-    padding: 24px 28px;
-    box-shadow: 0px 16px 36px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(180, 180, 180, 0.18);
+    border-radius: 20px;
+    padding: 28px 32px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    transition: all 0.3s ease;
+}
+
+.account-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .account-type {
@@ -502,15 +512,18 @@ body {
 }
 
 .card-red {
-    background: linear-gradient(135deg, #d7261e, #a10f0a);
+    background: linear-gradient(135deg, #ED1C24, #C41519);
+    box-shadow: 0 4px 16px rgba(237, 28, 36, 0.2);
 }
 
 .card-blue {
-    background: linear-gradient(135deg, #216aff, #0b3ca8);
+    background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
 }
 
 .card-purple {
-    background: linear-gradient(135deg, #a218ff, #5e0bb4);
+    background: linear-gradient(135deg, #A855F7, #7C3AED);
+    box-shadow: 0 4px 16px rgba(168, 85, 247, 0.2);
 }
 
 .acc-title {
@@ -646,6 +659,8 @@ body {
 .transfer-page {
     max-width: 900px;
     margin: 0 auto;
+    padding: 32px 16px;
+    min-height: calc(100vh - 80px);
 }
 
 .page-title {

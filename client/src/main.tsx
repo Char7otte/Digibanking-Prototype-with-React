@@ -9,6 +9,9 @@ import Login from "./Pages/Login/Login.tsx";
 import Transaction from "./Pages/Transaction/Transaction.tsx";
 import NotFound from "./Pages/NotFound/NotFound.tsx";
 import { MenuContextProvider } from "./MenuContext.tsx";
+import Demo from "./Pages/Demo/Demo.tsx";  
+import DemoTransaction from "./Pages/Demo/Demo.transaction.tsx";
+import NavBar from "./Components/NavBar/NavBar.tsx";
 
 // --- 1. Import the Assistants ---
 import ChatAssistant from "./Components/ChatAssistant/ChatAssistant.tsx";
@@ -36,6 +39,8 @@ const router = createBrowserRouter([
             { path: "/", element: <Login /> },
             { path: "/dashboard", element: <Dashboard /> },
             { path: "/transaction", element: <Transaction /> },
+            { path: "/demo", element: <><NavBar /><Demo /></> },
+            { path: "/demo/transaction", element: <><NavBar /><DemoTransaction /></> },
             { path: "*", element: <NotFound /> },
         ]
     }
