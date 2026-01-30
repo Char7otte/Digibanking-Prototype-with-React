@@ -1,68 +1,116 @@
 .mainContainer {
-  margin: 0 30px;
-  padding: 30px;
-  border: 1px solid var(--secondary-input-color);
-  border-radius: 15px;
+  margin: 0 auto;
+  max-width: 480px;
+  padding: 40px;
+  background: white;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-xl);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .mainContainer > div {
-  width: 80%;
+  width: 100%;
+}
+
+.logoSection {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.logoSection img {
+  height: 48px;
+  margin-bottom: 12px;
+}
+
+.logoSection .subtitle {
+  font-size: 16px;
+  color: var(--grey-600);
+  margin: 0;
 }
 
 @media (max-width: 768px) {
   .mainContainer {
-    margin-bottom: 60px;
+    margin: 0 16px 60px;
+    padding: 32px 24px;
+  }
+  
+  .logoSection img {
+    height: 40px;
   }
 }
 
 .loginForm {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
+  gap: 4px;
 }
 
 .loginForm label {
   width: 100%;
   display: block;
   text-align: start;
-}
-
-.radioContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 5px;
-  margin: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--grey-700);
+  margin-bottom: 6px;
 }
 
 .radioFieldset {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 2rem;
+  gap: 8px;
   border: none;
-  background: #f9f9f9;
-  border-radius: 12px;
-  padding: 1rem 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  background: var(--grey-100);
+  border-radius: var(--radius-lg);
+  padding: 6px;
+  margin-bottom: 32px;
+  width: 100%;
 }
 
 .radioContainer {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 5px;
-  margin: 5px;
+  padding: 0;
+  margin: 0;
+  position: relative;
 }
 
 .radioContainer input[type="radio"] {
-  accent-color: var(--ocbc-red);
-  margin-bottom: 0.5rem;
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.radioContainer label {
+  width: 100%;
+  text-align: center;
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--grey-600);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 0;
+}
+
+.radioContainer input[type="radio"]:checked + label {
+  background: white;
+  color: var(--ocbc-red);
+  box-shadow: var(--shadow-sm);
+  font-weight: 600;
+}
+
+.radioContainer label:hover {
+  color: var(--grey-900);
 }

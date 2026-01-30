@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, type ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "../Transaction/Transaction.module.css";
-import HeaderComponent from "../../Components/HeaderComponent/HeaderComponent";
 import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 import { useMenuContext } from "../../MenuContext";
@@ -131,8 +130,6 @@ function DemoTransaction() {
   return (
     <div className="d-flex justify-content-center">
       <div className="bodyMini">
-        <HeaderComponent />
-        
         {/* Demo Banner */}
         <div style={{
           backgroundColor: "#ff9800",

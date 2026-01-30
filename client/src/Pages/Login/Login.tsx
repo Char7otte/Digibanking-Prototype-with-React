@@ -55,10 +55,10 @@ function LoginComponent() {
   if (isLoading) return <div className="loadingContainer">Logging in...</div>;
 
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center flex-column">
-      <section className="pt-4">
-        <img src={OCBCLogo} alt="" />
-        <p className="subtitle pb-4">Internet Banking</p>
+    <div className="min-vh-100 d-flex align-items-center justify-content-center flex-column" style={{ background: 'var(--grey-50)' }}>
+      <section className={styles.logoSection}>
+        <img src={OCBCLogo} alt="OCBC Bank" />
+        <p className="subtitle">Internet Banking</p>
       </section>
       <main className={`${styles.mainContainer} `}>
         <fieldset className={`${styles.radioFieldset} d-flex border-0`}>
@@ -130,18 +130,15 @@ function LoginComponent() {
               <button 
                 type="button" 
                 onClick={() => navigate("/demo")}
+                className="spacing-md"
                 style={{ 
-                  marginTop: "10px", 
-                  backgroundColor: "#4caf50", 
-                  color: "white", 
-                  border: "none", 
-                  padding: "10px 20px", 
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  width: "100%"
+                  marginTop: "16px",
+                  backgroundColor: "var(--success)", 
+                  color: "white",
+                  fontWeight: "600"
                 }}
               >
-                Try Demo Account
+                🎮 Try Demo Account
               </button>
               <hr />
               <p>

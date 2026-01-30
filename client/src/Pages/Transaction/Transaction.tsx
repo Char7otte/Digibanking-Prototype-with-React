@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, type ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "./Transaction.module.css";
-import HeaderComponent from "../../Components/HeaderComponent/HeaderComponent";
 import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 import { useMenuContext } from "../../MenuContext";
@@ -190,7 +189,6 @@ function Transaction() {
     return (
       <div className="d-flex justify-content-center">
         <div className="bodyMini">
-          <HeaderComponent />
           <main className={styles.mainContainer}>
             <h1>Transfer money</h1>
             <p className="d-flex justify-content-center align-items-center">
@@ -310,7 +308,6 @@ function Transaction() {
     return (
       <>
         <div className="transfer-page">
-          <HeaderComponent />
           <h1 className="page-title">Transfer Money</h1>
           <p className="page-subtitle">Send money locally or overseas</p>
           <input

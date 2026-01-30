@@ -1,14 +1,42 @@
 .headerInput {
-        background-color: white;
-        margin: 10px 0;
-        margin-right: 10px;
-        border: 1px solid var(--secondary-input-color);
+  background-color: white;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.headerInput:focus {
+  border-color: var(--ocbc-red);
+  box-shadow: 0 0 0 3px var(--ocbc-red-light);
+}
+
+.headerInput::placeholder {
+  color: var(--grey-400);
 }
 
 .modifierButton {
-        margin: 10px 0;
-        margin-left: 0;
-        width: 50px;
-        background-color: white;
-        border: 1px solid var(--secondary-input-color);
+  width: 48px;
+  height: 48px;
+  min-height: 48px;
+  background-color: white;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+  margin-left: 12px;
+}
+
+.modifierButton:hover {
+  border-color: var(--grey-300);
+  background-color: var(--grey-50);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }

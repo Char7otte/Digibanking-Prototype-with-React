@@ -3,30 +3,31 @@ import { Link } from "react-router-dom";
 import styles from "./Demo.module.css";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent.tsx";
-import HeaderComponent from "../../Components/HeaderComponent/HeaderComponent";
 
 const DemoPage: React.FC = () => {
   const [demoData, setDemoData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch demo data from the backend
-    fetch("http://localhost:8080/api/account/summary?mode=demo")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Demo data received:", data);
-        setDemoData(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching demo data:", error);
-        setLoading(false);
-      });
+    // Use demo data without requiring authentication
+    // Simulate loading delay for better UX
+    setTimeout(() => {
+      const mockDemoData = {
+        balance: 5000.00,
+        payees: [
+          { id: 1, name: "John Doe", type: "Personal" },
+          { id: 2, name: "ABC Company", type: "Business" },
+          { id: 3, name: "Jane Smith", type: "Personal" },
+        ],
+        transactions: [
+          { id: 1, type: "Transfer", to: "John Doe", amount: 150.00 },
+          { id: 2, type: "Payment", to: "ABC Company", amount: 500.00 },
+          { id: 3, type: "Transfer", to: "Jane Smith", amount: 75.50 },
+        ],
+      };
+      setDemoData(mockDemoData);
+      setLoading(false);
+    }, 800);
   }, []);
 
   if (loading) {
@@ -40,14 +41,10 @@ const DemoPage: React.FC = () => {
   return (
     <div className="d-flex justify-content-center">
       <div className="bodyMini">
-        <HeaderComponent />
-        
         {/* Large Demo Banner */}
         <div className={styles.demoBanner}>
           <h1>THIS IS A DEMO TESTING ACCOUNT</h1>
         </div>
-        
-        <hr />
         <main className={styles.mainContainer}>
           <h1 className="text-center">Welcome to Demo Mode</h1>
           <p className="subtitle fs-2 text-center">Demo User</p>

@@ -4,7 +4,6 @@ import axios from "axios";
 import styles from "./Dashboard.module.css";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent.tsx";
-import HeaderComponent from "../../Components/HeaderComponent/HeaderComponent";
 import { useMenuContext } from "../../MenuContext.tsx";
 
 interface User {
@@ -73,8 +72,6 @@ function Dashboard() {
         return (
             <div className="d-flex justify-content-center">
                 <div className="bodyMini">
-                    <HeaderComponent />
-                    <hr />
                     <main className={styles.mainContainer}>
                         <h1 className="text-center">Welcome back</h1>
                         <p className="subtitle fs-2 text-center">{user.name}</p>
@@ -114,7 +111,6 @@ function Dashboard() {
         return (
             <div className={styles.mainContainerRegular}>
                 <div className={styles.bodyRegular}>
-                    <HeaderComponent />
                     <section className="dashboard-header">
                         <div>
                             <p className="label">Welcome back</p>
