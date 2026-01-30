@@ -9,19 +9,14 @@ import Login from "./Pages/Login/Login.tsx";
 import Transaction from "./Pages/Transaction/Transaction.tsx";
 import NotFound from "./Pages/NotFound/NotFound.tsx";
 import { MenuContextProvider } from "./MenuContext.tsx";
-import Demo from "./Pages/Demo/Demo.tsx";  
-import DemoTransaction from "./Pages/Demo/Demo.transaction.tsx";
-import NavBar from "./Components/NavBar/NavBar.tsx";
 
 export const UseSimplified = createContext(true);
 
 const router = createBrowserRouter([
     { path: "/", element: <Login /> },
-    { path: "/dashboard", element: <><NavBar /><Dashboard /></> },
-    { path: "/transaction", element: <><NavBar /><Transaction /></> },
-    { path: "/demo", element: <><NavBar /><Demo /></> },
-    { path: "/demo/transaction", element: <><NavBar /><DemoTransaction /></> },
-    { path: "*", element: <><NavBar /><NotFound /></> },
+    { path: "/dashboard", element: <Dashboard /> },
+    { path: "/transaction", element: <Transaction /> },
+    { path: "*", element: <NotFound /> },
 ]);
 
 createRoot(document.getElementById("root")!).render(
