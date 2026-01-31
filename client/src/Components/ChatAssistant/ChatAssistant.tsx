@@ -1,5 +1,5 @@
 // client/src/Components/ChatAssistant/ChatAssistant.tsx
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MessageSquare, Send, X, Zap, Languages } from "lucide-react";
 import axios from "axios";
