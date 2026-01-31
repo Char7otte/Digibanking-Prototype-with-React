@@ -9,10 +9,11 @@ import Login from "./Pages/Login/Login.tsx";
 import Transaction from "./Pages/Transaction/Transaction.tsx";
 import NotFound from "./Pages/NotFound/NotFound.tsx";
 import { MenuContextProvider } from "./MenuContext.tsx";
-import { EyeTrackingProvider } from "./Components/EyeTracking/EyeTrackingProvider.tsx";
+// import { EyeTrackingProvider } from "./Components/EyeTracking/EyeTrackingProvider.tsx";
 import Demo from "./Pages/Demo/Demo.tsx";
 import DemoTransaction from "./Pages/Demo/Demo.transaction.tsx";
 import NavBar from "./Components/NavBar/NavBar.tsx";
+import AccessibilityComponent from "./Components/AccessibilityComponent/AccessibilityComponent.tsx";
 
 // --- 1. Import the Assistants ---
 import ChatAssistant from "./Components/ChatAssistant/ChatAssistant.tsx";
@@ -29,6 +30,7 @@ const AppLayout = () => {
             <Outlet /> {/* Renders the current page (Login, Dashboard, etc.) */}
             <ChatAssistant /> {/* Renders the Chatbot */}
             <VoiceAssistant /> {/* <--- ADDED THIS COMPONENT */}
+            <AccessibilityComponent />
         </>
     );
 };

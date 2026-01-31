@@ -2,7 +2,6 @@ import { type FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 import styles from "./Login.module.css";
-import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent";
 import OCBCLogo from "../../assets/ocbc.svg";
 import supabase from "../../utils/supabase";
 
@@ -68,7 +67,6 @@ function LoginComponent() {
 
     if (isLoading) return <div className="loadingContainer">Logging in...</div>;
 
-                <AccessibilityComponent />
     return (
         <div
             className="min-vh-100 d-flex align-items-center justify-content-center flex-column"
