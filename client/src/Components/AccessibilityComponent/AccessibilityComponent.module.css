@@ -1,33 +1,37 @@
 .helpButton {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background: var(--ocbc-red) !important;
-  color: white !important;
-  border: none;
-  border-radius: 100px;
-  padding: 14px 24px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: var(--shadow-xl);
-  transition: all 0.2s ease;
-  z-index: 1000;
-  min-height: auto;
-  width: auto;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--ocbc-red) !important;
+    color: white !important;
+    border: none;
+    border-radius: 100px;
+    padding: auto;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-xl);
+    transition: all 0.2s ease;
+    z-index: 1000;
+    min-height: 60px;
+    width: 60px;
+}
+
+.tokenButton {
+    bottom: 260px !important;
 }
 
 .helpButton:hover {
-  background: var(--ocbc-red-hover) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 20px 30px -10px rgba(237, 28, 36, 0.4);
+    background: var(--ocbc-red-hover) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 20px 30px -10px rgba(237, 28, 36, 0.4);
 }
 
 @media (max-width: 768px) {
-  .helpButton {
-    bottom: 80px;
-    right: 16px;
-    padding: 12px 20px;
-    font-size: 14px;
-  }
+    .helpButton {
+        bottom: 80px;
+        right: 16px;
+        padding: 12px 20px;
+        font-size: 14px;
+    }
 }

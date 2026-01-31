@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import api from "../../api/axios.ts";
 import styles from "./Dashboard.module.css";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
-import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent.tsx";
 import { useMenuContext } from "../../MenuContext.tsx";
 import HeaderComponent from "../../Components/HeaderComponent/HeaderComponent.tsx";
 
@@ -119,7 +118,6 @@ function Dashboard() {
                             />
                         </section>
                     </main>
-                    <AccessibilityComponent />
                 </div>
             </div>
         );
@@ -229,7 +227,6 @@ function Dashboard() {
                             </li>
                         </ul>
                     </section>
-                    <AccessibilityComponent />
                 </div>
             </div>
         );

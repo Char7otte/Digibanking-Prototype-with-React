@@ -9,10 +9,11 @@ import Login from "./Pages/Login/Login.tsx";
 import Transaction from "./Pages/Transaction/Transaction.tsx";
 import NotFound from "./Pages/NotFound/NotFound.tsx";
 import { MenuContextProvider } from "./MenuContext.tsx";
-import { EyeTrackingProvider } from "./Components/EyeTracking/EyeTrackingProvider.tsx";
-import Demo from "./Pages/Demo/Demo.tsx";  
+// import { EyeTrackingProvider } from "./Components/EyeTracking/EyeTrackingProvider.tsx";
+import Demo from "./Pages/Demo/Demo.tsx";
 import DemoTransaction from "./Pages/Demo/Demo.transaction.tsx";
 import NavBar from "./Components/NavBar/NavBar.tsx";
+import AccessibilityComponent from "./Components/AccessibilityComponent/AccessibilityComponent.tsx";
 
 // --- 1. Import the Assistants ---
 import ChatAssistant from "./Components/ChatAssistant/ChatAssistant.tsx";
@@ -23,14 +24,15 @@ export const UseSimplified = createContext(true);
 // --- 2. Update Layout ---
 // This acts as a frame: it holds the current page (Outlet) AND the Assistants
 const AppLayout = () => {
-  return (
-    <>
-      <NavBar />
-      <Outlet /> {/* Renders the current page (Login, Dashboard, etc.) */}
-      <ChatAssistant /> {/* Renders the Chatbot */}
-      <VoiceAssistant /> {/* <--- ADDED THIS COMPONENT */}
-    </>
-  );
+    return (
+        <>
+            <NavBar />
+            <Outlet /> {/* Renders the current page (Login, Dashboard, etc.) */}
+            <ChatAssistant /> {/* Renders the Chatbot */}
+            <VoiceAssistant /> {/* <--- ADDED THIS COMPONENT */}
+            <AccessibilityComponent />
+        </>
+    );
 };
 
 // --- 3. Router Setup (Unchanged) ---
@@ -44,13 +46,13 @@ const router = createBrowserRouter([
             { path: "/demo", element: <Demo /> },
             { path: "/demo/transaction", element: <DemoTransaction /> },
             { path: "*", element: <NotFound /> },
-        ]
-    }
+        ],
+    },
 ]);
 
 createRoot(document.getElementById("root")!).render(
-  <MenuContextProvider>
-    <RouterProvider router={router} />
-    <EyeTrackingProvider />
-  </MenuContextProvider>, //stictmode gone ethan
+    <MenuContextProvider>
+        <RouterProvider router={router} />
+        {/* <EyeTrackingProvider /> */}
+    </MenuContextProvider>, //stictmode gone ethan
 );
