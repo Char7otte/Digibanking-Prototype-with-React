@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import api from "../../api/axios";
 import styles from "./Demo.module.css";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent.tsx";
@@ -9,25 +10,19 @@ const DemoPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Use demo data without requiring authentication
-    // Simulate loading delay for better UX
-    setTimeout(() => {
-      const mockDemoData = {
-        balance: 5000.00,
-        payees: [
-          { id: 1, name: "John Doe", type: "Personal" },
-          { id: 2, name: "ABC Company", type: "Business" },
-          { id: 3, name: "Jane Smith", type: "Personal" },
-        ],
-        transactions: [
-          { id: 1, type: "Transfer", to: "John Doe", amount: 150.00 },
-          { id: 2, type: "Payment", to: "ABC Company", amount: 500.00 },
-          { id: 3, type: "Transfer", to: "Jane Smith", amount: 75.50 },
-        ],
-      };
-      setDemoData(mockDemoData);
-      setLoading(false);
-    }, 800);
+    async function fetchDemoData() {
+      try {
+        const response = await api.get("/api/account/summary?mode=demo");
+        console.log("Fetched demo data:", response.data);
+        setDemoData(response.data);
+      } catch (error) {
+        console.error("Failed to fetch demo data:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchDemoData();
   }, []);
 
   if (loading) {

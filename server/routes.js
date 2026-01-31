@@ -7,6 +7,15 @@ const profileController = require("./api-mvc/controllers/profileController");
 const transferController = require("./api-mvc/controllers/transferController");
 const accountsController = require("./api-mvc/controllers/accountsController.js");
 
+const demoRoutes = require("./demo-account/demo.routes.js");
+const { extractMode } = require("./demo-account/demo-middleware.js");
+
+// Apply extractMode middleware to all routes
+router.use(extractMode);
+
+// Mount demo routes under /api
+router.use("/api", demoRoutes);
+
 router.get("/api", (req, res) => {
     res.send("API is working");
 });

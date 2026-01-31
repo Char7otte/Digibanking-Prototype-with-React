@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, type ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axios";
 import styles from "../Transaction/Transaction.module.css";
 import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
@@ -31,9 +31,8 @@ function DemoTransaction() {
   useEffect(() => {
     async function fetchDemoData() {
       try {
-        const response = await fetch("http://localhost:8080/api/account/summary?mode=demo");
-        const data = await response.json();
-        setDemoData(data);
+        const response = await api.get("/api/account/summary?mode=demo");
+        setDemoData(response.data);
       } catch (error: any) {
         console.error("Error fetching demo data:", error);
       } finally {
@@ -99,8 +98,8 @@ function DemoTransaction() {
 
   async function executeTransfer() {
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/transfer?mode=demo",
+      const response = await api.post(
+        "/api/transfer?mode=demo",
         {
           to: selectedTransfereeAccount.current,
           amount: transferAmount.current,
