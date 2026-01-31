@@ -91,7 +91,7 @@ function NavBar() {
                     >
                         <span className={styles.icon}>👁️</span>
                         <span className={styles.modeText}>
-                            {isSimplified ? "Regular" : "Simple"}
+                            {isSimplified ? "Simple" : "Regular"}
                         </span>
                     </button>
 
