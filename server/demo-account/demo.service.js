@@ -1,5 +1,5 @@
 // server/demo-account/demo.service.js
-const { readDB, writeDB } = require("../data/fileDb");
+const { readDB, writeDB } = require("../data/fileDB");
 const { ensureDemoData } = require("./demo.seed");
 
 function getOrCreateWallet(db, userId, mode) {

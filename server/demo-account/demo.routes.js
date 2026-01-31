@@ -1,6 +1,6 @@
 // server/demo-account/demo.routes.js
 const express = require("express");
-const { readDB } = require("../data/fileDb");
+const { readDB } = require("../data/fileDB");
 const { ensureDemoData } = require("./demo.seed");
 const { createTransaction } = require("./demo.service");
 const { resetDemoForUser, topUpDemo } = require("./demo.reset");
