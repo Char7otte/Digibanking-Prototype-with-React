@@ -1,0 +1,67 @@
+{
+  "wallets": [
+    {
+      "userId": 1,
+      "mode": "demo",
+      "balance": 4899,
+      "updatedAt": "2026-01-31T04:47:40.959Z"
+    }
+  ],
+  "payees": [
+    {
+      "id": 1,
+      "userId": 1,
+      "mode": "demo",
+      "name": "SP Utilities",
+      "type": "biller",
+      "createdAt": "2026-01-23T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "mode": "demo",
+      "name": "Netflix",
+      "type": "biller",
+      "createdAt": "2026-01-23T00:00:00.000Z"
+    }
+  ],
+  "transactions": [
+    {
+      "id": 1,
+      "userId": 1,
+      "mode": "demo",
+      "type": "transfer",
+      "to": "Mum",
+      "amount": 100,
+      "reference": "Birthday gift",
+      "status": "success",
+      "createdAt": "2026-01-23T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "mode": "demo",
+      "type": "transfer",
+      "to": "SP Utilities",
+      "amount": 100,
+      "reference": "Demo Transfer",
+      "status": "success",
+      "createdAt": "2026-01-25T16:16:59.642Z"
+    },
+    {
+      "id": 3,
+      "userId": 1,
+      "mode": "demo",
+      "type": "transfer",
+      "to": "SP Utilities",
+      "amount": 1,
+      "reference": "Demo Transfer",
+      "status": "success",
+      "createdAt": "2026-01-31T04:47:40.959Z"
+    }
+  ],
+  "counters": {
+    "transactionId": 3,
+    "payeeId": 2
+  }
+}

@@ -1,11 +1,51 @@
 .mainContainer {
-        border: 1px solid var(--secondary-input-color);
-        border-radius: 20px;
-        padding: 20px;
+  background: white;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.mainContainer:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--grey-300);
+  transform: translateY(-2px);
+}
+
+.mainContainer h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--grey-900);
+  margin: 0 0 4px 0;
+}
+
+.mainContainer .subtitle {
+  font-size: 14px;
+  color: var(--grey-500);
+  margin: 0;
+}
+
+.mainContainer p {
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--grey-600);
+}
+
+.mainContainer p span {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--grey-900);
 }
 
 .hideButton {
-        min-height: 0px;
-        width: 50px;
-        height: 50px;
+  min-height: 0px;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius);
+  background: var(--grey-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

@@ -15,12 +15,20 @@ const PORT = process.env.PORT || 8080;
 
 // SECURITY
 app.use(
-    helmet({
-        contentSecurityPolicy: false,
-    })
+  helmet({
+    contentSecurityPolicy: false,
+  }),
 );
 app.use(morgan("dev"));
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+
+const corsOptions = {
+  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
 
 // STATIC FILES
 app.use(express.static(path.join(__dirname, "public")));
@@ -34,12 +42,12 @@ app.use(bodyParser.json());
 
 // SESSIONS
 app.use(
-    session({
-        secret: "supersecretkey",
-        resave: false,
-        saveUninitialized: true,
-        cookie: { httpOnly: true },
-    })
+  session({
+    secret: "supersecretkey",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { httpOnly: true },
+  }),
 );
 
 // EJS
@@ -51,12 +59,34 @@ app.use("/", mainRoutes);
 
 // ERRORS
 app.use((req, res) => {
-    res.status(404).send("<h1>404 Not Found</h1>");
+  res.status(404).send("<h1>404 Not Found</h1>");
 });
 app.use((err, req, res, next) => {
-    console.error("SERVER ERROR:", err);
-    res.status(500).send("<h1>500 - Server Error</h1>");
+  console.error("SERVER ERROR:", err);
+  res.status(500).send("<h1>500 - Server Error</h1>");
+});
+
+//Socket.io
+const { createServer } = require("node:http");
+const { Server } = require("socket.io");
+const { fileURLToPath } = require("node:url");
+const { dirname, join } = require("node:path");
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("A user has connected", socket.id);
+
+  socket.on("disconnect", () => {
+    console.log("User has disconnected", socket.id);
+  });
 });
 
 // START SERVER
-app.listen(PORT, () => console.log(`Server running on ${PORT}`));
+server.listen(8080, () => {
+  console.log("Server is running on port 8080");
+});

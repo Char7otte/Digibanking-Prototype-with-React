@@ -1,108 +1,277 @@
 :root {
-  --spacing: 8;
-  --buttonSize: 50px;
-  --secondary-text-color: #978b8b;
-  --secondary-input-color: #e2e2e2;
-  --secondary-bg-color: #f9f9f9;
-  --ocbc-red: #ed1c24;
+    --spacing: 8;
+    --buttonSize: 50px;
+
+    /* OCBC Brand Colors */
+    --ocbc-red: #ed1c24;
+    --ocbc-red-dark: #c41519;
+    --ocbc-red-light: #ffe9ea;
+    --ocbc-red-hover: #b51419;
+
+    /* Neutrals */
+    --grey-50: #f9fafb;
+    --grey-100: #f3f4f6;
+    --grey-200: #e5e7eb;
+    --grey-300: #d1d5db;
+    --grey-400: #9ca3af;
+    --grey-500: #6b7280;
+    --grey-600: #4b5563;
+    --grey-700: #374151;
+    --grey-800: #1f2937;
+    --grey-900: #111827;
+
+    /* Semantic Colors */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --info: #3b82f6;
+
+    /* Legacy support */
+    --secondary-text-color: var(--grey-500);
+    --secondary-input-color: var(--grey-200);
+    --secondary-bg-color: var(--grey-50);
+
+    /* Typography */
+    --font-sans:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, sans-serif;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    --shadow-md:
+        0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --shadow-lg:
+        0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    --shadow-xl:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+    /* Border Radius */
+    --radius-sm: 6px;
+    --radius: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 24px;
 }
 
 body {
-  margin: 0;
-  font-family: "Trebuchet MS", sans-serif;
+    margin: 0;
+    font-family: var(--font-sans);
+    background: var(--grey-50);
+    color: var(--grey-900);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 a {
-  text-decoration: none;
-  width: 100%;
+    text-decoration: none;
+    width: 100%;
 }
 
-button,
+button {
+    min-height: var(--buttonSize);
+    width: 100%;
+    border-radius: var(--radius-md);
+    border: none;
+    background-color: var(--grey-100);
+    color: var(--grey-700);
+    font-weight: 500;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-sans);
+}
+
+button:hover {
+    background-color: var(--grey-200);
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
 input,
 select {
-  min-height: var(--buttonSize);
-  width: 100%;
-  border-radius: 10px;
-  border: none;
-  background-color: var(--secondary-input-color);
+    min-height: var(--buttonSize);
+    width: 100%;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--grey-300);
+    background-color: white;
+    color: var(--grey-900);
+    font-size: 15px;
+    font-family: var(--font-sans);
+    transition: all 0.2s ease;
 }
 
-input[type=range] {
-  width: 100%;
-  margin: 0;
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--ocbc-red);
+    box-shadow: 0 0 0 3px var(--ocbc-red-light);
+}
+
+input::placeholder {
+    color: var(--grey-400);
+}
+
+input[type="range"] {
+    width: 100%;
+    margin: 0;
+    accent-color: var(--ocbc-red);
 }
 
 input {
-  padding: 0px;
-  padding-left: 10px;
+    padding: 12px 16px;
+}
+
+select {
+    padding: 12px 16px;
+    cursor: pointer;
 }
 
 h1 {
-  font-weight: normal;
-  margin: 10px 0;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1.2;
+    margin: 10px 0;
+    color: var(--grey-900);
+    letter-spacing: -0.02em;
+}
+
+h2 {
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 1.3;
+    color: var(--grey-900);
+    letter-spacing: -0.01em;
+}
+
+h3 {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.4;
+    color: var(--grey-900);
 }
 
 p {
-  margin: 10px 0;
+    margin: 10px 0;
+    color: var(--grey-700);
+    line-height: 1.6;
 }
 
 hr {
-  height: 1px;
-  width: 100%;
-  background-color: var(--secondary-input-color);
-  border: none;
-  margin: 0;
+    height: 1px;
+    width: 100%;
+    background-color: var(--grey-200);
+    border: none;
+    margin: 20px 0;
+}
+
+a {
+    color: var(--ocbc-red);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 .important-button {
-  color: white !important;
-  background-color: var(--ocbc-red) !important;
+    color: white !important;
+    background-color: var(--ocbc-red) !important;
+    font-weight: 600 !important;
+    box-shadow: var(--shadow-md);
+}
+
+.important-button:hover {
+    background-color: var(--ocbc-red-hover) !important;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.important-button:active {
+    transform: translateY(0);
 }
 
 .subtitle {
-  color: var(--secondary-text-color);
+    color: var(--grey-500);
+    font-size: 14px;
+    font-weight: 400;
 }
 
 .spacing-md {
-  display: block;
-  margin-bottom: var(--spacing);
+    display: block;
+    margin-bottom: calc(var(--spacing) * 2);
 }
 
 .ignore-sizing {
-  min-height: 0px;
-  height: 50px;
+    min-height: auto !important;
+    height: auto !important;
+    width: auto !important;
 }
 
 .loadingContainer {
-  display: flex;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: var(--grey-600);
+    background: var(--grey-50);
 }
 
 .bodyMini {
-  width: 100%;
-  max-width: 768px;
+    width: 100%;
+    max-width: 768px;
+    margin: 0 auto;
+    padding: 0 16px;
 }
 
 .selectedAccountCard {
-  border: 5px solid var(--ocbc-red);
+    border: 3px solid var(--ocbc-red) !important;
+    box-shadow: 0 0 0 4px var(--ocbc-red-light) !important;
 }
 
 .selected {
-  border: 5px solid var(--ocbc-red) !important;
+    border: 3px solid var(--ocbc-red) !important;
+    box-shadow: 0 0 0 4px var(--ocbc-red-light) !important;
+    transform: translateY(-2px);
+}
+
+.ReactModal__Overlay {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    z-index: 9999;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.ReactModal__Content {
+    position: relative !important;
+    inset: auto !important;
+    background: white !important;
+    border-radius: var(--radius-xl) !important;
+    border: none !important;
+    box-shadow: var(--shadow-xl) !important;
 }
 
 @media (min-width: 1000px) {
-  .ReactModal__Content {
-    inset: 20% !important;
-  }
+    .ReactModal__Content {
+        max-width: 600px !important;
+        padding: 40px !important;
+    }
 }
 
 @media (max-width: 1000px) {
-  .ReactModal__Content {
-    inset: 15% !important;
-  }
+    .ReactModal__Content {
+        max-width: 90vw !important;
+        padding: 24px !important;
+    }
 }
 
 .accountCard {

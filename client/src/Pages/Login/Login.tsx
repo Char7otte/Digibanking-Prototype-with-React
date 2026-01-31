@@ -1,64 +1,78 @@
 import { type FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axios";
 import styles from "./Login.module.css";
 import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent";
 import OCBCLogo from "../../assets/ocbc.svg";
+import supabase from "../../utils/supabase";
 
 function LoginComponent() {
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [signOption, setSignOption] = useState("login");
+    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
+    const [signOption, setSignOption] = useState("login");
 
-  async function handleLogin(e: FormEvent) {
-    e.preventDefault();
+    async function handleLogin(e: FormEvent) {
+        e.preventDefault();
 
-    const form = e.target as HTMLFormElement;
-    const formData = new FormData(form);
-    const data = {
-      username: formData.get("username"),
-      password: formData.get("password"),
-    };
+        const form = e.target as HTMLFormElement;
+        const formData = new FormData(form);
+        const data = {
+            username: formData.get("username"),
+            password: formData.get("password"),
+        };
 
-    try {
-      setIsLoading(true);
-      await axios.post("http://localhost:8080/login", data, {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        withCredentials: true,
-      });
-      setIsLoading(false);
-      navigate("/dashboard");
-    } catch (error: any) {
-      setIsLoading(false);
-      console.log("Login error: ", error);
+        try {
+            setIsLoading(true);
+            await api.post("/login", data);
+            setIsLoading(false);
+            navigate("/dashboard");
+        } catch (error: any) {
+            setIsLoading(false);
+            console.log("Login error: ", error);
 
-      alert("Login failed. Please try again.");
+            alert("Login failed. Please try again.");
+        }
     }
-  }
 
-  async function handleRegister(e: FormEvent) {
-    e.preventDefault();
-    // const form = e.target as HTMLFormElement;
-    // const formData = new FormData(form);
-  }
+    async function handleRegister(e: FormEvent) {
+        e.preventDefault();
+    }
 
-  //   async function handleAssistance(e: FormEvent) {
-  //     e.preventDefault();
-  //   }
+    async function handleOTP(e: FormEvent) {
+        e.preventDefault();
+        const code = new FormData(e.target as HTMLFormElement).get("otp");
+        const fiveMinsAgo = new Date(Date.now() - 1000 * 60 * 5).toISOString();
+        const { data, error } = await supabase
+            .from("token")
+            .select()
+            .eq("code", code)
+            .gt("expires_at", fiveMinsAgo);
+        if (error || data == null) {
+            console.error(error);
+            alert("Server error. Please try again later.");
+            return;
+        }
 
-  //   function updateSignOption(newOption: string) {
-  //     setSignOption(newOption);
-  //   }
+        if (data.length == 0) {
+            alert("Incorrect/expired token. Please try again.");
+            return;
+        }
 
-  if (isLoading) return <div className="loadingContainer">Logging in...</div>;
+        setIsLoading(true);
+        await api.get("/login/token", {
+            params: { id: data[0].user_id },
+        });
+        setIsLoading(false);
+        navigate("/dashboard");
+    }
+
+    if (isLoading) return <div className="loadingContainer">Logging in...</div>;
 
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center flex-column">
-      <section className="pt-4">
-        <img src={OCBCLogo} alt="" />
-        <p className="subtitle pb-4">Internet Banking</p>
+    <div className="min-vh-100 d-flex align-items-center justify-content-center flex-column" style={{ background: 'var(--grey-50)' }}>
+      <section className={styles.logoSection}>
+        <img src={OCBCLogo} alt="OCBC Bank" />
+        <p className="subtitle">Internet Banking</p>
       </section>
       <main className={`${styles.mainContainer} `}>
         <fieldset className={`${styles.radioFieldset} d-flex border-0`}>
@@ -127,6 +141,19 @@ function LoginComponent() {
               <button type="submit" className="important-button">
                 Sign In
               </button>
+              <button 
+                type="button" 
+                onClick={() => navigate("/demo")}
+                className="spacing-md"
+                style={{ 
+                  marginTop: "16px",
+                  backgroundColor: "var(--success)", 
+                  color: "white",
+                  fontWeight: "600"
+                }}
+              >
+                🎮 Try Demo Account
+              </button>
               <hr />
               <p>
                 New to OCBC? <a href="">Open an Account</a>
@@ -185,7 +212,7 @@ function LoginComponent() {
             <p className="subtitle pb-4">
               Enter the generated OTP to gain access to the account
             </p>
-            <form onSubmit={handleLogin} className={styles.loginForm}>
+            <form onSubmit={handleOTP} className={styles.loginForm}>
               <input
                 type="hidden"
                 name="username"
@@ -223,10 +250,10 @@ function LoginComponent() {
           </div>
         )}
 
-        <AccessibilityComponent />
-      </main>
-    </div>
-  );
+                <AccessibilityComponent />
+            </main>
+        </div>
+    );
 }
 
 export default LoginComponent;
