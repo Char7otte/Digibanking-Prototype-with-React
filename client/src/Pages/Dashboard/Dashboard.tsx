@@ -5,6 +5,7 @@ import styles from "./Dashboard.module.css";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent.tsx";
 import { useMenuContext } from "../../MenuContext.tsx";
+import HeaderComponent from "../../Components/HeaderComponent/HeaderComponent.tsx";
 
 interface User {
     id: number;
@@ -78,15 +79,24 @@ function Dashboard() {
                         <h1 className="text-center">Welcome back</h1>
                         <p className="subtitle fs-2 text-center">{user.name}</p>
                         <section className={styles.subContainer}>
-                            <h2 className="mb-2 mt-4">What would you like to do?</h2>
+                            <h2 className="mb-2 mt-4">
+                                What would you like to do?
+                            </h2>
                             <div>
                                 <Link to={"/transaction"}>
-                                    <button type="submit" className="spacing-md fs-3 important-button">
+                                    <button
+                                        type="submit"
+                                        className="spacing-md fs-3 important-button"
+                                    >
                                         Transfer Money
                                     </button>
                                 </Link>
-                                <button className="spacing-md fs-3">Pay Bills</button>
-                                <button className="fs-3">View Transactions</button>
+                                <button className="spacing-md fs-3">
+                                    Pay Bills
+                                </button>
+                                <button className="fs-3">
+                                    View Transactions
+                                </button>
                             </div>
                         </section>
                         <section className={styles.subContainer}>
@@ -100,9 +110,13 @@ function Dashboard() {
                                     isHidden: false,
                                 }}
                             />
-                            <AccountCardComponent accountData={savingsAccount} />
+                            <AccountCardComponent
+                                accountData={savingsAccount}
+                            />
                             <AccountCardComponent accountData={creditAccount} />
-                            <AccountCardComponent accountData={checkingAccount} />
+                            <AccountCardComponent
+                                accountData={checkingAccount}
+                            />
                         </section>
                     </main>
                     <AccessibilityComponent />
@@ -128,9 +142,13 @@ function Dashboard() {
                     <section className="accounts-overview grid-3">
                         <div className="account-card card-red">
                             <p className="acc-title">Savings Account</p>
-                            <p className="acc-number">•••• {user.account_number.slice(-4)}</p>
+                            <p className="acc-number">
+                                •••• {user.account_number.slice(-4)}
+                            </p>
                             <p className="acc-label">Available Balance</p>
-                            <p className="acc-balance">SGD {user.balance.toFixed(2)}</p>
+                            <p className="acc-balance">
+                                SGD {user.balance.toFixed(2)}
+                            </p>
                             <a className="acc-details" href="#">
                                 View Details →
                             </a>
@@ -180,7 +198,9 @@ function Dashboard() {
                     <section className="monthly-summary card">
                         <p className="summary-title">This Month</p>
                         <p className="summary-amount">$3,124</p>
-                        <p className="summary-sub">↑ 12% less than last month</p>
+                        <p className="summary-sub">
+                            ↑ 12% less than last month
+                        </p>
                         <hr />
                         <p className="summary-title">Total Balance</p>
                         <p className="summary-amount">$33,530</p>
@@ -191,15 +211,21 @@ function Dashboard() {
                         <ul className="tx-list">
                             <li className="tx-item">
                                 <span>Salary Credit</span>
-                                <span className="tx-amount income">+ $5500.00</span>
+                                <span className="tx-amount income">
+                                    + $5500.00
+                                </span>
                             </li>
                             <li className="tx-item">
                                 <span>Amazon Shopping</span>
-                                <span className="tx-amount expense">- $124.99</span>
+                                <span className="tx-amount expense">
+                                    - $124.99
+                                </span>
                             </li>
                             <li className="tx-item">
                                 <span>Starbucks Coffee</span>
-                                <span className="tx-amount expense">- $8.50</span>
+                                <span className="tx-amount expense">
+                                    - $8.50
+                                </span>
                             </li>
                         </ul>
                     </section>
