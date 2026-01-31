@@ -11,12 +11,12 @@ function HeaderComponent() {
             setIsSimplified(localIsSimplified === "true");
     }, []);
 
-    function toggleSimplifiedMenu() {
-        //Need to create temp bool because states don't update dynamically within a function.
-        const newBool = !isSimplified;
-        setIsSimplified(newBool);
-        localStorage.setItem("isSimplified", newBool.toString());
-    }
+    // function toggleSimplifiedMenu() {
+    //     //Need to create temp bool because states don't update dynamically within a function.
+    //     const newBool = !isSimplified;
+    //     setIsSimplified(newBool);
+    //     localStorage.setItem("isSimplified", newBool.toString());
+    // }
 
     return (
         <header className="d-flex justify-content-between p-2">
