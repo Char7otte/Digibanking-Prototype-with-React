@@ -536,23 +536,27 @@ body {
 .acc-title {
     font-size: 0.9rem;
     opacity: 0.9;
+    color: white;
 }
 
 .acc-number {
     font-size: 1rem;
     margin-top: 4px;
     opacity: 0.9;
+    color: white;
 }
 
 .acc-label {
     margin-top: 14px;
     opacity: 0.8;
+    color: white;
 }
 
 .acc-balance {
     font-size: 1.6rem;
     font-weight: 600;
     margin-top: 4px;
+    color: white;
 }
 
 .acc-details {
@@ -560,6 +564,7 @@ body {
     display: inline-block;
     color: white;
     text-decoration: none;
+    font-weight: bold;
 }
 
 /* ===== Quick Actions ===== */
