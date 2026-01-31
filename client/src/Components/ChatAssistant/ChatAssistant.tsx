@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MessageSquare, Send, X, Zap, Languages } from "lucide-react";
-import axios from "axios";
+import api from "../../api/axios";
 import styles from "./ChatAssistant.module.css";
 
 interface Message {
@@ -41,7 +41,7 @@ const ChatAssistant = () => {
         setIsTyping(true);
 
         try {
-            const res = await axios.post("http://localhost:8080/api/ai/chat", {
+            const res = await api.post("/api/ai/chat", {
                 message: userMsg,
                 lang: language,
             });

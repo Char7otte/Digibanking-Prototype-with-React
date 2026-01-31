@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 import styles from "./NavBar.module.css";
 import OCBCLogo from "../../assets/ocbc.svg";
 import { useMenuContext } from "../../MenuContext";
@@ -16,9 +16,12 @@ function NavBar() {
             setIsSimplified(localIsSimplified === "true");
     }, [setIsSimplified]);
 
-      await axios.post("http://localhost:8080/logout", {}, {
     const handleLogout = async () => {
         try {
+            await api.post(
+                "/logout",
+                {},
+                {
                     withCredentials: true,
                 },
             );

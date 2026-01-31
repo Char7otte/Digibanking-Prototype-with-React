@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/axios.ts";
 import styles from "./Dashboard.module.css";
 import AccountCardComponent from "../../Components/AccountCardComponent/AccountCardComponent";
 import AccessibilityComponent from "../../Components/AccessibilityComponent/AccessibilityComponent.tsx";
@@ -26,7 +26,7 @@ function Dashboard() {
     useEffect(() => {
         async function fetchUserData() {
             try {
-                const res = await axios.get("http://localhost:8080/dashboard", {
+                const res = await api.get("/dashboard", {
                     withCredentials: true,
                 });
                 setUser(res.data.user);
