@@ -5,14 +5,14 @@
 
 /* ROOT VARIABLES */
 :root {
-    --primary: #ED1C24;
-    --primary-dark: #C41519;
-    --primary-hover: #B51419;
-    --background: #F9FAFB;
+    --primary: #ed1c24;
+    --primary-dark: #c41519;
+    --primary-hover: #b51419;
+    --background: #f9fafb;
     --card: #ffffff;
     --text: #111827;
-    --muted: #6B7280;
-    --border: #E5E7EB;
+    --muted: #6b7280;
+    --border: #e5e7eb;
     --radius: 16px;
     --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.06);
     --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -26,17 +26,21 @@ body {
     font-size: 1rem;
 }
 
-
 /* GLOBAL RESET */
 *:not(dialog) {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 }
 
 body {
-    background: linear-gradient(135deg, #FFE9EA 0%, #F9FAFB 50%, #F3F4F6 100%);
+    background: linear-gradient(135deg, #ffe9ea 0%, #f9fafb 50%, #f3f4f6 100%);
     color: var(--text);
     min-height: 100vh;
 }
@@ -50,7 +54,7 @@ body {
     justify-content: space-between;
     padding: 16px 32px;
     background: #ffffff;
-    border-bottom: 1px solid #F3F4F6;
+    border-bottom: 1px solid #f3f4f6;
     position: sticky;
     top: 0;
     z-index: 50;
@@ -91,7 +95,9 @@ body {
     font-size: 0.95rem;
     padding: 6px 10px;
     border-radius: 999px;
-    transition: background 0.15s ease, color 0.15s ease;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease;
 }
 
 .nav-link:hover {
@@ -432,7 +438,6 @@ body {
    RESPONSIVE
    ============================================================ */
 @media (max-width: 768px) {
-
     .grid-3,
     .grid-2 {
         grid-template-columns: 1fr;
@@ -473,7 +478,9 @@ body {
     border: none;
     cursor: pointer;
 
-    transition: background 0.2s ease, transform 0.15s ease;
+    transition:
+        background 0.2s ease,
+        transform 0.15s ease;
 }
 
 .back-button:hover {
@@ -512,17 +519,17 @@ body {
 }
 
 .card-red {
-    background: linear-gradient(135deg, #ED1C24, #C41519);
+    background: linear-gradient(135deg, #ed1c24, #c41519);
     box-shadow: 0 4px 16px rgba(237, 28, 36, 0.2);
 }
 
 .card-blue {
-    background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
 }
 
 .card-purple {
-    background: linear-gradient(135deg, #A855F7, #7C3AED);
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
     box-shadow: 0 4px 16px rgba(168, 85, 247, 0.2);
 }
 
