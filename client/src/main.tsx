@@ -51,6 +51,6 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
     <MenuContextProvider>
         <RouterProvider router={router} />
-        <EyeTrackingProvider />
+        {/* <EyeTrackingProvider /> */}
     </MenuContextProvider>, //stictmode gone ethan
 );
