@@ -17,6 +17,7 @@
     "react-dom": "^19.2.0",
     "react-modal": "^3.16.3",
     "react-router-dom": "^7.9.5",
+    "webgazer": "^3.4.0"
     "socket.io-client": "^4.8.3"
   },
   "devDependencies": {

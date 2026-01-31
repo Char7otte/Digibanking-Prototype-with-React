@@ -1,4 +1,4 @@
-import { StrictMode, createContext } from "react";
+import { createContext } from "react"; //ethan removed StrictMode
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import "./bootstrap-utilities.css";
@@ -9,6 +9,7 @@ import Login from "./Pages/Login/Login.tsx";
 import Transaction from "./Pages/Transaction/Transaction.tsx";
 import NotFound from "./Pages/NotFound/NotFound.tsx";
 import { MenuContextProvider } from "./MenuContext.tsx";
+import { EyeTrackingProvider } from "./Components/EyeTracking/EyeTrackingProvider.tsx";
 import Demo from "./Pages/Demo/Demo.tsx";  
 import DemoTransaction from "./Pages/Demo/Demo.transaction.tsx";
 import NavBar from "./Components/NavBar/NavBar.tsx";
@@ -48,9 +49,8 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
-    <StrictMode>
-        <MenuContextProvider>
-            <RouterProvider router={router} />
-        </MenuContextProvider>
-    </StrictMode>
+  <MenuContextProvider>
+    <RouterProvider router={router} />
+    <EyeTrackingProvider />
+  </MenuContextProvider>, //stictmode gone ethan
 );
