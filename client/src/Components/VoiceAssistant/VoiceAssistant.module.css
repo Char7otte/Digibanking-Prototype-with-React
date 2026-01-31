@@ -2,7 +2,7 @@
 
 .container {
     position: fixed;
-    bottom: 70px;
+    bottom: 100px;
     right: 24px;
     z-index: 1050;
     display: flex;
@@ -37,8 +37,8 @@
 }
 
 .mainButton {
-    width: 56px;
-    height: 56px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     display: flex;
     align-items: center;
