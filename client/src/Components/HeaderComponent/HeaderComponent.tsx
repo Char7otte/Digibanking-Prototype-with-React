@@ -7,7 +7,8 @@ function HeaderComponent() {
 
     useEffect(() => {
         const localIsSimplified = localStorage.getItem("isSimplified");
-        if (localIsSimplified != null) setIsSimplified(localIsSimplified === "true");
+        if (localIsSimplified != null)
+            setIsSimplified(localIsSimplified === "true");
     }, []);
 
     function toggleSimplifiedMenu() {
@@ -19,10 +20,14 @@ function HeaderComponent() {
 
     return (
         <header className="d-flex justify-content-between p-2">
-            <input type="text" placeholder="Search transactions, payments" className={styles.headerInput} />
             <button className={styles.modifierButton} onClick={toggleSimplifiedMenu}>
                 👁️
             </button>
+            <input
+                type="text"
+                placeholder="Search transactions, payments"
+                className={styles.headerInput}
+            />
         </header>
     );
 }
