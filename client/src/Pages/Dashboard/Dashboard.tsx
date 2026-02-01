@@ -31,7 +31,10 @@ function Dashboard() {
                 setUser(res.data.user);
             } catch (error: any) {
                 console.error("Error fetching user data:", error);
-                if (error.res?.status === 401) {
+                if (
+                    error?.response?.status === 401 ||
+                    error?.response?.status === 403
+                ) {
                     navigate("/login");
                 }
             } finally {
