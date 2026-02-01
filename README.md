@@ -1,4 +1,4 @@
 # Digibanking-Prototype-with-React
 
-[Site](<[https://digibanking-prototype-with-react.vercel.app/](https://digibanking-prototype-with-react.pages.dev/)>) \
+[Site](https://digibanking-prototype-with-react.pages.dev/) \
 [API Server. Visit first to wake it up!](https://digibanking-prototype-with-react.onrender.com/api)
