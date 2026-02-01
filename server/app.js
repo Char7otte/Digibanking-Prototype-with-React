@@ -11,6 +11,7 @@ require("dotenv").config();
 const mainRoutes = require("./routes.js");
 
 const app = express();
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 8080;
 
 // SECURITY
@@ -45,8 +46,14 @@ app.use(
     session({
         secret: "supersecretkey",
         resave: false,
-        saveUninitialized: true,
-        cookie: { httpOnly: true },
+        saveUninitialized: false,
+        proxy: true,
+        cookie: {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            maxAge: 24 * 60 * 60 * 1000,
+        },
     }),
 );
 
