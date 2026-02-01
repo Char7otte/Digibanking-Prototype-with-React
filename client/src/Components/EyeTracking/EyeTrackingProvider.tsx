@@ -15,11 +15,12 @@ import "../../eye-tracking.css";
  */
 export function EyeTrackingProvider() {
     const [showCalibration, setShowCalibration] = useState(false);
+    const [isEnabled, setIsEnabled] = useState(true);
 
     // Initialize eye tracking with 800ms dwell time
     const { isInitialized } = useEyeClick({
         dwellMs: 800,
-        enabled: true,
+        enabled: isEnabled,
     });
 
     //Automatically mark clickable text elements
@@ -45,7 +46,7 @@ export function EyeTrackingProvider() {
                 <div
                     style={{
                         padding: "8px 12px",
-                        backgroundColor: isInitialized ? "#4caf50" : "#ff9800",
+                        backgroundColor: isEnabled ? (isInitialized ? "#4caf50" : "#ff9800") : "#9e9e9e",
                         color: "white",
                         borderRadius: "5px",
                         fontSize: "12px",
@@ -53,14 +54,14 @@ export function EyeTrackingProvider() {
                     }}
                 >
                     Eye Tracking:{" "}
-                    {isInitialized ? "Active ✓" : "Initializing..."}
+                    {isEnabled ? (isInitialized ? "Active ✓" : "Initializing...") : "Disabled"}
                 </div>
 
                 <button
-                    onClick={() => setShowCalibration(true)}
+                    onClick={() => setIsEnabled(!isEnabled)}
                     style={{
                         padding: "8px 12px",
-                        backgroundColor: "#ff6b35",
+                        backgroundColor: isEnabled ? "#f44336" : "#4caf50",
                         color: "white",
                         border: "none",
                         borderRadius: "5px",
@@ -70,8 +71,27 @@ export function EyeTrackingProvider() {
                         fontWeight: "600",
                     }}
                 >
-                    Calibrate
+                    {isEnabled ? "Disable" : "Enable"}
                 </button>
+
+                {isEnabled && (
+                    <button
+                        onClick={() => setShowCalibration(true)}
+                        style={{
+                            padding: "8px 12px",
+                            backgroundColor: "#ff6b35",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "5px",
+                            fontSize: "12px",
+                            cursor: "pointer",
+                            boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+                            fontWeight: "600",
+                        }}
+                    >
+                        Calibrate
+                    </button>
+                )}
             </div>
         </>
     );

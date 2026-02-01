@@ -56,6 +56,21 @@ export function useEyeClick({
         lastElementRef.current.classList.remove("eye-hover");
         lastElementRef.current = null;
       }
+      
+      // Stop WebGazer if it's already running (when disabled)
+      if (globalEyeTrackingStarted) {
+        // @ts-ignore
+        const currentWebGazer = (window as any).webgazer;
+        try {
+           if (currentWebGazer) {
+               currentWebGazer.end(); // Use .end() to stop camera and processing
+               globalEyeTrackingStarted = false;
+               setIsInitialized(false);
+           }
+        } catch (e) {
+          console.warn("Error stopping webgazer:", e);
+        }
+      }
       return;
     }
 
@@ -132,6 +147,8 @@ export function useEyeClick({
 
     const start = async () => {
       try {
+        if (!enabled) return; // double check
+
         // @ts-ignore
         const mod = await import("webgazer");
         webgazer = (mod?.default || mod) as any;
@@ -144,7 +161,9 @@ export function useEyeClick({
         // automatically when the user navigates between pages.
         
         await webgazer.setRegression("ridge").setGazeListener(() => {}).begin();
-
+        // Force show video to false if desired, although .begin() might show it initially
+        // webgazer.showVideo(false); 
+        
         const removeListeners = () => {
              if (webgazer?.removeMouseEventListeners) {
                  webgazer.removeMouseEventListeners();

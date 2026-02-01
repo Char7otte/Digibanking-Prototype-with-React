@@ -27,7 +27,3 @@
 [data-eye-clickable="true"] {
   cursor: pointer;
 }
-
-[data-eye-clickable="true"]:hover {
-  opacity: 0.8;
-}
