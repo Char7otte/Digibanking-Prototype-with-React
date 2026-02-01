@@ -45,11 +45,16 @@ app.use(
     session({
         secret: "supersecretkey",
         resave: false,
-        saveUninitialized: true,
-        cookie: { httpOnly: true },
+        saveUninitialized: false,
+        proxy: true,
+        cookie: {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            maxAge: 1000 * 60 * 60 * 24, // 24 hours
+        },
     }),
 );
-
 // EJS
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
