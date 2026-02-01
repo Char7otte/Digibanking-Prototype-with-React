@@ -22,7 +22,9 @@ function LoginComponent() {
 
         try {
             setIsLoading(true);
-            await api.post("/login", data);
+            const response = await api.post("/login", data);
+            const { token } = response.data;
+            localStorage.setItem("authToken", token);
             setIsLoading(false);
             navigate("/dashboard");
         } catch (error: any) {

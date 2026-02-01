@@ -25,9 +25,7 @@ function Dashboard() {
     useEffect(() => {
         async function fetchUserData() {
             try {
-                const res = await api.get("/dashboard", {
-                    withCredentials: true,
-                });
+                const res = await api.get("/dashboard");
                 setUser(res.data.user);
             } catch (error: any) {
                 console.error("Error fetching user data:", error);

@@ -7,6 +7,8 @@ const profileController = require("./api-mvc/controllers/profileController");
 const transferController = require("./api-mvc/controllers/transferController");
 const accountsController = require("./api-mvc/controllers/accountsController.js");
 
+const { requireAuth } = require("./api-mvc/middlewares/authMiddleware");
+
 const demoRoutes = require("./demo-account/demo.routes.js");
 const { extractMode } = require("./demo-account/demo-middleware.js");
 
@@ -27,31 +29,29 @@ const { generateGeminiVoiceResponse } = require("./geminiService");
 router.post("/login", loginController.login);
 
 // Dashboard
-router.get("/dashboard", dashboardController.dashboard);
+router.get("/dashboard", requireAuth, dashboardController.dashboard);
 
 // Profile
-router.get("/profile", profileController.profile);
-router.post("/profile/update", profileController.updateProfile);
+router.get("/profile", requireAuth, profileController.profile);
+router.post("/profile/update", requireAuth, profileController.updateProfile);
 
 // Transfer page
-router.get("/transfer", (req, res) => {
-  if (!req.session.user) return res.redirect("/login");
-
-  res.render("transfer", {
-    error: null,
-    success: null,
-    user: req.session.user,
-  });
+router.get("/transfer", requireAuth, (req, res) => {
+    res.render("transfer", {
+        error: null,
+        success: null,
+        user: req.user,
+    });
 });
 
 // Transfer action
-router.post("/transfer", transferController.transfer);
+router.post("/transfer", requireAuth, transferController.transfer);
 
 // Logout
 router.get("/logout", (req, res) => {
-  req.session.destroy(() => {
-    res.redirect("/");
-  });
+    req.session.destroy(() => {
+        res.redirect("/");
+    });
 });
 
 router.get("/login/token", accountsController.getViaUserID);
@@ -67,7 +67,10 @@ router.post("/api/ai/chat", async (req, res) => {
     // 3. Parse the JSON result safely
     let parsedResult;
     try {
-        const cleanText = aiResult.replace(/```json/g, "").replace(/```/g, "").trim();
+        const cleanText = aiResult
+            .replace(/```json/g, "")
+            .replace(/```/g, "")
+            .trim();
         parsedResult = JSON.parse(cleanText);
     } catch (e) {
         parsedResult = { action: "chat", reply: aiResult };
@@ -77,30 +80,30 @@ router.post("/api/ai/chat", async (req, res) => {
 });
 
 // voice assistant route
-router.post('/api/voice/process', async (req, res) => {
-  try {
-    const { command } = req.body;
-    
-    if (!command) {
-      return res.status(400).json({ error: "No command provided" });
-    }
-
-    const aiResponseRaw = await generateGeminiVoiceResponse(command);
-    
-    // Gemini with JSON mode usually returns a stringified JSON
-    let result;
+router.post("/api/voice/process", async (req, res) => {
     try {
-      result = JSON.parse(aiResponseRaw);
-    } catch (e) {
-      // Fallback if parsing fails
-      result = { action: "chat", reply: aiResponseRaw };
-    }
+        const { command } = req.body;
 
-    res.json(result);
-  } catch (error) {
-    console.error("Route Error:", error);
-    res.status(500).json({ error: "Failed to process voice command" });
-  }
+        if (!command) {
+            return res.status(400).json({ error: "No command provided" });
+        }
+
+        const aiResponseRaw = await generateGeminiVoiceResponse(command);
+
+        // Gemini with JSON mode usually returns a stringified JSON
+        let result;
+        try {
+            result = JSON.parse(aiResponseRaw);
+        } catch (e) {
+            // Fallback if parsing fails
+            result = { action: "chat", reply: aiResponseRaw };
+        }
+
+        res.json(result);
+    } catch (error) {
+        console.error("Route Error:", error);
+        res.status(500).json({ error: "Failed to process voice command" });
+    }
 });
 
 module.exports = router;
