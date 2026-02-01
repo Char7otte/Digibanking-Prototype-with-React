@@ -2,7 +2,7 @@
 
 .container {
     position: fixed;
-    bottom: 180px; /* Adjusted to clear your assistance button */
+    bottom: 224px; /* Adjusted to clear your assistance button */
     right: 24px;
     z-index: 9999;
     font-family: sans-serif;

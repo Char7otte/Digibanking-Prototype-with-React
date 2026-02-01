@@ -1,17 +1,39 @@
 const { getPool, sql } = require("../../db");
 
 const exchangeRates = {
-    SGD: { SGD: 1, MYR: 3.50, CNY: 5.20, IDR: 11500, THB: 26, USD: 0.74, AUD: 1.03 },
-    USD: { USD: 1, SGD: 1.35, MYR: 4.60, CNY: 7.10, IDR: 15500, THB: 33, AUD: 1.52 },
-    AUD: { AUD: 1, SGD: 0.97, MYR: 3.10, CNY: 4.65, IDR: 10700, THB: 22, USD: 0.66 }
+    SGD: {
+        SGD: 1,
+        MYR: 3.5,
+        CNY: 5.2,
+        IDR: 11500,
+        THB: 26,
+        USD: 0.74,
+        AUD: 1.03,
+    },
+    USD: {
+        USD: 1,
+        SGD: 1.35,
+        MYR: 4.6,
+        CNY: 7.1,
+        IDR: 15500,
+        THB: 33,
+        AUD: 1.52,
+    },
+    AUD: {
+        AUD: 1,
+        SGD: 0.97,
+        MYR: 3.1,
+        CNY: 4.65,
+        IDR: 10700,
+        THB: 22,
+        USD: 0.66,
+    },
 };
 
 exports.transfer = async (req, res) => {
     try {
         let { recipient, amount, mode, countryCurrency } = req.body;
-        const sender = req.session.user;
-
-        if (!sender) return res.redirect("/login");
+        const sender = req.user;
 
         // Default mode
         mode = mode || "local";
@@ -20,7 +42,7 @@ exports.transfer = async (req, res) => {
             return res.render("transfer", {
                 user: sender,
                 error: "Please fill in all fields.",
-                success: null
+                success: null,
             });
         }
 
@@ -29,21 +51,23 @@ exports.transfer = async (req, res) => {
             return res.render("transfer", {
                 user: sender,
                 error: "Invalid amount entered.",
-                success: null
+                success: null,
             });
         }
 
         const pool = await getPool();
 
         // Fetch sender
-        const senderQuery = await pool.request()
+        const senderQuery = await pool
+            .request()
             .input("id", sql.Int, sender.id)
             .query(`SELECT * FROM UsersAccounts WHERE id = @id`);
 
         const senderDB = senderQuery.recordset[0];
 
         // Fetch recipient
-        const recQuery = await pool.request()
+        const recQuery = await pool
+            .request()
             .input("acc", sql.VarChar(50), recipient)
             .query(`SELECT * FROM UsersAccounts WHERE account_number = @acc`);
 
@@ -53,7 +77,7 @@ exports.transfer = async (req, res) => {
             return res.render("transfer", {
                 user: sender,
                 error: "Recipient account not found.",
-                success: null
+                success: null,
             });
         }
 
@@ -62,11 +86,11 @@ exports.transfer = async (req, res) => {
             return res.render("transfer", {
                 user: sender,
                 error: "You cannot transfer to your own account.",
-                success: null
+                success: null,
             });
         }
 
-        const senderCurrency = senderDB.currency;      // e.g. SGD, USD, AUD
+        const senderCurrency = senderDB.currency; // e.g. SGD, USD, AUD
         const recipientCurrency = recipientUser.currency;
 
         let debitAmount = 0;
@@ -81,7 +105,7 @@ exports.transfer = async (req, res) => {
                 return res.render("transfer", {
                     user: sender,
                     error: `Local transfers require matching currencies (${senderCurrency} → ${recipientCurrency} not allowed).`,
-                    success: null
+                    success: null,
                 });
             }
 
@@ -92,12 +116,11 @@ exports.transfer = async (req, res) => {
         //  OVERSEAS TRANSFER (CURRENCY CONVERSION)
 
         if (mode === "overseas") {
-
             if (!countryCurrency) {
                 return res.render("transfer", {
                     user: sender,
                     error: "Please select a destination country & currency.",
-                    success: null
+                    success: null,
                 });
             }
 
@@ -107,18 +130,21 @@ exports.transfer = async (req, res) => {
             selectedCurrency = currencyCode;
 
             // SenderCurrency → selectedCurrency
-            if (!exchangeRates[senderCurrency] || !exchangeRates[senderCurrency][currencyCode]) {
+            if (
+                !exchangeRates[senderCurrency] ||
+                !exchangeRates[senderCurrency][currencyCode]
+            ) {
                 return res.render("transfer", {
                     user: sender,
                     error: `Exchange rate unavailable for ${senderCurrency} → ${currencyCode}.`,
-                    success: null
+                    success: null,
                 });
             }
 
             const rate = exchangeRates[senderCurrency][currencyCode];
 
-            debitAmount = amt;             // Sender pays in their currency
-            creditAmount = amt * rate;     // Convert to foreign currency
+            debitAmount = amt; // Sender pays in their currency
+            creditAmount = amt * rate; // Convert to foreign currency
         }
 
         //  VERIFY BALANCE
@@ -127,7 +153,7 @@ exports.transfer = async (req, res) => {
             return res.render("transfer", {
                 user: sender,
                 error: "Insufficient funds.",
-                success: null
+                success: null,
             });
         }
 
@@ -141,13 +167,17 @@ exports.transfer = async (req, res) => {
         await reqT
             .input("sid", sql.Int, senderDB.id)
             .input("deduct", sql.Decimal(18, 2), debitAmount)
-            .query(`UPDATE UsersAccounts SET balance = balance - @deduct WHERE id = @sid`);
+            .query(
+                `UPDATE UsersAccounts SET balance = balance - @deduct WHERE id = @sid`,
+            );
 
         // Credit recipient
         await reqT
             .input("racc", sql.VarChar(50), recipientUser.account_number)
             .input("credit", sql.Decimal(18, 2), creditAmount)
-            .query(`UPDATE UsersAccounts SET balance = balance + @credit WHERE account_number = @racc`);
+            .query(
+                `UPDATE UsersAccounts SET balance = balance + @credit WHERE account_number = @racc`,
+            );
 
         await t.commit();
 
@@ -171,15 +201,14 @@ exports.transfer = async (req, res) => {
         return res.render("transfer", {
             user: sender,
             error: null,
-            success: msg
+            success: msg,
         });
-
     } catch (err) {
         console.error("Transfer error:", err);
         return res.render("transfer", {
-            user: req.session.user,
+            user: req.user,
             error: "Server error occurred.",
-            success: null
+            success: null,
         });
     }
 };

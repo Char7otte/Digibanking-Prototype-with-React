@@ -14,6 +14,7 @@ import Demo from "./Pages/Demo/Demo.tsx";
 import DemoTransaction from "./Pages/Demo/Demo.transaction.tsx";
 import NavBar from "./Components/NavBar/NavBar.tsx";
 import AccessibilityComponent from "./Components/AccessibilityComponent/AccessibilityComponent.tsx";
+import { Helmet } from "react-helmet";
 
 // --- 1. Import the Assistants ---
 import ChatAssistant from "./Components/ChatAssistant/ChatAssistant.tsx";
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
     <MenuContextProvider>
+        <Helmet>
+            <title>OCBC Digibank</title>
+            <link rel="icon" href="../public/ocbc.svg" />
+        </Helmet>
         <RouterProvider router={router} />
         {/* <EyeTrackingProvider /> */}
     </MenuContextProvider>, //stictmode gone ethan

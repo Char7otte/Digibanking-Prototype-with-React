@@ -22,7 +22,9 @@ function LoginComponent() {
 
         try {
             setIsLoading(true);
-            await api.post("/login", data);
+            const response = await api.post("/login", data);
+            const { token } = response.data;
+            localStorage.setItem("authToken", token);
             setIsLoading(false);
             navigate("/dashboard");
         } catch (error: any) {
@@ -133,13 +135,13 @@ function LoginComponent() {
                                 className="spacing-md"
                             />
                             <label htmlFor="username" className="m-2">
-                                PIN
+                                Password
                             </label>
                             <input
                                 type="password"
                                 name="password"
                                 id="password"
-                                placeholder="Enter your PIN number"
+                                placeholder="Enter your Password"
                                 className="spacing-md"
                             />
                             <a
@@ -164,10 +166,10 @@ function LoginComponent() {
                             >
                                 🎮 Try Demo Account
                             </button>
-                            <hr />
+                            {/* <hr />
                             <p>
                                 New to OCBC? <a href="">Open an Account</a>
-                            </p>
+                            </p> */}
                         </form>
                     </div>
                 )}
@@ -202,13 +204,13 @@ function LoginComponent() {
                                 className="spacing-md"
                             />
                             <label htmlFor="username" className="m-2">
-                                PIN
+                                Password
                             </label>
                             <input
                                 type="text"
                                 name="password"
                                 id="password"
-                                placeholder="Enter your PIN number"
+                                placeholder="Enter your Password"
                                 className="spacing-md"
                             />
                             <button
@@ -217,10 +219,10 @@ function LoginComponent() {
                             >
                                 Sign up
                             </button>
-                            <hr />
+                            {/* <hr />
                             <p>
                                 New to OCBC? <a href="">Open an Account</a>
-                            </p>
+                            </p> */}
                         </form>
                     </div>
                 )}
@@ -264,10 +266,10 @@ function LoginComponent() {
                             >
                                 Login
                             </button>
-                            <hr />
+                            {/* <hr />
                             <p>
                                 New to OCBC? <a href="">Open an Account</a>
-                            </p>
+                            </p> */}
                         </form>
                     </div>
                 )}
