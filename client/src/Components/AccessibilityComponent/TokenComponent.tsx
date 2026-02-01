@@ -1,31 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ReactModal from "react-modal";
 import styles from "./AccessibilityComponent.module.css";
 import supabase from "../../utils/supabase";
-import { io } from "socket.io-client";
 
 function TokenComponent({ userID }: { userID: number }) {
-    useEffect(() => {
-        const URL = import.meta.env.VITE_SERVER_URL || "http://localhost:8080";
-        const socket = io(URL);
-        socket.connect();
-        let socketID: string | undefined = "";
-
-        socket.on("connect", () => {
-            socketID = socket.id;
-            console.log("Connected to server with ID:", socketID);
-        });
-
-        socket.on("pending_approval", (data) => {
-            console.log("Received a login request from:", data.deviceDetails);
-        });
-
-        return () => {
-            socket.off("pending_approval");
-            socket.disconnect();
-        };
-    }, []);
-
     const [code, setCode] = useState<string>();
     const [isOpen, setIsOpen] = useState(false);
     const [isGenerated, setIsGenerated] = useState(false);

@@ -66,27 +66,6 @@ app.use((err, req, res, next) => {
     res.status(500).send("<h1>500 - Server Error</h1>");
 });
 
-//Socket.io
-const { createServer } = require("node:http");
-const { Server } = require("socket.io");
-const { fileURLToPath } = require("node:url");
-const { dirname, join } = require("node:path");
-const server = createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: process.env.CLIENT_URL || "http://localhost:5173",
-    },
-});
-
-io.on("connection", (socket) => {
-    console.log("A user has connected", socket.id);
-    io.to(socket.id).emit("pending_approval");
-
-    socket.on("disconnect", () => {
-        console.log("User has disconnected", socket.id);
-    });
-});
-
 // START SERVER
 server.listen(8080, () => {
     console.log("Server is running on port 8080");
