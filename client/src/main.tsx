@@ -9,7 +9,7 @@ import Login from "./Pages/Login/Login.tsx";
 import Transaction from "./Pages/Transaction/Transaction.tsx";
 import NotFound from "./Pages/NotFound/NotFound.tsx";
 import { MenuContextProvider } from "./MenuContext.tsx";
-// import { EyeTrackingProvider } from "./Components/EyeTracking/EyeTrackingProvider.tsx";
+import { EyeTrackingProvider } from "./Components/EyeTracking/EyeTrackingProvider.tsx";
 import Demo from "./Pages/Demo/Demo.tsx";
 import DemoTransaction from "./Pages/Demo/Demo.transaction.tsx";
 import NavBar from "./Components/NavBar/NavBar.tsx";
@@ -58,6 +58,6 @@ createRoot(document.getElementById("root")!).render(
             <link rel="icon" href="../public/ocbc.svg" />
         </Helmet>
         <RouterProvider router={router} />
-        {/* <EyeTrackingProvider /> */}
+        <EyeTrackingProvider />
     </MenuContextProvider>, //stictmode gone ethan
 );
