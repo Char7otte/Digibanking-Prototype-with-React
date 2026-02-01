@@ -36,7 +36,7 @@ export function EyeTrackingProvider() {
                 style={{
                     position: "fixed",
                     bottom: "10px",
-                    right: "10px",
+                    left: "10px",
                     display: "flex",
                     flexDirection: "column",
                     gap: "8px",
