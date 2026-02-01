@@ -15,7 +15,7 @@ import "../../eye-tracking.css";
  */
 export function EyeTrackingProvider() {
     const [showCalibration, setShowCalibration] = useState(false);
-    const [isEnabled, setIsEnabled] = useState(true);
+    const [isEnabled, setIsEnabled] = useState(false);
 
     // Initialize eye tracking with 800ms dwell time
     const { isInitialized } = useEyeClick({
