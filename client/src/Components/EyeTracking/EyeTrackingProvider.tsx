@@ -46,7 +46,11 @@ export function EyeTrackingProvider() {
                 <div
                     style={{
                         padding: "8px 12px",
-                        backgroundColor: isEnabled ? (isInitialized ? "#4caf50" : "#ff9800") : "#9e9e9e",
+                        backgroundColor: isEnabled
+                            ? isInitialized
+                                ? "#4caf50"
+                                : "#ff9800"
+                            : "#9e9e9e",
                         color: "white",
                         borderRadius: "5px",
                         fontSize: "12px",
@@ -54,7 +58,11 @@ export function EyeTrackingProvider() {
                     }}
                 >
                     Eye Tracking:{" "}
-                    {isEnabled ? (isInitialized ? "Active ✓" : "Initializing...") : "Disabled"}
+                    {isEnabled
+                        ? isInitialized
+                            ? "Active ✓"
+                            : "Initializing..."
+                        : "Disabled"}
                 </div>
 
                 <button
