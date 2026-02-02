@@ -1,6 +1,6 @@
 # Digibanking-Prototype-with-React
 
-username: bob
+username: bob \
 password: bobpass
 
 [Site](https://digibanking-prototype-with-react.pages.dev/) \
